@@ -2,15 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
+    // Stats
+    public int move_speed = 1;
 
-	// Use this for initialization
-	void Start () {
-		
+    public Tile current_tile;
+    List<Tile> field_tiles = new List<Tile>();
+
+	void Start ()
+    {
+        Tile[] tile_array = FindObjectsOfType<Tile>();
+        foreach (Tile tile in tile_array)
+        {
+            field_tiles.Add(tile);
+        }
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    void CheckMove()
+    {
+        foreach(Tile tile in field_tiles)
+        {
+            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= move_speed)
+            {
+                tile.Highlight(this);
+            }
+        }
+    }
+
+    public void Move(Tile new_tile)
+    {
+        foreach (Tile tile in field_tiles)
+        {
+            tile.Dehighlight();
+        }
+
+        transform.SetParent(new_tile.transform, false);
+        current_tile = new_tile;
+    }
+
+    void OnMouseDown()
+    {
+        CheckMove();
+    }
+
+    void Update ()
+    {
 		
 	}
 }
