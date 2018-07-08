@@ -33,7 +33,6 @@ public class Ball : MonoBehaviour
             }
 
             float derived_angle = Mathf.PI * ((starting_distance_to_hoop - current_distance) / starting_distance_to_hoop);
-            Debug.Log(derived_angle);
             float parabolic_variance = 0.1f * Mathf.Sin(derived_angle);
             transform.position = Vector2.MoveTowards(transform.position, hoop_location, ball_speed) + new Vector2(0, parabolic_variance);
         }
