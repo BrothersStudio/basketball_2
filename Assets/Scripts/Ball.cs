@@ -56,6 +56,7 @@ public class Ball : MonoBehaviour
             {
                 passing = false;
                 transform.localPosition = ball_visual_offset;
+                return;
             }
 
             transform.position = Vector2.MoveTowards(transform.position, pass_destination.transform.position, ball_speed);

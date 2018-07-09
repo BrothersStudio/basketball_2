@@ -8,18 +8,4 @@ public static class Utils
     {
         return (int)(Mathf.Abs(location_1.x - location_2.x) + Mathf.Abs(location_1.y - location_2.y));
     }
-
-    public static Player FindPlayerOnTile(Tile tile)
-    {
-        Player[] players = GameObject.FindObjectsOfType<Player>();
-        foreach (Player player in players)
-        {
-            if (player.current_tile == tile)
-            {
-                return player;
-            }
-        }
-        Debug.LogError("Couldn't find player for this tile, why are you asking?");
-        return null;
-    }
 }

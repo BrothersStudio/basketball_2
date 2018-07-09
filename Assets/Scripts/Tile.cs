@@ -6,6 +6,8 @@ public class Tile : MonoBehaviour
 {
     public bool highlighted = false;
     public Vector2 current_location;
+    Player standing_player;
+
     Player querying_player;
 
     public void Highlight(Player querying_player)
@@ -34,8 +36,30 @@ public class Tile : MonoBehaviour
             }
             else if (querying_player.passing)
             {
-                querying_player.Pass(Utils.FindPlayerOnTile(this));
+                querying_player.Pass(standing_player);
             }
+        }
+    }
+
+    public void SetPlayer(Player player)
+    {
+        standing_player = player;
+    }
+
+    public void RemovePlayer()
+    {
+        standing_player = null;
+    }
+
+    public bool HasPlayer()
+    {
+        if (standing_player != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
