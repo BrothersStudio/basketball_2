@@ -13,7 +13,7 @@ public class Ball : MonoBehaviour
     Player pass_destination;
 
     public float ball_speed;
-    public Vector3 ball_visual_offset;
+    Vector3 ball_visual_offset;
 
     void Start()
     {
