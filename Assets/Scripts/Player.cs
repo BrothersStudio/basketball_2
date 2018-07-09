@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public bool has_ball;
+    public bool passing = false;
+    public bool moving = false;
 
     // Stats
     public int move_speed = 1;
@@ -24,9 +25,9 @@ public class Player : MonoBehaviour
         }
 	}
 
-    public bool CanShoot()
+    public bool HasBall()
     {
-        if (has_ball)
+        if (transform.childCount > 0) 
         {
             return true;
         }
@@ -39,16 +40,40 @@ public class Player : MonoBehaviour
     public void Shoot()
     {
         GetComponentInChildren<Ball>().Shoot();
-        has_ball = false;
+
+        canvas.transform.Find("Command Window").gameObject.SetActive(false);
     }
 
-    public void Pass()
+    public void CheckPass()
     {
-        has_ball = false;
+        passing = true;
+
+        Player[] players = FindObjectsOfType<Player>();
+        foreach (Player player in players)
+        {
+            if (player != this)
+            {
+                // TODO: if on team
+                player.current_tile.Highlight(this);
+            }
+        }
+    }
+
+    public void Pass(Player pass_player)
+    {
+        passing = false;
+        DehighlightTiles();
+
+        GetComponentInChildren<Ball>().Pass(pass_player);
+        transform.Find("Ball").SetParent(pass_player.transform, true);
+
+        canvas.transform.Find("Command Window").gameObject.SetActive(false);
     }
 
     public void CheckMove()
     {
+        moving = true;
+
         foreach(Tile tile in field_tiles)
         {
             if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= move_speed)
@@ -60,22 +85,32 @@ public class Player : MonoBehaviour
 
     public void Move(Tile new_tile)
     {
-        foreach (Tile tile in field_tiles)
-        {
-            tile.Dehighlight();
-        }
+        moving = false;
+        DehighlightTiles();
 
         transform.SetParent(new_tile.transform, false);
         current_tile = new_tile;
+
+        canvas.transform.Find("Command Window").gameObject.SetActive(false);
     }
 
     void OnMouseDown()
     {
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
+        if (current_tile.highlighted)
+        {
+            current_tile.OnMouseDown();
+        }
+        else
+        { 
+            canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
+        }
     }
 
-    void Update ()
+    void DehighlightTiles()
     {
-		
-	}
+        foreach (Tile tile in field_tiles)
+        {
+            tile.Dehighlight();
+        }
+    }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    bool highlighted = false;
+    public bool highlighted = false;
     public Vector2 current_location;
     Player querying_player;
 
@@ -24,11 +24,18 @@ public class Tile : MonoBehaviour
         GetComponent<SpriteRenderer>().color = Color.white;
     }
 
-    private void OnMouseDown()
+    public void OnMouseDown()
     {
         if (highlighted)
         {
-            querying_player.Move(this);
+            if (querying_player.moving)
+            {
+                querying_player.Move(this);
+            }
+            else if (querying_player.passing)
+            {
+                querying_player.Pass(Utils.FindPlayerOnTile(this));
+            }
         }
     }
 }
