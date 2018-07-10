@@ -10,6 +10,7 @@ public class FieldGenerator : MonoBehaviour
 
     public int rows;
     public int columns;
+    public Sprite[] tile_sprites;
 
     public int hoop_row;
     public int hoop_column;
@@ -25,7 +26,9 @@ public class FieldGenerator : MonoBehaviour
             for (int j = 0; j < columns; j++)
             {
                 GameObject new_tile = Instantiate(tile_prefab, transform);
-                new_tile.transform.SetPositionAndRotation(new Vector3(j * -0.7f + i * -0.8f, j * -0.45f + i * 0.42f, j * -0.01f + i * 1f), Quaternion.identity);
+                new_tile.GetComponent<SpriteRenderer>().sprite = tile_sprites[Random.Range(0, tile_sprites.Length)];
+
+                new_tile.transform.SetPositionAndRotation(new Vector3(j * -1.06f + i * -1.04f, j * -0.36f + i * 0.36f, j * -0.01f + i * 1f), Quaternion.identity);
                 new_tile.name = "Tile " + i.ToString() + "," + j.ToString();
                 new_tile.GetComponent<Tile>().current_location = new Vector2(i, j);
 
