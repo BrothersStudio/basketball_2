@@ -9,6 +9,19 @@ public static class Utils
         return (int)(Mathf.Abs(location_1.x - location_2.x) + Mathf.Abs(location_1.y - location_2.y));
     }
 
+    public static Tile FindTileAtLocation(Vector2 location)
+    {
+        Tile[] all_tiles = GameObject.FindObjectsOfType<Tile>();
+        foreach (Tile tile in all_tiles)
+        {
+            if (tile.current_location == location)
+            {
+                return tile;
+            }
+        }
+        return null;
+    }
+
     public static float GetShotChanceAtDistance(int distance)
     {
         if (distance <= 1)

@@ -10,6 +10,8 @@ public class Tile : MonoBehaviour
 
     Player querying_player;
 
+    public bool has_ball;
+
     public void Highlight(Player querying_player)
     {
         highlighted = true;
@@ -60,6 +62,21 @@ public class Tile : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    public void SetBall()
+    {
+        if (HasPlayer())
+        {
+            Ball ball = FindObjectOfType<Ball>();
+
+            ball.transform.SetParent(standing_player.transform);
+            FindObjectOfType<Ball>().SetCaught();
+        }
+        else
+        {
+            has_ball = true;
         }
     }
 }

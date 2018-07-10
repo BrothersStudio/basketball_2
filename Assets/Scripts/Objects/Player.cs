@@ -62,8 +62,27 @@ public class Player : MonoBehaviour
 
     public void Shoot()
     {
-        GetComponentInChildren<Ball>().Shoot();
+        //GetComponentInChildren<Ball>().Shoot();
+        ShootRebound();
         //transform.Find("Ball").SetParent(pass_player.transform, true);
+    }
+
+    public void ShootRebound()
+    {
+        Hoop hoop = FindObjectOfType<Hoop>();
+
+        Tile rebound_tile = null;
+        while (rebound_tile == null)
+        {
+            int x = (int)hoop.current_tile.current_location.x + Random.Range(-2, 2);
+            int y = (int)hoop.current_tile.current_location.y + Random.Range(-2, 2);
+            if (x == 0 && y == 0) continue;
+
+            Vector2 try_location = new Vector2(x, y);
+            rebound_tile = Utils.FindTileAtLocation(try_location);
+        }
+        GetComponentInChildren<Ball>().ShootRebound(rebound_tile);
+        transform.Find("Ball").SetParent(rebound_tile.transform, true);
     }
 
     public void CheckPass()
@@ -73,9 +92,8 @@ public class Player : MonoBehaviour
         Player[] players = FindObjectsOfType<Player>();
         foreach (Player player in players)
         {
-            if (player != this)
+            if (player != this && player.team == this.team)
             {
-                // TODO: if on team
                 player.current_tile.Highlight(this);
             }
         }
@@ -116,6 +134,14 @@ public class Player : MonoBehaviour
         current_tile.RemovePlayer();
         new_tile.SetPlayer(this);
         current_tile = new_tile;
+
+        if (new_tile.has_ball)
+        {
+            Ball ball = FindObjectOfType<Ball>();
+
+            ball.transform.SetParent(transform);
+            FindObjectOfType<Ball>().SetCaught();
+        }
 
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }

@@ -63,7 +63,6 @@ public class CommandWindow : MonoBehaviour
         shot_confirm_window.transform.Find("Percent").GetComponent<Text>().text = shot_percent.ToString() + "%";
 
         shot_confirm_window.transform.Find("Shoot Button").GetComponent<Button>().onClick.RemoveAllListeners();
-        shot_confirm_window.transform.Find("Shoot Button").GetComponent<Button>().onClick.AddListener(selected_player.Shoot);
         shot_confirm_window.transform.Find("Shoot Button").GetComponent<Button>().onClick.AddListener(TryShot);
 
         shot_confirm_window.SetActive(true);
@@ -73,6 +72,8 @@ public class CommandWindow : MonoBehaviour
     {
         if (Random.Range(0, 100) < shot_percent)
         {
+            selected_player.ShootRebound();
+
             int points = 2;
             if (shot_range > 4)
             {
@@ -88,6 +89,10 @@ public class CommandWindow : MonoBehaviour
                     transform.parent.Find("Score Panel").GetComponent<ScoreCounter>().TeamBScores(points);
                     break;
             }
+        }
+        else
+        {
+            selected_player.ShootRebound();
         }
 
         Cancel();
