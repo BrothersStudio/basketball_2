@@ -16,10 +16,13 @@ public class FieldGenerator : MonoBehaviour
     public int hoop_column;
 
     bool gave_ball = false;
-    public List<int> player_rows;
-    public List<int> player_columns;
+    public List<int> team_A_player_rows;
+    public List<int> team_A_player_columns;
 
-	void Awake ()
+    public List<int> team_B_player_rows;
+    public List<int> team_B_player_columns;
+
+    void Awake ()
     {
 		for (int i = 0; i < rows; i++)
         {
@@ -38,12 +41,13 @@ public class FieldGenerator : MonoBehaviour
                     new_hoop.GetComponent<Hoop>().current_tile = new_tile.GetComponent<Tile>();
                 }
 
-                for (int n = 0; n < player_rows.Count; n++)
+                for (int n = 0; n < team_A_player_rows.Count; n++)
                 {
-                    if (i == player_rows[n] && j == player_columns[n])
+                    if (i == team_A_player_rows[n] && j == team_A_player_columns[n])
                     {
                         GameObject new_player = Instantiate(player_prefab, new_tile.transform);
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
+                        new_player.GetComponent<Player>().team = Team.A;
 
                         if (!gave_ball)
                         {
@@ -53,6 +57,19 @@ public class FieldGenerator : MonoBehaviour
                         {
                             Destroy(new_player.transform.GetChild(0).gameObject);
                         }
+                    }
+                }
+
+                for (int n = 0; n < team_B_player_rows.Count; n++)
+                {
+                    if (i == team_B_player_rows[n] && j == team_B_player_columns[n])
+                    {
+                        GameObject new_player = Instantiate(player_prefab, new_tile.transform);
+                        new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
+                        new_player.GetComponent<Player>().team = Team.B;
+                        new_player.GetComponent<SpriteRenderer>().color = Color.red;
+
+                        Destroy(new_player.transform.GetChild(0).gameObject);
                     }
                 }
             }

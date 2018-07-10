@@ -13,7 +13,7 @@ public class TimeCounter : MonoBehaviour
         quater_time = new TimeSpan(0, 15, 0);
     }
 
-    void DecreaseTime()
+    public void DecreaseTime()
     {
         quater_time -= new TimeSpan(0, 0, 30);
 
@@ -23,7 +23,7 @@ public class TimeCounter : MonoBehaviour
 
     void UpdateTimeDisplay()
     {
-        transform.Find("Time").GetComponent<Text>().text = quater_time.Minutes.ToString() + ":" + quater_time.Seconds.ToString();
+        transform.Find("Time").GetComponent<Text>().text = quater_time.Minutes.ToString() + ":" + quater_time.Seconds.ToString("D2");
     }
 
     void CheckQuarter()

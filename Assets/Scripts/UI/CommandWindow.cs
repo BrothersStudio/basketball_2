@@ -23,7 +23,7 @@ public class CommandWindow : MonoBehaviour
         bool has_ball = selected_player.HasBall();
 
         Button shoot_button = transform.Find("Shoot Button").GetComponent<Button>();
-        if (has_ball)
+        if (has_ball && !selected_player.took_attack)
         {
             shoot_button.interactable = true;
             shoot_button.onClick.RemoveAllListeners();
@@ -35,11 +35,19 @@ public class CommandWindow : MonoBehaviour
         }
 
         Button move_button = transform.Find("Move Button").GetComponent<Button>();
-        move_button.onClick.RemoveAllListeners();
-        move_button.onClick.AddListener(selected_player.CheckMove);
+        if (!selected_player.took_move)
+        {
+            move_button.interactable = true;
+            move_button.onClick.RemoveAllListeners();
+            move_button.onClick.AddListener(selected_player.CheckMove);
+        }
+        else
+        {
+            move_button.interactable = false;
+        }
 
         Button pass_button = transform.Find("Pass Button").GetComponent<Button>();
-        if (has_ball)
+        if (has_ball && !selected_player.took_attack) 
         {
             pass_button.interactable = true;
             pass_button.onClick.RemoveAllListeners();
@@ -72,8 +80,6 @@ public class CommandWindow : MonoBehaviour
     {
         if (Random.Range(0, 100) < shot_percent)
         {
-            selected_player.ShootRebound();
-
             int points = 2;
             if (shot_range > 4)
             {
@@ -89,6 +95,8 @@ public class CommandWindow : MonoBehaviour
                     transform.parent.Find("Score Panel").GetComponent<ScoreCounter>().TeamBScores(points);
                     break;
             }
+
+            selected_player.Shoot();
         }
         else
         {

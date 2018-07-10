@@ -7,6 +7,9 @@ public class Player : MonoBehaviour
     public bool passing = false;
     public bool moving = false;
 
+    public bool took_attack = false;
+    public bool took_move = false;
+
     // Stats
     public int shoot_skill;
     public int block_skill;
@@ -31,8 +34,6 @@ public class Player : MonoBehaviour
         {
             field_tiles.Add(tile);
         }
-
-        team = Team.A;
 	}
 
     public bool HasBall()
@@ -65,6 +66,10 @@ public class Player : MonoBehaviour
         //GetComponentInChildren<Ball>().Shoot();
         ShootRebound();
         //transform.Find("Ball").SetParent(pass_player.transform, true);
+
+        took_attack = true;
+        CheckTurn();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
     public void ShootRebound()
@@ -83,6 +88,10 @@ public class Player : MonoBehaviour
         }
         GetComponentInChildren<Ball>().ShootRebound(rebound_tile);
         transform.Find("Ball").SetParent(rebound_tile.transform, true);
+
+        took_attack = true;
+        CheckTurn();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
     public void CheckPass()
@@ -107,6 +116,8 @@ public class Player : MonoBehaviour
         GetComponentInChildren<Ball>().Pass(pass_player);
         transform.Find("Ball").SetParent(pass_player.transform, true);
 
+        took_attack = true;
+        CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
@@ -143,7 +154,45 @@ public class Player : MonoBehaviour
             FindObjectOfType<Ball>().SetCaught();
         }
 
+        took_move = true;
+        CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
+    void CheckTurn()
+    {
+        if (took_attack && took_move)
+        {
+            GetComponent<SpriteRenderer>().color = Color.gray;
+
+            if (Utils.TeamIsDoneTurn(team))
+            {
+                FindObjectOfType<PhaseController>().ChangePhase();
+            }
+        }
+    }
+
+    public bool IsDone()
+    {
+        if (took_attack && took_move)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void RefreshTurn()
+    {
+        took_attack = false;
+        took_move = false;
+
+        if (team == Team.A)
+        {
+            GetComponent<SpriteRenderer>().color = Color.white;
+        }
     }
 
     void OnMouseDown()
@@ -152,7 +201,7 @@ public class Player : MonoBehaviour
         {
             current_tile.OnMouseDown();
         }
-        else
+        else if (!(took_move && took_attack))
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
         }

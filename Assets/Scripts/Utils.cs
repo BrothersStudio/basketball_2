@@ -69,4 +69,17 @@ public static class Utils
             return 5f;
         }
     }
+
+    public static bool TeamIsDoneTurn(Team team)
+    {
+        Player[] players = GameObject.FindObjectsOfType<Player>();
+        foreach (Player player in players)
+        {
+            if (player.team == team && !player.IsDone())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }
