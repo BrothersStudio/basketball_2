@@ -35,6 +35,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4501744998037054}
   - component: {fileID: 212608221325428694}
+  - component: {fileID: 114262394737120688}
   m_Layer: 0
   m_Name: Hoop
   m_TagString: Untagged
@@ -69,6 +70,17 @@ Transform:
   m_Father: {fileID: 4501744998037054}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114262394737120688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1164313406363022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb208594bc142d48b576e0928412363, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212608221325428694
 SpriteRenderer:
   m_ObjectHideFlags: 1

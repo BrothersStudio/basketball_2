@@ -8,7 +8,13 @@ public class Player : MonoBehaviour
     public bool moving = false;
 
     // Stats
-    public int move_speed = 1;
+    public int shoot_skill;
+    public int block_skill;
+    public int move_skill;
+
+    // Team Info
+    public Team team;
+    public Player defender;
 
     public Tile current_tile;
     List<Tile> field_tiles = new List<Tile>();
@@ -25,6 +31,8 @@ public class Player : MonoBehaviour
         {
             field_tiles.Add(tile);
         }
+
+        team = Team.A;
 	}
 
     public bool HasBall()
@@ -39,11 +47,23 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void CheckShoot()
+    {
+        Hoop hoop = FindObjectOfType<Hoop>();
+
+        int enemy_block = 0;
+        if (defender != null)
+        {
+            enemy_block = defender.block_skill;
+        }
+
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetShot(shoot_skill, enemy_block, Utils.GetDistance(current_tile.current_location, hoop.current_tile.current_location));
+    }
+
     public void Shoot()
     {
         GetComponentInChildren<Ball>().Shoot();
-
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        //transform.Find("Ball").SetParent(pass_player.transform, true);
     }
 
     public void CheckPass()
@@ -78,7 +98,7 @@ public class Player : MonoBehaviour
 
         foreach(Tile tile in field_tiles)
         {
-            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= move_speed &&
+            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= move_skill &&
                 !tile.HasPlayer())
             {
                 tile.Highlight(this);
@@ -119,4 +139,10 @@ public class Player : MonoBehaviour
             tile.Dehighlight();
         }
     }
+}
+
+public enum Team
+{
+    A,
+    B
 }

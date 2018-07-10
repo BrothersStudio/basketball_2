@@ -31,7 +31,8 @@ public class FieldGenerator : MonoBehaviour
 
                 if (i == hoop_row && j == hoop_column)
                 {
-                    Instantiate(hoop_prefab, new_tile.transform);
+                    GameObject new_hoop = Instantiate(hoop_prefab, new_tile.transform);
+                    new_hoop.GetComponent<Hoop>().current_tile = new_tile.GetComponent<Tile>();
                 }
 
                 for (int n = 0; n < player_rows.Count; n++)

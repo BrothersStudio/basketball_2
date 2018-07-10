@@ -111,7 +111,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passing: 0
   moving: 0
-  move_speed: 2
+  shoot_skill: 2
+  block_skill: 2
+  move_skill: 2
+  team: 0
+  defender: {fileID: 0}
   current_tile: {fileID: 0}
 --- !u!114 &114707996567249212
 MonoBehaviour:
