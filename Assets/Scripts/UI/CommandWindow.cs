@@ -72,6 +72,39 @@ public class CommandWindow : MonoBehaviour
                 juke_button.interactable = false;
             }
         }
+        else
+        {
+            // Turn off offensive buttons
+            transform.Find("Shoot Button").gameObject.SetActive(false);
+            transform.Find("Pass Button").gameObject.SetActive(false);
+            transform.Find("Juke Button").gameObject.SetActive(false);
+
+            Button block_button = transform.Find("Block Button").GetComponent<Button>();
+            block_button.gameObject.SetActive(true);
+            if (!selected_player.took_attack)
+            {
+                block_button.interactable = true;
+                block_button.onClick.RemoveAllListeners();
+                block_button.onClick.AddListener(selected_player.Block);
+            }
+            else
+            {
+                block_button.interactable = false;
+            }
+
+            Button steal_button = transform.Find("Steal Button").GetComponent<Button>();
+            steal_button.gameObject.SetActive(true);
+            if (!selected_player.took_attack)
+            {
+                steal_button.interactable = true;
+                steal_button.onClick.RemoveAllListeners();
+                steal_button.onClick.AddListener(selected_player.Steal);
+            }
+            else
+            {
+                steal_button.interactable = false;
+            }
+        }
 
         Button move_button = transform.Find("Move Button").GetComponent<Button>();
         if (!selected_player.took_move)

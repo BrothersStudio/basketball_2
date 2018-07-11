@@ -15,12 +15,15 @@ public class Player : MonoBehaviour
     public bool used_juke = false;
     int temp_speed = 0;
 
+    int temp_block = 0;
+    int temp_steal = 0;
+
     // Stats
-    public int shoot_skill;
-    public int control_skill;
-    public int block_skill;
-    public int stance_skill;
-    public int move_skill;
+    int shoot_skill = 2;
+    int control_skill = 2;
+    int block_skill = 2;
+    int steal_skill = 2;
+    int move_skill = 2;
 
     // Team Info
     public Team team;
@@ -29,6 +32,22 @@ public class Player : MonoBehaviour
     public Tile current_tile;
     List<Tile> field_tiles = new List<Tile>();
     GameObject canvas;
+
+    public int Block_Skill
+    {
+        get
+        {
+            return block_skill + temp_block;
+        }
+    }
+
+    public int Steal_Skill
+    {
+        get
+        {
+            return steal_skill + temp_steal;
+        }
+    }
 
 	void Start ()
     {
@@ -60,7 +79,7 @@ public class Player : MonoBehaviour
         int enemy_block = 0;
         if (defender != null)
         {
-            enemy_block = defender.block_skill;
+            enemy_block = defender.Block_Skill;
         }
 
         Hoop hoop = FindObjectOfType<Hoop>();
@@ -127,6 +146,24 @@ public class Player : MonoBehaviour
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
+    public void Block()
+    {
+        temp_block += 1;
+
+        took_attack = true;
+        CheckTurn();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
+    public void Steal()
+    {
+        temp_steal += 1;
+
+        took_attack = true;
+        CheckTurn();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
     public void CheckMove()
     {
         moving = true;
@@ -176,9 +213,9 @@ public class Player : MonoBehaviour
         int enemy_steal = 0;
         if (defender != null)
         {
-            enemy_steal = defender.stance_skill;
+            enemy_steal = defender.Steal_Skill;
         }
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetJuke(stance_skill, enemy_steal);
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetJuke(control_skill, enemy_steal);
     }
 
     public void SuccessfulJuke()
@@ -226,6 +263,10 @@ public class Player : MonoBehaviour
         took_attack = false;
         took_move = false;
         used_juke = false;
+
+        temp_block = 0;
+        temp_steal = 0;
+        temp_speed = 0;
 
         if (team == Team.A)
         {
