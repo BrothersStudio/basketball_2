@@ -9,6 +9,21 @@ public static class Utils
         return (int)(Mathf.Abs(location_1.x - location_2.x) + Mathf.Abs(location_1.y - location_2.y));
     }
 
+    public static Player ReturnAdjacentOpponent(Player input_player)
+    {
+        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        {
+            if (player.team != input_player.team)
+            {
+                if (GetDistance(player.current_tile.current_location, input_player.current_tile.current_location) == 1)
+                {
+                    return player;
+                }
+            }
+        }
+        return null;
+    }
+
     public static Tile FindTileAtLocation(Vector2 location)
     {
         Tile[] all_tiles = GameObject.FindObjectsOfType<Tile>();
@@ -81,5 +96,13 @@ public static class Utils
             }
         }
         return true;
+    }
+
+    public static void DehighlightTiles()
+    {
+        foreach (Tile tile in GameObject.FindObjectsOfType<Tile>())
+        {
+            tile.Dehighlight();
+        }
     }
 }

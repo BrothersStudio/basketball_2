@@ -11,27 +11,66 @@ public class CommandWindow : MonoBehaviour
     int shot_percent;
     GameObject shot_confirm_window;
 
+    int juke_percent;
+    GameObject juke_confirm_window;
+    public GameObject juke_text_prefab;
+
     void Start()
     {
         shot_confirm_window = transform.parent.Find("Shot Confirm Window").gameObject;
+        juke_confirm_window = transform.parent.Find("Juke Confirm Window").gameObject;
     }
 
     public void SetButtons(Player player)
     {
         selected_player = player;
 
-        bool has_ball = selected_player.HasBall();
+        if (player.team == Possession.team)
+        {
+            bool has_ball = selected_player.HasBall();
 
-        Button shoot_button = transform.Find("Shoot Button").GetComponent<Button>();
-        if (has_ball && !selected_player.took_attack)
-        {
-            shoot_button.interactable = true;
-            shoot_button.onClick.RemoveAllListeners();
-            shoot_button.onClick.AddListener(selected_player.CheckShoot);
-        }
-        else
-        {
-            shoot_button.interactable = false;
+            // Turn off defensive buttons
+            transform.Find("Block Button").gameObject.SetActive(false);
+            transform.Find("Steal Button").gameObject.SetActive(false);
+
+            Button shoot_button = transform.Find("Shoot Button").GetComponent<Button>();
+            shoot_button.gameObject.SetActive(true);
+            if (has_ball && !selected_player.took_attack)
+            {
+                shoot_button.interactable = true;
+                shoot_button.onClick.RemoveAllListeners();
+                shoot_button.onClick.AddListener(selected_player.CheckShoot);
+            }
+            else
+            {
+                shoot_button.interactable = false;
+            }
+
+            Button pass_button = transform.Find("Pass Button").GetComponent<Button>();
+            pass_button.gameObject.SetActive(true);
+            if (has_ball && !selected_player.took_attack)
+            {
+                pass_button.interactable = true;
+                pass_button.onClick.RemoveAllListeners();
+                pass_button.onClick.AddListener(selected_player.CheckPass);
+            }
+            else
+            {
+                pass_button.interactable = false;
+            }
+
+            Button juke_button = transform.Find("Juke Button").GetComponent<Button>();
+            juke_button.gameObject.SetActive(true);
+            if (!selected_player.took_move && Utils.ReturnAdjacentOpponent(selected_player) != null)
+            {
+                juke_button.interactable = true;
+                juke_button.onClick.RemoveAllListeners();
+                juke_button.onClick.AddListener(selected_player.CheckJuke);
+            }
+            else
+            {
+                juke_button.interactable = false;
+            }
         }
 
         Button move_button = transform.Find("Move Button").GetComponent<Button>();
@@ -46,18 +85,6 @@ public class CommandWindow : MonoBehaviour
             move_button.interactable = false;
         }
 
-        Button pass_button = transform.Find("Pass Button").GetComponent<Button>();
-        if (has_ball && !selected_player.took_attack) 
-        {
-            pass_button.interactable = true;
-            pass_button.onClick.RemoveAllListeners();
-            pass_button.onClick.AddListener(selected_player.CheckPass);
-        }
-        else
-        {
-            pass_button.interactable = false;
-        }
-
         gameObject.SetActive(true);
     }
 
@@ -66,6 +93,7 @@ public class CommandWindow : MonoBehaviour
         shot_confirm_window.transform.Find("Attack").GetComponent<Text>().text = "Shoot: " + attack.ToString();
         shot_confirm_window.transform.Find("Defense").GetComponent<Text>().text = "Block: " + defense.ToString();
         shot_confirm_window.transform.Find("Distance").GetComponent<Text>().text = "Distance: " + distance.ToString();
+        shot_range = distance;
 
         shot_percent = (int)Mathf.Clamp(Utils.GetShotChanceAtDistance(distance) + (attack - defense) * 10, 0, 100);
         shot_confirm_window.transform.Find("Percent").GetComponent<Text>().text = shot_percent.ToString() + "%";
@@ -106,6 +134,35 @@ public class CommandWindow : MonoBehaviour
         Cancel();
     }
 
+    public void SetJuke(int attack, int defense)
+    {
+        juke_confirm_window.transform.Find("Attack").GetComponent<Text>().text = "Control: " + attack.ToString();
+        juke_confirm_window.transform.Find("Defense").GetComponent<Text>().text = "Stance: " + defense.ToString();
+
+        juke_percent = Mathf.Clamp(50 + (attack - defense) * 10, 0, 100);
+        juke_confirm_window.transform.Find("Percent").GetComponent<Text>().text = juke_percent.ToString() + "%";
+
+        juke_confirm_window.transform.Find("Juke Button").GetComponent<Button>().onClick.RemoveAllListeners();
+        juke_confirm_window.transform.Find("Juke Button").GetComponent<Button>().onClick.AddListener(TryJuke);
+
+        juke_confirm_window.SetActive(true);
+    }
+
+    public void TryJuke()
+    {
+        if (Random.Range(0, 100) < juke_percent)
+        {
+            GameObject juke_text = Instantiate(juke_text_prefab, transform.parent);
+            juke_text.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(selected_player.transform.position);
+            selected_player.SuccessfulJuke();
+            juke_confirm_window.SetActive(false);
+        }
+        else
+        {
+            selected_player.FailJuke();
+        }
+    }
+
     public void ConfirmCancel()
     {
         shot_confirm_window.SetActive(false);
@@ -115,6 +172,8 @@ public class CommandWindow : MonoBehaviour
     {
         selected_player = null;
         shot_confirm_window.SetActive(false);
+        juke_confirm_window.SetActive(false);
+        Utils.DehighlightTiles();
         gameObject.SetActive(false);
     }
 }

@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public bool offense;
+
     public bool passing = false;
     public bool moving = false;
 
     public bool took_attack = false;
     public bool took_move = false;
 
+    public bool used_juke = false;
+    int temp_speed = 0;
+
     // Stats
     public int shoot_skill;
+    public int control_skill;
     public int block_skill;
+    public int stance_skill;
     public int move_skill;
 
     // Team Info
@@ -50,14 +57,13 @@ public class Player : MonoBehaviour
 
     public void CheckShoot()
     {
-        Hoop hoop = FindObjectOfType<Hoop>();
-
         int enemy_block = 0;
         if (defender != null)
         {
             enemy_block = defender.block_skill;
         }
 
+        Hoop hoop = FindObjectOfType<Hoop>();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetShot(shoot_skill, enemy_block, Utils.GetDistance(current_tile.current_location, hoop.current_tile.current_location));
     }
 
@@ -111,7 +117,7 @@ public class Player : MonoBehaviour
     public void Pass(Player pass_player)
     {
         passing = false;
-        DehighlightTiles();
+        Utils.DehighlightTiles();
 
         GetComponentInChildren<Ball>().Pass(pass_player);
         transform.Find("Ball").SetParent(pass_player.transform, true);
@@ -125,9 +131,15 @@ public class Player : MonoBehaviour
     {
         moving = true;
 
+        int current_move_skill = move_skill + temp_speed;
+        if (Utils.ReturnAdjacentOpponent(this) != null)
+        {
+            current_move_skill--;
+        }
+
         foreach(Tile tile in field_tiles)
         {
-            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= move_skill &&
+            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= current_move_skill &&
                 !tile.HasPlayer())
             {
                 tile.Highlight(this);
@@ -138,7 +150,7 @@ public class Player : MonoBehaviour
     public void Move(Tile new_tile)
     {
         moving = false;
-        DehighlightTiles();
+        Utils.DehighlightTiles();
 
         transform.SetParent(new_tile.transform, false);
 
@@ -154,6 +166,31 @@ public class Player : MonoBehaviour
             FindObjectOfType<Ball>().SetCaught();
         }
 
+        took_move = true;
+        CheckTurn();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
+    public void CheckJuke()
+    {
+        int enemy_steal = 0;
+        if (defender != null)
+        {
+            enemy_steal = defender.stance_skill;
+        }
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetJuke(stance_skill, enemy_steal);
+    }
+
+    public void SuccessfulJuke()
+    {
+        used_juke = true;
+        temp_speed = 2;
+        CheckMove();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
+    public void FailJuke()
+    {
         took_move = true;
         CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
@@ -188,6 +225,7 @@ public class Player : MonoBehaviour
     {
         took_attack = false;
         took_move = false;
+        used_juke = false;
 
         if (team == Team.A)
         {
@@ -204,14 +242,6 @@ public class Player : MonoBehaviour
         else if (!(took_move && took_attack))
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
-        }
-    }
-
-    void DehighlightTiles()
-    {
-        foreach (Tile tile in field_tiles)
-        {
-            tile.Dehighlight();
         }
     }
 }
