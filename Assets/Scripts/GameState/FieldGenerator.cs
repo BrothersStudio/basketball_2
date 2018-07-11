@@ -12,9 +12,6 @@ public class FieldGenerator : MonoBehaviour
     public int columns;
     public Sprite[] tile_sprites;
 
-    public int hoop_row;
-    public int hoop_column;
-
     bool gave_ball = false;
     public List<int> team_A_player_rows;
     public List<int> team_A_player_columns;
@@ -24,9 +21,35 @@ public class FieldGenerator : MonoBehaviour
 
     void Awake ()
     {
-		for (int i = 0; i < rows; i++)
+        GenerateField(0);
+	}
+
+    public void GenerateField(int setup)
+    {
+        int set_rows;
+        int set_columns;
+        int set_hoop_row;
+        int set_hoop_column;
+        if (setup == 0)
         {
-            for (int j = 0; j < columns; j++)
+            set_rows = rows;
+            set_columns = columns;
+
+            set_hoop_row = 6;
+            set_hoop_column = 5;
+        }
+        else 
+        {
+            set_rows = columns;
+            set_columns = rows;
+
+            set_hoop_row = 5;
+            set_hoop_column = 0;
+        }
+
+        for (int i = 0; i < set_rows; i++)
+        {
+            for (int j = 0; j < set_columns; j++)
             {
                 GameObject new_tile = Instantiate(tile_prefab, transform);
                 new_tile.GetComponent<SpriteRenderer>().sprite = tile_sprites[Random.Range(0, tile_sprites.Length)];
@@ -35,7 +58,7 @@ public class FieldGenerator : MonoBehaviour
                 new_tile.name = "Tile " + i.ToString() + "," + j.ToString();
                 new_tile.GetComponent<Tile>().current_location = new Vector2(i, j);
 
-                if (i == hoop_row && j == hoop_column)
+                if (i == set_hoop_row && j == set_hoop_column)
                 {
                     GameObject new_hoop = Instantiate(hoop_prefab, new_tile.transform);
                     new_hoop.GetComponent<Hoop>().current_tile = new_tile.GetComponent<Tile>();
@@ -74,5 +97,6 @@ public class FieldGenerator : MonoBehaviour
                 }
             }
         }
-	}
+        
+    }
 }
