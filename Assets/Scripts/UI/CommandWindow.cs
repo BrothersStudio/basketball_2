@@ -157,7 +157,7 @@ public class CommandWindow : MonoBehaviour
                     break;
             }
 
-            selected_player.Shoot();
+            selected_player.ShootAndScore();
         }
         else
         {

@@ -86,14 +86,11 @@ public class Player : MonoBehaviour
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetShot(shoot_skill, enemy_block, Utils.GetDistance(current_tile.current_location, hoop.current_tile.current_location));
     }
 
-    public void Shoot()
+    public void ShootAndScore()
     {
-        //GetComponentInChildren<Ball>().Shoot();
         ShootRebound();
-        //transform.Find("Ball").SetParent(pass_player.transform, true);
+        Invoke("DelayChange", 1);
 
-        took_attack = true;
-        CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
@@ -195,13 +192,7 @@ public class Player : MonoBehaviour
         new_tile.SetPlayer(this);
         current_tile = new_tile;
 
-        if (new_tile.has_ball)
-        {
-            Ball ball = FindObjectOfType<Ball>();
-
-            ball.transform.SetParent(transform);
-            FindObjectOfType<Ball>().SetCaught();
-        }
+        CheckForBall(new_tile);
 
         took_move = true;
         CheckTurn();
@@ -231,6 +222,34 @@ public class Player : MonoBehaviour
         took_move = true;
         CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
+    void CheckForBall(Tile new_tile)
+    {
+        if (new_tile.has_ball)
+        {
+            Ball ball = FindObjectOfType<Ball>();
+
+            ball.transform.SetParent(transform);
+            FindObjectOfType<Ball>().SetCaught();
+
+            if (Possession.team != team)
+            {
+                Invoke("DelayChange", 1);
+            }
+        }
+    }
+
+    void DelayChange()
+    {
+        if (team == Team.A)
+        {
+            FindObjectOfType<PhaseController>().ChangeSidesTo(Team.B);
+        }
+        else
+        {
+            FindObjectOfType<PhaseController>().ChangeSidesTo(Team.A);
+        }
     }
 
     void CheckTurn()
