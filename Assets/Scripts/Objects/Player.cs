@@ -28,7 +28,42 @@ public class Player : MonoBehaviour
 
     public Tile current_tile;
     List<Tile> field_tiles = new List<Tile>();
+
     GameObject canvas;
+    HoverStatsWindow hover_stats;
+
+    #region Skills
+    public int Shoot_Skill
+    {
+        get
+        {
+            return shoot_skill;
+        }
+    }
+
+    public int Normal_Shoot_Skill
+    {
+        get
+        {
+            return shoot_skill;
+        }
+    }
+
+    public int Control_Skill
+    {
+        get
+        {
+            return control_skill;
+        }
+    }
+
+    public int Normal_Control_Skill
+    {
+        get
+        {
+            return control_skill;
+        }
+    }
 
     public int Block_Skill
     {
@@ -38,11 +73,27 @@ public class Player : MonoBehaviour
         }
     }
 
+    public int Normal_Block_Skill
+    {
+        get
+        {
+            return block_skill;
+        }
+    }
+
     public int Steal_Skill
     {
         get
         {
             return steal_skill + temp_steal;
+        }
+    }
+
+    public int Normal_Steal_Skill
+    {
+        get
+        {
+            return steal_skill;
         }
     }
 
@@ -59,9 +110,20 @@ public class Player : MonoBehaviour
         }
     }
 
-	void Start ()
+    public int Normal_Move_Skill
+    {
+        get
+        {
+            return move_skill;
+        }
+    }
+
+    #endregion
+
+    void Start ()
     {
         canvas = GameObject.Find("Canvas");
+        hover_stats = canvas.transform.Find("Hover Stats Window").GetComponent<HoverStatsWindow>();
 
         current_tile.SetPlayer(this);
 
@@ -295,6 +357,11 @@ public class Player : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().color = Color.red;
         }
+    }
+
+    void OnMouseOver()
+    {
+        hover_stats.Populate(this);
     }
 
     void OnMouseDown()
