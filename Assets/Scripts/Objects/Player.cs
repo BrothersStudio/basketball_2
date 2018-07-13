@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     int control_skill = 2;
     int block_skill = 2;
     int steal_skill = 2;
-    int move_skill = 2;
+    int move_skill = 3;
 
     // Team Info
     public Team team;
