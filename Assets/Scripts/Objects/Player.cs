@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public bool offense;
-
     public bool passing = false;
     public bool moving = false;
 
@@ -27,7 +25,6 @@ public class Player : MonoBehaviour
 
     // Team Info
     public Team team;
-    public Player defender;
 
     public Tile current_tile;
     List<Tile> field_tiles = new List<Tile>();
@@ -46,6 +43,19 @@ public class Player : MonoBehaviour
         get
         {
             return steal_skill + temp_steal;
+        }
+    }
+
+    public int Move_Skill
+    {
+        get
+        {
+            int current_move_skill = move_skill + temp_speed;
+            if (Utils.ReturnAdjacentOpponent(this) != null)
+            {
+                current_move_skill--;
+            }
+            return current_move_skill;
         }
     }
 
@@ -77,9 +87,10 @@ public class Player : MonoBehaviour
     public void CheckShoot()
     {
         int enemy_block = 0;
-        if (defender != null)
+        Player enemy = Utils.ReturnAdjacentOpponent(this);
+        if (enemy != null)
         {
-            enemy_block = defender.Block_Skill;
+            enemy_block = enemy.Block_Skill;
         }
 
         Hoop hoop = FindObjectOfType<Hoop>();
@@ -89,7 +100,7 @@ public class Player : MonoBehaviour
     public void ShootAndScore()
     {
         ShootRebound();
-        Invoke("DelayChange", 1);
+        Invoke("DelayChange", 1.5f);
 
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
@@ -165,15 +176,9 @@ public class Player : MonoBehaviour
     {
         moving = true;
 
-        int current_move_skill = move_skill + temp_speed;
-        if (Utils.ReturnAdjacentOpponent(this) != null)
-        {
-            current_move_skill--;
-        }
-
         foreach(Tile tile in field_tiles)
         {
-            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= current_move_skill &&
+            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= Move_Skill &&
                 !tile.HasPlayer())
             {
                 tile.Highlight(this);
@@ -202,9 +207,11 @@ public class Player : MonoBehaviour
     public void CheckJuke()
     {
         int enemy_steal = 0;
-        if (defender != null)
+
+        Player enemy = Utils.ReturnAdjacentOpponent(this);
+        if (enemy != null)
         {
-            enemy_steal = defender.Steal_Skill;
+            enemy_steal = enemy.Steal_Skill;
         }
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetJuke(control_skill, enemy_steal);
     }
@@ -235,21 +242,14 @@ public class Player : MonoBehaviour
 
             if (Possession.team != team)
             {
-                Invoke("DelayChange", 1);
+                Invoke("DelayChange", 0.5f);
             }
         }
     }
 
     void DelayChange()
     {
-        if (team == Team.A)
-        {
-            FindObjectOfType<PhaseController>().ChangeSidesTo(Team.B);
-        }
-        else
-        {
-            FindObjectOfType<PhaseController>().ChangeSidesTo(Team.A);
-        }
+        FindObjectOfType<PhaseController>().ChangeSides();
     }
 
     void CheckTurn()
@@ -290,6 +290,10 @@ public class Player : MonoBehaviour
         if (team == Team.A)
         {
             GetComponent<SpriteRenderer>().color = Color.white;
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 

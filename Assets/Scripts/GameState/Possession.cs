@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class Possession
 {
-    public static Team team = Team.A;
+    public static Team team;
 }

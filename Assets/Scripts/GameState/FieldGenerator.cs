@@ -11,10 +11,9 @@ public class FieldGenerator : MonoBehaviour
     public int rows;
     public int columns;
     public Sprite[] tile_sprites;
-    List<GameObject> all_tiles = new List<GameObject>();
+    List<GameObject> all_objects = new List<GameObject>();
 
     // Team A Offense
-    bool gave_ball = false;
     public List<int> offensive_A_player_rows;
     public List<int> offensive_A_player_columns;
 
@@ -43,16 +42,22 @@ public class FieldGenerator : MonoBehaviour
 
     public void GenerateField(int setup)
     {
-        RemoveOldTiles();
+        RemoveOldObjects();
+
+        Team offensive_team;
+        Team defensive_team;
 
         List<int> offensive_player_rows;
         List<int> offensive_player_columns;
         List<int> defensive_player_rows;
         List<int> defensive_player_columns;
+
         int hoop_row;
         int hoop_column;
+
         int set_rows;
         int set_columns;
+
         if (setup == 0)
         {
             offensive_player_rows = offensive_A_player_rows;
@@ -66,6 +71,9 @@ public class FieldGenerator : MonoBehaviour
 
             set_rows = rows;
             set_columns = columns;
+
+            offensive_team = Team.A;
+            defensive_team = Team.B;
 
             Camera.main.transform.position = new Vector3(-8.41f, 0.33f, -10f);
         }
@@ -83,8 +91,14 @@ public class FieldGenerator : MonoBehaviour
             set_rows = columns;
             set_columns = rows;
 
+            offensive_team = Team.B;
+            defensive_team = Team.A;
+
             Camera.main.transform.position = new Vector3(-8.41f, 1.21f, -10f);
         }
+
+        Possession.team = offensive_team;
+        bool gave_ball = false;
 
         for (int i = 0; i < set_rows; i++)
         {
@@ -97,10 +111,13 @@ public class FieldGenerator : MonoBehaviour
                 new_tile.name = "Tile " + i.ToString() + "," + j.ToString();
                 new_tile.GetComponent<Tile>().current_location = new Vector2(i, j);
 
+                all_objects.Add(new_tile);
+
                 if (i == hoop_row && j == hoop_column)
                 {
                     GameObject new_hoop = Instantiate(hoop_prefab, new_tile.transform);
                     new_hoop.GetComponent<Hoop>().current_tile = new_tile.GetComponent<Tile>();
+                    all_objects.Add(new_hoop);
                 }
 
                 for (int n = 0; n < offensive_player_rows.Count; n++)
@@ -109,11 +126,19 @@ public class FieldGenerator : MonoBehaviour
                     {
                         GameObject new_player = Instantiate(player_prefab, new_tile.transform);
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
-                        new_player.GetComponent<Player>().team = Team.A;
+                        new_player.GetComponent<Player>().team = offensive_team;
+                        all_objects.Add(new_player);
+                        if (defensive_team == Team.A)
+                        {
+                            new_player.GetComponent<SpriteRenderer>().color = Color.red;
+                        }
 
                         if (!gave_ball)
                         {
                             gave_ball = true;
+
+                            // Add the ball so we can cleanly destroy it later
+                            all_objects.Add(new_player.transform.GetChild(0).gameObject); 
                         }
                         else
                         {
@@ -128,22 +153,27 @@ public class FieldGenerator : MonoBehaviour
                     {
                         GameObject new_player = Instantiate(player_prefab, new_tile.transform);
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
-                        new_player.GetComponent<Player>().team = Team.B;
-                        new_player.GetComponent<SpriteRenderer>().color = Color.red;
+                        new_player.GetComponent<Player>().team = defensive_team;
+                        Destroy(new_player.transform.GetChild(0).gameObject);  // Remove ball
 
-                        Destroy(new_player.transform.GetChild(0).gameObject);
+                        if (defensive_team == Team.B)
+                        {
+                            new_player.GetComponent<SpriteRenderer>().color = Color.red;
+                        }
+
+                        all_objects.Add(new_player);
                     }
                 }
             }
         }        
     }
 
-    void RemoveOldTiles()
+    void RemoveOldObjects()
     {
-        foreach (GameObject tile in all_tiles)
+        foreach (GameObject obj in all_objects)
         {
-            Destroy(tile);
+            Destroy(obj);
         }
-        all_tiles.Clear();
+        all_objects.Clear();
     }
 }

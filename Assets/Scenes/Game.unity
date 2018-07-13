@@ -1636,7 +1636,6 @@ GameObject:
   - component: {fileID: 577636590}
   - component: {fileID: 577636593}
   - component: {fileID: 577636592}
-  - component: {fileID: 577636591}
   m_Layer: 5
   m_Name: Changing Sides
   m_TagString: Untagged
@@ -1662,17 +1661,6 @@ RectTransform:
   m_AnchoredPosition: {x: -1.44, y: 0}
   m_SizeDelta: {x: 1468.4, y: 548}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &577636591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 577636589}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9394cb25809e0d447bd597407c4531fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &577636592
 MonoBehaviour:
   m_ObjectHideFlags: 0

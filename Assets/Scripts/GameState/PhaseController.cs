@@ -32,16 +32,16 @@ public class PhaseController : MonoBehaviour
         FindObjectOfType<TimeCounter>().DecreaseTime();
     }
 
-    public void ChangeSidesTo(Team team)
+    public void ChangeSides()
     {
         FindObjectOfType<MovingUI>().StartMoving();
-        if (team == Team.A)
+        if (Possession.team == Team.A)
         {
-            FindObjectOfType<FieldGenerator>().GenerateField(0);
+            FindObjectOfType<FieldGenerator>().GenerateField(1);
         }
         else
         {
-            FindObjectOfType<FieldGenerator>().GenerateField(1);
+            FindObjectOfType<FieldGenerator>().GenerateField(0);
         }
     }
 }

@@ -16,13 +16,11 @@ public class Ball : MonoBehaviour
 
     Player pass_destination;
 
-    public float ball_speed;
+    float ball_speed = 0.2f;
     Vector3 ball_catch_visual_offset;
 
     void Start()
     {
-        hoop_location = GameObject.FindGameObjectWithTag("Basket").transform.position;
-
         ball_catch_visual_offset = transform.localPosition;
     }
 
@@ -32,6 +30,8 @@ public class Ball : MonoBehaviour
         rebound_next = false;
 
         shooting = true;
+
+        hoop_location = FindObjectOfType<Hoop>().transform.GetChild(0).transform.position;
         starting_distance_to_hoop = Vector2.Distance(transform.position, hoop_location);
     }
 
