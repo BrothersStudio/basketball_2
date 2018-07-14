@@ -34,7 +34,14 @@ public class CommandWindow : MonoBehaviour
         {
             attack_button.interactable = false;
 
-            attack_button.gameObject.GetComponentInChildren<Text>().text = "Push";
+            if (has_ball)
+            {
+                attack_button.gameObject.GetComponentInChildren<Text>().text = "Pass";
+            }
+            else
+            {
+                attack_button.gameObject.GetComponentInChildren<Text>().text = "Push";
+            }
         }
 
         Button move_button = transform.Find("Move Button").GetComponent<Button>();

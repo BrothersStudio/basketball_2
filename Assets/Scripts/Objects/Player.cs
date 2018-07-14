@@ -54,7 +54,8 @@ public class Player : MonoBehaviour
         Player[] players = FindObjectsOfType<Player>();
         foreach (Player player in players)
         {
-            if (player != this && player.team == this.team)
+            if (player != this && player.team == this.team &&
+                Utils.GetDistance(player.current_tile.position, current_tile.position) <= 3)
             {
                 player.current_tile.Highlight(this);
             }
