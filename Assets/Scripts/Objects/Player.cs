@@ -139,6 +139,18 @@ public class Player : MonoBehaviour
         current_tile.RemovePlayer();
         new_tile.SetPlayer(this);
         current_tile = new_tile;
+
+        CheckIfScored();
+    }
+
+    void CheckIfScored()
+    {
+        Hoop hoop = FindObjectOfType<Hoop>();
+        if (Utils.GetDistance(current_tile.position, hoop.current_tile.position) <= 1)
+        {
+            FindObjectOfType<ScoreCounter>();
+            Invoke("DelayChange", 0.5f);
+        }
     }
 
     public void SetInactive()
