@@ -5,12 +5,10 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public bool highlighted = false;
-    public Vector2 current_location;
+    public Vector2 position;
     Player standing_player;
 
     Player querying_player;
-
-    public bool has_ball;
 
     public void Highlight(Player querying_player)
     {
@@ -40,6 +38,10 @@ public class Tile : MonoBehaviour
             {
                 querying_player.Pass(standing_player);
             }
+            else if (querying_player.pushing)
+            {
+                querying_player.Push(standing_player);
+            }
         }
     }
 
@@ -62,21 +64,6 @@ public class Tile : MonoBehaviour
         else
         {
             return false;
-        }
-    }
-
-    public void SetBall()
-    {
-        if (HasPlayer())
-        {
-            Ball ball = FindObjectOfType<Ball>();
-
-            ball.transform.SetParent(standing_player.transform);
-            FindObjectOfType<Ball>().SetCaught();
-        }
-        else
-        {
-            has_ball = true;
         }
     }
 }

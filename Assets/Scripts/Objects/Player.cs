@@ -5,23 +5,14 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public bool passing = false;
+    public bool pushing = false;
     public bool moving = false;
 
     public bool took_attack = false;
     public bool took_move = false;
 
-    public bool used_juke = false;
-    int temp_speed = 0;
-
-    int temp_block = 0;
-    int temp_steal = 0;
-
     // Stats
-    int shoot_skill = 2;
-    int control_skill = 2;
-    int block_skill = 2;
-    int steal_skill = 2;
-    int move_skill = 3;
+    int move = 2;
 
     // Team Info
     public Team team;
@@ -30,100 +21,10 @@ public class Player : MonoBehaviour
     List<Tile> field_tiles = new List<Tile>();
 
     GameObject canvas;
-    HoverStatsWindow hover_stats;
-
-    #region Skills
-    public int Shoot_Skill
-    {
-        get
-        {
-            return shoot_skill;
-        }
-    }
-
-    public int Normal_Shoot_Skill
-    {
-        get
-        {
-            return shoot_skill;
-        }
-    }
-
-    public int Control_Skill
-    {
-        get
-        {
-            return control_skill;
-        }
-    }
-
-    public int Normal_Control_Skill
-    {
-        get
-        {
-            return control_skill;
-        }
-    }
-
-    public int Block_Skill
-    {
-        get
-        {
-            return block_skill + temp_block;
-        }
-    }
-
-    public int Normal_Block_Skill
-    {
-        get
-        {
-            return block_skill;
-        }
-    }
-
-    public int Steal_Skill
-    {
-        get
-        {
-            return steal_skill + temp_steal;
-        }
-    }
-
-    public int Normal_Steal_Skill
-    {
-        get
-        {
-            return steal_skill;
-        }
-    }
-
-    public int Move_Skill
-    {
-        get
-        {
-            int current_move_skill = move_skill + temp_speed;
-            if (Utils.ReturnAdjacentOpponent(this) != null)
-            {
-                current_move_skill--;
-            }
-            return current_move_skill;
-        }
-    }
-
-    public int Normal_Move_Skill
-    {
-        get
-        {
-            return move_skill;
-        }
-    }
-
-    #endregion
 
     void Start ()
     {
         canvas = GameObject.Find("Canvas");
-        hover_stats = canvas.transform.Find("Hover Stats Window").GetComponent<HoverStatsWindow>();
 
         current_tile.SetPlayer(this);
 
@@ -144,49 +45,6 @@ public class Player : MonoBehaviour
         {
             return false;
         }
-    }
-
-    public void CheckShoot()
-    {
-        int enemy_block = 0;
-        Player enemy = Utils.ReturnAdjacentOpponent(this);
-        if (enemy != null)
-        {
-            enemy_block = enemy.Block_Skill;
-        }
-
-        Hoop hoop = FindObjectOfType<Hoop>();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetShot(shoot_skill, enemy_block, Utils.GetDistance(current_tile.current_location, hoop.current_tile.current_location));
-    }
-
-    public void ShootAndScore()
-    {
-        ShootRebound();
-        Invoke("DelayChange", 1.5f);
-
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
-    }
-
-    public void ShootRebound()
-    {
-        Hoop hoop = FindObjectOfType<Hoop>();
-
-        Tile rebound_tile = null;
-        while (rebound_tile == null)
-        {
-            int x = (int)hoop.current_tile.current_location.x + Random.Range(-2, 2);
-            int y = (int)hoop.current_tile.current_location.y + Random.Range(-2, 2);
-            if (x == 0 && y == 0) continue;
-
-            Vector2 try_location = new Vector2(x, y);
-            rebound_tile = Utils.FindTileAtLocation(try_location);
-        }
-        GetComponentInChildren<Ball>().ShootRebound(rebound_tile);
-        transform.Find("Ball").SetParent(rebound_tile.transform, true);
-
-        took_attack = true;
-        CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
     public void CheckPass()
@@ -216,22 +74,36 @@ public class Player : MonoBehaviour
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
-    public void Block()
+    public void CheckPush()
     {
-        temp_block += 1;
+        pushing = true;
+
+        foreach (Player player in Utils.ReturnAdjacentOpponents(this))
+        {
+            player.current_tile.Highlight(this);
+        }
+    }
+
+    public void Push(Player other_player)
+    {
+        pushing = false;
+        Utils.DehighlightTiles();
+
+        Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
+        Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+        other_player.PushedTo(new_tile);
 
         took_attack = true;
         CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
-    public void Steal()
+    public void PushedTo(Tile new_tile)
     {
-        temp_steal += 1;
-
-        took_attack = true;
-        CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        if (new_tile != null)
+        {
+            MoveToTile(new_tile);
+        }
     }
 
     public void CheckMove()
@@ -240,7 +112,7 @@ public class Player : MonoBehaviour
 
         foreach(Tile tile in field_tiles)
         {
-            if (Utils.GetDistance(tile.current_location, current_tile.current_location) <= Move_Skill &&
+            if (Utils.GetDistance(tile.position, current_tile.position) <= move + (HasBall() ? 1 : 0) &&
                 !tile.HasPlayer())
             {
                 tile.Highlight(this);
@@ -253,60 +125,29 @@ public class Player : MonoBehaviour
         moving = false;
         Utils.DehighlightTiles();
 
+        MoveToTile(new_tile);
+
+        took_move = true;
+        CheckTurn();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
+    void MoveToTile(Tile new_tile)
+    {
         transform.SetParent(new_tile.transform, false);
 
         current_tile.RemovePlayer();
         new_tile.SetPlayer(this);
         current_tile = new_tile;
-
-        CheckForBall(new_tile);
-
-        took_move = true;
-        CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
 
-    public void CheckJuke()
+    public void SetInactive()
     {
-        int enemy_steal = 0;
+        passing = false;
+        pushing = false;
+        moving = false;
 
-        Player enemy = Utils.ReturnAdjacentOpponent(this);
-        if (enemy != null)
-        {
-            enemy_steal = enemy.Steal_Skill;
-        }
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetJuke(control_skill, enemy_steal);
-    }
-
-    public void SuccessfulJuke()
-    {
-        used_juke = true;
-        temp_speed = 2;
-        CheckMove();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
-    }
-
-    public void FailJuke()
-    {
-        took_move = true;
-        CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
-    }
-
-    void CheckForBall(Tile new_tile)
-    {
-        if (new_tile.has_ball)
-        {
-            Ball ball = FindObjectOfType<Ball>();
-
-            ball.transform.SetParent(transform);
-            FindObjectOfType<Ball>().SetCaught();
-
-            if (Possession.team != team)
-            {
-                Invoke("DelayChange", 0.5f);
-            }
-        }
+        Utils.DehighlightTiles();
     }
 
     void DelayChange()
@@ -343,11 +184,6 @@ public class Player : MonoBehaviour
     {
         took_attack = false;
         took_move = false;
-        used_juke = false;
-
-        temp_block = 0;
-        temp_steal = 0;
-        temp_speed = 0;
 
         if (team == Team.A)
         {
@@ -357,11 +193,6 @@ public class Player : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().color = Color.red;
         }
-    }
-
-    void OnMouseOver()
-    {
-        hover_stats.Populate(this);
     }
 
     void OnMouseDown()

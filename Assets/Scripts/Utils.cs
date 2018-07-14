@@ -9,19 +9,20 @@ public static class Utils
         return (int)(Mathf.Abs(location_1.x - location_2.x) + Mathf.Abs(location_1.y - location_2.y));
     }
 
-    public static Player ReturnAdjacentOpponent(Player input_player)
+    public static List<Player> ReturnAdjacentOpponents(Player input_player)
     {
+        List<Player> adjacent_players = new List<Player>();
         foreach (Player player in GameObject.FindObjectsOfType<Player>())
         {
             if (player.team != input_player.team)
             {
-                if (GetDistance(player.current_tile.current_location, input_player.current_tile.current_location) == 1)
+                if (GetDistance(player.current_tile.position, input_player.current_tile.position) == 1)
                 {
-                    return player;
+                    adjacent_players.Add(player);
                 }
             }
         }
-        return null;
+        return adjacent_players;
     }
 
     public static Tile FindTileAtLocation(Vector2 location)
@@ -29,60 +30,12 @@ public static class Utils
         Tile[] all_tiles = GameObject.FindObjectsOfType<Tile>();
         foreach (Tile tile in all_tiles)
         {
-            if (tile.current_location == location)
+            if (tile.position == location)
             {
                 return tile;
             }
         }
         return null;
-    }
-
-    public static float GetShotChanceAtDistance(int distance)
-    {
-        if (distance <= 1)
-        {
-            return 65f;
-        }
-        else if (distance <= 2)
-        {
-            return 50f;
-        }
-        else if (distance <= 3)
-        {
-            return 45f;
-        }
-        else if (distance <= 4)
-        {
-            return 40f;
-        }
-        else if (distance <= 5)
-        {
-            return 35f;
-        }
-        else if (distance <= 6)
-        {
-            return 30f;
-        }
-        else if (distance <= 7)
-        {
-            return 25f;
-        }
-        else if (distance <= 8)
-        {
-            return 20f;
-        }
-        else if (distance <= 9)
-        {
-            return 15f;
-        }
-        else if (distance <= 10)
-        {
-            return 10f;
-        }
-        else
-        {
-            return 5f;
-        }
     }
 
     public static bool TeamIsDoneTurn(Team team)

@@ -109,7 +109,7 @@ public class FieldGenerator : MonoBehaviour
 
                 new_tile.transform.SetPositionAndRotation(new Vector3(j * -1.06f + i * -1.04f, j * -0.36f + i * 0.36f, j * -0.01f + i * 1f), Quaternion.identity);
                 new_tile.name = "Tile " + i.ToString() + "," + j.ToString();
-                new_tile.GetComponent<Tile>().current_location = new Vector2(i, j);
+                new_tile.GetComponent<Tile>().position = new Vector2(i, j);
 
                 all_objects.Add(new_tile);
 
