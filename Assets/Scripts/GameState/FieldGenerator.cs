@@ -166,6 +166,11 @@ public class FieldGenerator : MonoBehaviour
                 }
             }
         }        
+
+        foreach (Tile tile in FindObjectsOfType<Tile>())
+        {
+            tile.SetAdjacency();
+        }
     }
 
     void RemoveOldObjects()

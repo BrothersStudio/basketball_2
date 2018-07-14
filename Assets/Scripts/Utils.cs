@@ -12,11 +12,12 @@ public static class Utils
     public static List<Player> ReturnAdjacentOpponents(Player input_player)
     {
         List<Player> adjacent_players = new List<Player>();
-        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        foreach (Tile tile in input_player.current_tile.adjacent_tiles)
         {
-            if (player.team != input_player.team)
+            Player player = tile.GetPlayer();
+            if (player != null)
             {
-                if (GetDistance(player.current_tile.position, input_player.current_tile.position) == 1)
+                if (player.team != input_player.team)
                 {
                     adjacent_players.Add(player);
                 }
