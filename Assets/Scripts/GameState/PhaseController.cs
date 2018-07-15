@@ -6,6 +6,8 @@ public class PhaseController : MonoBehaviour
 {
     Phase current_phase;
 
+    public bool AiOn;
+
     void Start()
     {
         current_phase = Phase.TeamAAct;
@@ -22,6 +24,10 @@ public class PhaseController : MonoBehaviour
         {
             current_phase = Phase.TeamBAct;
             FindObjectOfType<TurnText>().StartMoving("B");
+            if (AiOn)
+            {
+                GetComponent<AIController>().StartAITurn();
+            }
         }
         else if (current_phase == Phase.TeamBAct)
         {

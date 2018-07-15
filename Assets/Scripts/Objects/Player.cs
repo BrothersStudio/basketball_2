@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     public Team team;
 
     public Tile current_tile;
+    public List<Tile> highlighted_tiles = new List<Tile>();
 
     GameObject canvas;
 
@@ -51,6 +52,7 @@ public class Player : MonoBehaviour
                 Utils.GetDistance(player.current_tile.position, current_tile.position) <= 3)
             {
                 player.current_tile.Highlight(this);
+                highlighted_tiles.Add(player.current_tile);
             }
         }
     }
@@ -58,14 +60,12 @@ public class Player : MonoBehaviour
     public void Pass(Player pass_player)
     {
         passing = false;
-        Utils.DehighlightTiles();
 
         GetComponentInChildren<Ball>().Pass(pass_player);
         transform.Find("Ball").SetParent(pass_player.transform, true);
 
         took_attack = true;
-        CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        EndAction();
     }
 
     public void CheckPush()
@@ -82,6 +82,7 @@ public class Player : MonoBehaviour
                 if (!new_tile.HasPlayer())
                 {
                     player.current_tile.Highlight(this);
+                    highlighted_tiles.Add(player.current_tile);
                 }
             }
         }
@@ -90,15 +91,13 @@ public class Player : MonoBehaviour
     public void Push(Player other_player)
     {
         pushing = false;
-        Utils.DehighlightTiles();
 
         Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
         Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
         other_player.PushedTo(new_tile);
 
         took_attack = true;
-        CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        EndAction();
     }
 
     public void PushedTo(Tile new_tile)
@@ -142,6 +141,7 @@ public class Player : MonoBehaviour
             if (!tile.HasPlayer())
             {
                 tile.Highlight(this);
+                highlighted_tiles.Add(tile);
             }
         }
     }
@@ -149,13 +149,11 @@ public class Player : MonoBehaviour
     public void Move(Tile new_tile)
     {
         moving = false;
-        Utils.DehighlightTiles();
 
         MoveToTile(new_tile);
 
         took_move = true;
-        CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        EndAction();
     }
 
     void MoveToTile(Tile new_tile)
@@ -179,12 +177,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    void EndAction()
+    {
+        SetInactive();
+        CheckTurn();
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+    }
+
     public void SetInactive()
     {
         passing = false;
         pushing = false;
         moving = false;
 
+        highlighted_tiles.Clear();
         Utils.DehighlightTiles();
     }
 
@@ -239,7 +245,7 @@ public class Player : MonoBehaviour
         {
             current_tile.OnMouseDown();
         }
-        else if (!(took_move && took_attack))
+        else if (!(took_move && took_attack) && (team != Team.B))
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
         }
