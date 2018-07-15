@@ -61,7 +61,10 @@ public class CommandWindow : MonoBehaviour
 
     public void Cancel()
     {
-        selected_player.SetInactive();
+        if (selected_player != null)
+        {
+            selected_player.SetInactive();
+        }
         selected_player = null;
         
         gameObject.SetActive(false);

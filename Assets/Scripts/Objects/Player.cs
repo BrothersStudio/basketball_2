@@ -18,7 +18,6 @@ public class Player : MonoBehaviour
     public Team team;
 
     public Tile current_tile;
-    List<Tile> field_tiles = new List<Tile>();
 
     GameObject canvas;
 
@@ -27,12 +26,6 @@ public class Player : MonoBehaviour
         canvas = GameObject.Find("Canvas");
 
         current_tile.SetPlayer(this);
-
-        Tile[] tile_array = FindObjectsOfType<Tile>();
-        foreach (Tile tile in tile_array)
-        {
-            field_tiles.Add(tile);
-        }
 	}
 
     public bool HasBall()
@@ -111,10 +104,33 @@ public class Player : MonoBehaviour
     {
         moving = true;
 
-        foreach(Tile tile in field_tiles)
+        HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
+        tiles_to_walk.Add(current_tile);
+
+        int distance_to_walk = move + (HasBall() ? 1 : 0);
+        for (int i = 0; i < distance_to_walk; i++)
         {
-            if (Utils.GetDistance(tile.position, current_tile.position) <= move + (HasBall() ? 1 : 0) &&
-                !tile.HasPlayer())
+            Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
+            tiles_to_walk.CopyTo(current_walk_tiles);
+            foreach (Tile tile in current_walk_tiles)
+            {
+                foreach (Tile adjacent_tile in tile.adjacent_tiles)
+                {
+                    if (adjacent_tile.HasPlayer())
+                    {
+                        if (adjacent_tile.GetPlayer().team != this.team)
+                        {
+                            continue;
+                        }
+                    }
+                    tiles_to_walk.Add(adjacent_tile);
+                }
+            }
+        }
+
+        foreach (Tile tile in tiles_to_walk)
+        {
+            if (!tile.HasPlayer())
             {
                 tile.Highlight(this);
             }
