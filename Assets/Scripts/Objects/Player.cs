@@ -43,43 +43,15 @@ public class Player : MonoBehaviour
 
     public void CheckPass()
     {
-        passing = true;
-
-        Player[] players = FindObjectsOfType<Player>();
-        foreach (Player player in players)
+        if (!took_attack && !passing)
         {
-            if (player != this && player.team == this.team &&
-                Utils.GetDistance(player.current_tile.position, current_tile.position) <= 3)
+            passing = true;
+
+            Player[] players = FindObjectsOfType<Player>();
+            foreach (Player player in players)
             {
-                player.current_tile.Highlight(this);
-                highlighted_tiles.Add(player.current_tile);
-            }
-        }
-    }
-
-    public void Pass(Player pass_player)
-    {
-        passing = false;
-
-        GetComponentInChildren<Ball>().Pass(pass_player);
-        transform.Find("Ball").SetParent(pass_player.transform, true);
-
-        took_attack = true;
-        EndAction();
-    }
-
-    public void CheckPush()
-    {
-        pushing = true;
-
-        foreach (Player player in Utils.ReturnAdjacentOpponents(this))
-        {
-            // Don't light up tiles when there's a person on the push destination tile, making the push impossible
-            Vector2 new_tile_coordinate = (player.current_tile.position - current_tile.position) + player.current_tile.position;
-            Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
-            if (new_tile != null)
-            {
-                if (!new_tile.HasPlayer())
+                if (player != this && player.team == this.team &&
+                    Utils.GetDistance(player.current_tile.position, current_tile.position) <= 3)
                 {
                     player.current_tile.Highlight(this);
                     highlighted_tiles.Add(player.current_tile);
@@ -88,16 +60,69 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Pass(Player pass_player)
+    {
+        if (!took_attack)
+        {
+            passing = false;
+
+            GetComponentInChildren<Ball>().Pass(pass_player);
+            transform.Find("Ball").SetParent(pass_player.transform, true);
+
+            took_attack = true;
+            EndAction();
+        }
+    }
+
+    public bool CheckPush()
+    {
+        if (!took_attack && !pushing)
+        {
+            pushing = true;
+
+            foreach (Player player in Utils.ReturnAdjacentOpponents(this))
+            {
+                // Don't light up tiles when there's a person on the push destination tile, making the push impossible
+                Vector2 new_tile_coordinate = (player.current_tile.position - current_tile.position) + player.current_tile.position;
+                Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+                if (new_tile != null)
+                {
+                    if (!new_tile.HasPlayer())
+                    {
+                        player.current_tile.Highlight(this);
+                        highlighted_tiles.Add(player.current_tile);
+                    }
+                }
+            }
+
+            if (highlighted_tiles.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void Push(Player other_player)
     {
-        pushing = false;
+        if (!took_attack)
+        {
+            pushing = false;
 
-        Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
-        Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
-        other_player.PushedTo(new_tile);
+            Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
+            Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+            other_player.PushedTo(new_tile);
 
-        took_attack = true;
-        EndAction();
+            took_attack = true;
+            EndAction();
+        }
     }
 
     public void PushedTo(Tile new_tile)
@@ -110,50 +135,60 @@ public class Player : MonoBehaviour
 
     public void CheckMove()
     {
-        moving = true;
-
-        HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
-        tiles_to_walk.Add(current_tile);
-
-        int distance_to_walk = move + (HasBall() ? 1 : 0);
-        for (int i = 0; i < distance_to_walk; i++)
+        if (!took_move && !moving)
         {
-            Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
-            tiles_to_walk.CopyTo(current_walk_tiles);
-            foreach (Tile tile in current_walk_tiles)
+            moving = true;
+
+            HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
+            tiles_to_walk.Add(current_tile);
+
+            int distance_to_walk = move + (HasBall() ? 1 : 0);
+            for (int i = 0; i < distance_to_walk; i++)
             {
-                foreach (Tile adjacent_tile in tile.adjacent_tiles)
+                Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
+                tiles_to_walk.CopyTo(current_walk_tiles);
+                foreach (Tile tile in current_walk_tiles)
                 {
-                    if (adjacent_tile.HasPlayer())
+                    foreach (Tile adjacent_tile in tile.adjacent_tiles)
                     {
-                        if (adjacent_tile.GetPlayer().team != this.team)
+                        if (adjacent_tile.HasPlayer())
                         {
-                            continue;
+                            if (adjacent_tile.GetPlayer().team != this.team)
+                            {
+                                continue;
+                            }
                         }
+                        tiles_to_walk.Add(adjacent_tile);
                     }
-                    tiles_to_walk.Add(adjacent_tile);
                 }
             }
-        }
 
-        foreach (Tile tile in tiles_to_walk)
-        {
-            if (!tile.HasPlayer())
+            foreach (Tile tile in tiles_to_walk)
             {
-                tile.Highlight(this);
-                highlighted_tiles.Add(tile);
+                if (!tile.HasPlayer())
+                {
+                    tile.Highlight(this);
+                    highlighted_tiles.Add(tile);
+                }
             }
+
+            // This makes AI stuff a little easier later..
+            current_tile.Highlight(this);
+            highlighted_tiles.Add(current_tile);
         }
     }
 
     public void Move(Tile new_tile)
     {
-        moving = false;
+        if (!took_move)
+        {
+            moving = false;
 
-        MoveToTile(new_tile);
+            MoveToTile(new_tile);
 
-        took_move = true;
-        EndAction();
+            took_move = true;
+            EndAction();
+        }
     }
 
     void MoveToTile(Tile new_tile)

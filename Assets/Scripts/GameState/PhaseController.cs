@@ -5,12 +5,16 @@ using UnityEngine;
 public class PhaseController : MonoBehaviour
 {
     Phase current_phase;
+    FieldGenerator field_generator;
 
     public bool AiOn;
 
-    void Start()
+    void Awake()
     {
         current_phase = Phase.TeamAAct;
+
+        field_generator = FindObjectOfType<FieldGenerator>();
+        field_generator.GenerateField(0);
     }
 
     public void ChangePhase()
@@ -43,11 +47,11 @@ public class PhaseController : MonoBehaviour
         FindObjectOfType<MovingUI>().StartMoving();
         if (Possession.team == Team.A)
         {
-            FindObjectOfType<FieldGenerator>().GenerateField(1);
+            field_generator.GenerateField(1);
         }
         else
         {
-            FindObjectOfType<FieldGenerator>().GenerateField(0);
+            field_generator.GenerateField(0);
         }
     }
 }

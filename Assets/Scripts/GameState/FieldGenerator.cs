@@ -34,12 +34,6 @@ public class FieldGenerator : MonoBehaviour
     int B_field_hoop_column = 0;
 
 
-    void Awake ()
-    {
-        // TODO: Some kind of coin flip or layup to determine initial possession?
-        GenerateField(0);
-	}
-
     public void GenerateField(int setup)
     {
         RemoveOldObjects();

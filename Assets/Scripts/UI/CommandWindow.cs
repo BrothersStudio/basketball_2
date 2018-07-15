@@ -26,7 +26,7 @@ public class CommandWindow : MonoBehaviour
         {
             attack_button.interactable = true;
             attack_button.onClick.RemoveAllListeners();
-            attack_button.onClick.AddListener(selected_player.CheckPush);
+            attack_button.onClick.AddListener(delegate { selected_player.CheckPush(); });
 
             attack_button.gameObject.GetComponentInChildren<Text>().text = "Push";
         }
@@ -61,7 +61,12 @@ public class CommandWindow : MonoBehaviour
 
     public void Cancel()
     {
-        selected_player = null;
+        if (selected_player != null)
+        {
+            selected_player.SetInactive();
+            selected_player = null;
+        }
+
         gameObject.SetActive(false);
     }
 }
