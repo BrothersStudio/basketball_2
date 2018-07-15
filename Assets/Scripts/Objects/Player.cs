@@ -74,7 +74,16 @@ public class Player : MonoBehaviour
 
         foreach (Player player in Utils.ReturnAdjacentOpponents(this))
         {
-            player.current_tile.Highlight(this);
+            // Don't light up tiles when there's a person on the push destination tile, making the push impossible
+            Vector2 new_tile_coordinate = (player.current_tile.position - current_tile.position) + player.current_tile.position;
+            Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+            if (new_tile != null)
+            {
+                if (!new_tile.HasPlayer())
+                {
+                    player.current_tile.Highlight(this);
+                }
+            }
         }
     }
 
