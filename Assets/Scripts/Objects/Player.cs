@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public bool took_attack = false;
     public bool took_move = false;
 
+    public bool ai_pass_check = false;
+
     // Stats
     int move = 2;
 
@@ -133,7 +135,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void CheckMove()
+    public void CheckMove(bool checking = false)
     {
         if (!took_move && !moving)
         {
@@ -142,7 +144,7 @@ public class Player : MonoBehaviour
             HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
             tiles_to_walk.Add(current_tile);
 
-            int distance_to_walk = move + (HasBall() ? 1 : 0);
+            int distance_to_walk = move + (HasBall() || checking ? 1 : 0);
             for (int i = 0; i < distance_to_walk; i++)
             {
                 Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
@@ -280,7 +282,8 @@ public class Player : MonoBehaviour
         {
             current_tile.OnMouseDown();
         }
-        else if (!(took_move && took_attack) && (team != Team.B))
+        //else if (!(took_move && took_attack) && (team != Team.B) && !AITurn.active)
+        else if (!(took_move && took_attack))
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
         }

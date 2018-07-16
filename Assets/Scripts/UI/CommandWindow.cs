@@ -49,7 +49,7 @@ public class CommandWindow : MonoBehaviour
         {
             move_button.interactable = true;
             move_button.onClick.RemoveAllListeners();
-            move_button.onClick.AddListener(selected_player.CheckMove);
+            move_button.onClick.AddListener(delegate { selected_player.CheckMove(); });
         }
         else
         {

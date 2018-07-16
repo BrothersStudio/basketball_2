@@ -119,6 +119,7 @@ public class FieldGenerator : MonoBehaviour
                     if (i == offensive_player_rows[n] && j == offensive_player_columns[n])
                     {
                         GameObject new_player = Instantiate(player_prefab, new_tile.transform);
+                        new_player.name = "Offender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
                         new_player.GetComponent<Player>().team = offensive_team;
                         all_objects.Add(new_player);
@@ -146,6 +147,7 @@ public class FieldGenerator : MonoBehaviour
                     if (i == defensive_player_rows[n] && j == defensive_player_columns[n])
                     {
                         GameObject new_player = Instantiate(player_prefab, new_tile.transform);
+                        new_player.name = "Defender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
                         new_player.GetComponent<Player>().team = defensive_team;
                         Destroy(new_player.transform.GetChild(0).gameObject);  // Remove ball

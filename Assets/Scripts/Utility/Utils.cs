@@ -59,4 +59,12 @@ public static class Utils
             tile.Dehighlight();
         }
     }
+
+    public static void ResetPassChecks()
+    {
+        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        {
+            player.ai_pass_check = false;
+        }
+    }
 }

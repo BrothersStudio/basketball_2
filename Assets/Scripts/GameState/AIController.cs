@@ -4,53 +4,176 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
+    List<Player> ai_players = new List<Player>();
+
     public void StartAITurn()
     {
-        StartCoroutine("PerformTurn");
+        AITurn.active = true;
+
+        if (ai_players.Count == 0)
+        {
+            foreach (Player player in FindObjectsOfType<Player>())
+            {
+                if (player.team == Team.B)
+                {
+                    ai_players.Add(player);
+                }
+            }
+        }
+
+        if (Possession.team == Team.A)
+        {
+            StartCoroutine("Defend");
+        }
+        else
+        {
+            StartCoroutine("Attack");
+        }
     }
 
-    IEnumerator PerformTurn()
+    IEnumerator Defend()
     {
-        foreach (Player player in FindObjectsOfType<Player>())
+        foreach (Player player in ai_players)
         {
-            if (player.team == Team.B)
+            // Todo: Some kind of logic for if we start our turn next to an enemy?
+
+            // Moving
+            player.CheckMove();
+            yield return new WaitForSeconds(1f);
+            FindClosestHighlightedTileTo(player, FindClosestEnemyTo(player).current_tile).OnMouseDown();
+
+            yield return new WaitForSeconds(0.5f);
+
+            // Pushing
+            player.CheckPush();
+            yield return new WaitForSeconds(1f);
+            bool pushed = false;
+
+            // Push ball carrier if you have the option
+            foreach (Tile tile in player.highlighted_tiles)
             {
-                // Moving
-                player.CheckMove();
-                yield return new WaitForSeconds(1f);
-                FindClosestHighlightedTileTo(player, FindClosestEnemyTo(player)).OnMouseDown();
-
-                yield return new WaitForSeconds(0.5f);
-
-                // Pushing
-                player.CheckPush();
-                yield return new WaitForSeconds(1f);
-                bool pushed = false;
-
-                // Push ball carrier if you have the option
-                foreach (Tile tile in player.highlighted_tiles)
+                if (tile.HasPlayer())
                 {
-                    if (tile.HasPlayer())
+                    if (tile.GetPlayer().HasBall())
                     {
-                        if (tile.GetPlayer().HasBall())
-                        {
-                            tile.OnMouseDown();
-                            pushed = true;
-                            break;
-                        }
+                        tile.OnMouseDown();
+                        pushed = true;
+                        break;
                     }
                 }
+            }
 
-                // If no ball carrier, push a random guy I guess
-                if (!pushed && player.highlighted_tiles.Count != 0)
-                {
-                    player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].OnMouseDown();
-                    pushed = true;
-                }
+            // If no ball carrier, push a random guy I guess
+            if (!pushed && player.highlighted_tiles.Count != 0)
+            {
+                player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].OnMouseDown();
+                pushed = true;
             }
         }
         GetComponent<PhaseController>().ChangePhase();
         yield return new WaitForSeconds(0.5f);
+        AITurn.active = false;
+    }
+
+    IEnumerator Attack()
+    {
+        // First let's see if any player is in range of the goal
+        List<Player> in_score_range = new List<Player>();
+        foreach (Player player in ai_players)
+        {
+            if (CanReachNet(player))
+            {
+                Debug.Log(player.name + " can reach the net");
+                in_score_range.Add(player);
+            }
+        }
+
+        // Does that player have the ball? If so just score
+        foreach (Player player in in_score_range)
+        {
+            if (player.HasBall())
+            {
+                player.CheckMove();
+                yield return new WaitForSeconds(1f);
+                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                yield return new WaitForSeconds(0.5f);
+                AITurn.active = false;
+                yield break;
+            }
+        }
+
+        // If those player don't have the ball, can we get the ball to those players?
+        foreach (Player player in in_score_range)
+        {
+            player.ai_pass_check = true;
+            yield return StartCoroutine(GiveHimTheBall(player));
+            if (player.HasBall())
+            {
+                player.CheckMove();
+                yield return new WaitForSeconds(1f);
+                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                yield return new WaitForSeconds(0.5f);
+                AITurn.active = false;
+                yield break;
+            }
+        }
+
+        GetComponent<PhaseController>().ChangePhase();
+        yield return new WaitForSeconds(0.5f);
+        AITurn.active = false;
+    }
+
+    IEnumerator GiveHimTheBall(Player target_player)
+    {
+        Debug.Log("Trying to get the ball to " + target_player.name);
+        foreach (Player player in ai_players)
+        {
+            if (player == target_player || player.ai_pass_check || player.took_attack) continue;
+
+            Debug.Log("Checking " + player.name);
+
+            player.CheckMove(true);
+            Tile closest_tile = FindClosestHighlightedTileTo(player, target_player.current_tile);
+            if (Utils.GetDistance(closest_tile.position, target_player.current_tile.position) <= 3)
+            {
+                player.ai_pass_check = true;
+
+                if (player.HasBall())
+                {
+                    player.SetInactive();
+                    player.CheckMove(true);
+                    closest_tile = FindClosestHighlightedTileTo(player, target_player.current_tile);
+                    yield return new WaitForSeconds(1f);
+                    closest_tile.OnMouseDown();
+                    player.CheckPass();
+                    yield return new WaitForSeconds(0.5f);
+                    player.Pass(target_player);
+                    yield return new WaitForSeconds(0.5f);
+                    Utils.ResetPassChecks();
+                    yield break;
+                }
+                else
+                {
+                    player.SetInactive();
+                    yield return StartCoroutine(GiveHimTheBall(player));
+                    if (player.HasBall())
+                    {
+                        player.CheckMove();
+                        closest_tile = FindClosestHighlightedTileTo(player, target_player.current_tile);
+                        yield return new WaitForSeconds(1f);
+                        closest_tile.OnMouseDown();
+                        player.CheckPass();
+                        yield return new WaitForSeconds(0.5f);
+                        player.Pass(target_player);
+                        yield return new WaitForSeconds(0.5f);
+                        Utils.ResetPassChecks();
+                        yield break;
+                    }
+                }
+            }
+            player.SetInactive();
+        }
+        Utils.ResetPassChecks();
     }
 
     Player FindClosestEnemyTo(Player searching_player)
@@ -75,14 +198,14 @@ public class AIController : MonoBehaviour
         return min_player;
     }
 
-    Tile FindClosestHighlightedTileTo(Player moving_player, Player target_player)
+    Tile FindClosestHighlightedTileTo(Player moving_player, Tile target_tile)
     {
         List<Tile> min_tiles = new List<Tile>();
         int min_dist = 100;
 
         foreach (Tile highlighted_tile in moving_player.highlighted_tiles)
         {
-            int check_dist = Utils.GetDistance(target_player.current_tile.position, highlighted_tile.position);
+            int check_dist = Utils.GetDistance(target_tile.position, highlighted_tile.position);
             if (check_dist < min_dist)
             {
                 min_tiles.Clear();
@@ -118,5 +241,21 @@ public class AIController : MonoBehaviour
         }
 
         return selected_tile;
+    }
+
+    bool CanReachNet(Player player)
+    {
+        player.CheckMove();
+        Vector2 hoop_location = FindObjectOfType<Hoop>().current_tile.position;
+        foreach (Tile tile in player.highlighted_tiles)
+        {
+            if (Utils.GetDistance(tile.position, hoop_location) <= 1)
+            {
+                player.SetInactive();
+                return true;
+            }
+        }
+        player.SetInactive();
+        return false;
     }
 }
