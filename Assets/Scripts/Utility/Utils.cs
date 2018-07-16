@@ -9,6 +9,40 @@ public static class Utils
         return (int)(Mathf.Abs(location_1.x - location_2.x) + Mathf.Abs(location_1.y - location_2.y));
     }
 
+    public static int GetDistanceFromAToBForTeam(Tile tile_1, Tile tile_2, Team team)
+    {
+        HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
+        tiles_to_walk.Add(tile_1);
+
+        int counter = 0;
+        while (true)
+        {
+            counter++;
+
+            Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
+            tiles_to_walk.CopyTo(current_walk_tiles);
+            foreach (Tile tile in current_walk_tiles)
+            {
+                foreach (Tile adjacent_tile in tile.adjacent_tiles)
+                {
+                    if (adjacent_tile.HasPlayer())
+                    {
+                        if (adjacent_tile.GetPlayer().team != team)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (adjacent_tile == tile_2)
+                    {
+                        return counter;
+                    }
+                    tiles_to_walk.Add(adjacent_tile);
+                }
+            }
+        }
+    }
+
     public static List<Player> ReturnAdjacentOpponents(Player input_player)
     {
         List<Player> adjacent_players = new List<Player>();

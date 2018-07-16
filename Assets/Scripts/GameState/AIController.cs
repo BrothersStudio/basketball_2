@@ -27,6 +27,7 @@ public class AIController : MonoBehaviour
         }
         else
         {
+            SortAIPlayers();
             StartCoroutine("Attack");
         }
     }
@@ -118,6 +119,33 @@ public class AIController : MonoBehaviour
             }
         }
 
+        // Okay, I can't win let's move towards the goal using the ball to boost movement
+        foreach (Player player in ai_players)
+        {
+            player.CheckMove();
+            yield return new WaitForSeconds(1f);
+            FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+            yield return new WaitForSeconds(0.5f);
+
+            // Can we pass it to anyone who hasn't moved?
+            if (player.HasBall())
+            {
+                player.CheckPass();
+                foreach (Tile tile in player.highlighted_tiles)
+                {
+                    if (tile.HasPlayer())
+                    {
+                        if (!tile.GetPlayer().took_move)
+                        {
+                            yield return new WaitForSeconds(0.5f);
+                            tile.OnMouseDown();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         GetComponent<PhaseController>().ChangePhase();
         yield return new WaitForSeconds(0.5f);
         AITurn.active = false;
@@ -126,7 +154,6 @@ public class AIController : MonoBehaviour
     IEnumerator GiveHimTheBall(Player target_player)
     {
         Debug.Log("Trying to get the ball to " + target_player.name);
-        // sort ai_players: start with person with ball and move backwards (maybe reorder this whenever the ball moves dunno)
         foreach (Player player in ai_players)
         {
             if (player == target_player || player.ai_pass_check || player.took_attack) continue;
@@ -228,7 +255,7 @@ public class AIController : MonoBehaviour
             min_dist = 100;
             foreach (Tile tile in min_tiles)
             {
-                int check_dist = Utils.GetDistance(tile.position, hoop_tile.position);
+                int check_dist = Utils.GetDistanceFromAToBForTeam(tile, hoop_tile, Team.B);
                 if (check_dist < min_dist)
                 {
                     min_dist = check_dist;
@@ -254,5 +281,36 @@ public class AIController : MonoBehaviour
         }
         player.SetInactive();
         return false;
+    }
+
+    void SortAIPlayers()
+    {
+        Player ball_carrier = null;
+        foreach (Player player in ai_players)
+        {
+            if (player.HasBall())
+            {
+                ball_carrier = player;
+                break;
+            }
+        }
+        ai_players.Remove(ball_carrier);
+
+        // Sort
+        Player temp = null;
+        for (int write = 0; write < ai_players.Count; write++)
+        {
+            for (int sort = 0; sort < ai_players.Count - 1; sort++)
+            {
+                if (Utils.GetDistance(ai_players[sort].current_tile.position, ball_carrier.current_tile.position) >
+                    Utils.GetDistance(ai_players[sort + 1].current_tile.position, ball_carrier.current_tile.position))
+                {
+                    temp = ai_players[sort + 1];
+                    ai_players[sort + 1] = ai_players[sort];
+                    ai_players[sort] = temp;
+                }
+            }
+        }
+        ai_players.Insert(0, ball_carrier);
     }
 }
