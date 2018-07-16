@@ -149,7 +149,7 @@ public class AIController : MonoBehaviour
                     yield return new WaitForSeconds(0.5f);
                     player.Pass(target_player);
                     yield return new WaitForSeconds(0.5f);
-                    Utils.ResetPassChecks();
+                    //Utils.ResetPassChecks();
                     yield break;
                 }
                 else
@@ -166,7 +166,7 @@ public class AIController : MonoBehaviour
                         yield return new WaitForSeconds(0.5f);
                         player.Pass(target_player);
                         yield return new WaitForSeconds(0.5f);
-                        Utils.ResetPassChecks();
+                        //Utils.ResetPassChecks();
                         yield break;
                     }
                 }
