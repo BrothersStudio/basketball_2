@@ -126,6 +126,7 @@ public class AIController : MonoBehaviour
     IEnumerator GiveHimTheBall(Player target_player)
     {
         Debug.Log("Trying to get the ball to " + target_player.name);
+        // sort ai_players: start with person with ball and move backwards (maybe reorder this whenever the ball moves dunno)
         foreach (Player player in ai_players)
         {
             if (player == target_player || player.ai_pass_check || player.took_attack) continue;

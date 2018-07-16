@@ -52,6 +52,8 @@ public class FieldGenerator : MonoBehaviour
         int set_rows;
         int set_columns;
 
+        int gave_ball_ind;
+
         if (setup == 0)
         {
             offensive_player_rows = offensive_A_player_rows;
@@ -68,6 +70,8 @@ public class FieldGenerator : MonoBehaviour
 
             offensive_team = Team.A;
             defensive_team = Team.B;
+
+            gave_ball_ind = 1;
 
             Camera.main.transform.position = new Vector3(-8.41f, 0.33f, -10f);
         }
@@ -87,6 +91,8 @@ public class FieldGenerator : MonoBehaviour
 
             offensive_team = Team.B;
             defensive_team = Team.A;
+
+            gave_ball_ind = 0;
 
             Camera.main.transform.position = new Vector3(-8.41f, 1.21f, -10f);
         }
@@ -128,7 +134,7 @@ public class FieldGenerator : MonoBehaviour
                             new_player.GetComponent<SpriteRenderer>().color = Color.red;
                         }
 
-                        if (!gave_ball)
+                        if (!gave_ball && n == gave_ball_ind)
                         {
                             gave_ball = true;
 
