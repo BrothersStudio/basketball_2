@@ -137,36 +137,19 @@ public class AIController : MonoBehaviour
             if (Utils.GetDistance(closest_tile.position, target_player.current_tile.position) <= 3)
             {
                 player.ai_pass_check = true;
+                player.SetInactive();
 
                 if (player.HasBall())
                 {
-                    player.SetInactive();
-                    player.CheckMove(true);
-                    closest_tile = FindClosestHighlightedTileTo(player, target_player.current_tile);
-                    yield return new WaitForSeconds(1f);
-                    closest_tile.OnMouseDown();
-                    player.CheckPass();
-                    yield return new WaitForSeconds(0.5f);
-                    player.Pass(target_player);
-                    yield return new WaitForSeconds(0.5f);
-                    //Utils.ResetPassChecks();
+                    yield return StartCoroutine(PassTo(player, target_player));
                     yield break;
                 }
                 else
                 {
-                    player.SetInactive();
                     yield return StartCoroutine(GiveHimTheBall(player));
                     if (player.HasBall())
                     {
-                        player.CheckMove();
-                        closest_tile = FindClosestHighlightedTileTo(player, target_player.current_tile);
-                        yield return new WaitForSeconds(1f);
-                        closest_tile.OnMouseDown();
-                        player.CheckPass();
-                        yield return new WaitForSeconds(0.5f);
-                        player.Pass(target_player);
-                        yield return new WaitForSeconds(0.5f);
-                        //Utils.ResetPassChecks();
+                        yield return StartCoroutine(PassTo(player, target_player));
                         yield break;
                     }
                 }
@@ -174,6 +157,19 @@ public class AIController : MonoBehaviour
             player.SetInactive();
         }
         Utils.ResetPassChecks();
+    }
+
+    IEnumerator PassTo(Player origin, Player target)
+    {
+        origin.CheckMove();
+        Tile closest_tile = FindClosestHighlightedTileTo(origin, target.current_tile);
+        yield return new WaitForSeconds(1f);
+        closest_tile.OnMouseDown();
+        origin.CheckPass();
+        yield return new WaitForSeconds(0.5f);
+        origin.Pass(target);
+        yield return new WaitForSeconds(0.5f);
+        //Utils.ResetPassChecks();
     }
 
     Player FindClosestEnemyTo(Player searching_player)
