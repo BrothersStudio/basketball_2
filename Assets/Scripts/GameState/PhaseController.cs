@@ -32,6 +32,7 @@ public class PhaseController : MonoBehaviour
     {
         foreach (Player player in FindObjectsOfType<Player>())
         {
+            player.SetInactive();
             player.RefreshTurn();
         }
 
@@ -46,6 +47,8 @@ public class PhaseController : MonoBehaviour
         }
         else if (current_phase == Phase.TeamBAct)
         {
+            GetComponent<AIController>().StopAllCoroutines();
+
             current_phase = Phase.TeamAAct;
             FindObjectOfType<TurnText>().StartMoving("A");
         }
