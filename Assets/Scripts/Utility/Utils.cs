@@ -25,6 +25,11 @@ public static class Utils
             {
                 foreach (Tile adjacent_tile in tile.adjacent_tiles)
                 {
+                    if (adjacent_tile == tile_2)
+                    {
+                        return counter;
+                    }
+
                     if (adjacent_tile.HasPlayer())
                     {
                         if (adjacent_tile.GetPlayer().team != team)
@@ -33,10 +38,6 @@ public static class Utils
                         }
                     }
 
-                    if (adjacent_tile == tile_2)
-                    {
-                        return counter;
-                    }
                     tiles_to_walk.Add(adjacent_tile);
                 }
             }

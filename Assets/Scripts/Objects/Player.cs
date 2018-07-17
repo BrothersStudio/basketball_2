@@ -310,8 +310,8 @@ public class Player : MonoBehaviour
         {
             current_tile.OnMouseDown();
         }
-        //else if (!(took_move && took_attack) && (team != Team.B) && !AITurn.active)
-        else if (!(took_move && took_attack))
+        else if (!(took_move && took_attack) && (team != Team.B) && !AITurn.active)
+        //else if (!(took_move && took_attack))
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
         }

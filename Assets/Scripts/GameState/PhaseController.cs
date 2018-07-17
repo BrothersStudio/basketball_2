@@ -59,10 +59,12 @@ public class PhaseController : MonoBehaviour
         if (Possession.team == Team.A)
         {
             field_generator.GenerateField(1);
+            Possession.team = Team.B;
         }
         else
         {
             field_generator.GenerateField(0);
+            Possession.team = Team.A;
         }
     }
 }

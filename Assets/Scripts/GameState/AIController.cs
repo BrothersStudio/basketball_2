@@ -166,6 +166,7 @@ public class AIController : MonoBehaviour
                             break;
                         }
                     }
+                    player.SetInactive();
                 }
 
                 // Move toward hoop
