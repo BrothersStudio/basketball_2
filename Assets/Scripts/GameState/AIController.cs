@@ -4,7 +4,21 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
+    public bool random;
+
     List<Player> ai_players = new List<Player>();
+
+    void Start()
+    {
+        if (random)
+        {
+            Random.InitState(System.DateTime.Now.Second);
+        }
+        else
+        {
+            Random.InitState(100);
+        }
+    }
 
     public void StartAITurn()
     {
@@ -84,22 +98,7 @@ public class AIController : MonoBehaviour
         {
             if (CanReachNet(player))
             {
-                Debug.Log(player.name + " can reach the net");
                 in_score_range.Add(player);
-            }
-        }
-
-        // Does that player have the ball? If so just score
-        foreach (Player player in in_score_range)
-        {
-            if (player.HasBall())
-            {
-                player.CheckMove();
-                yield return new WaitForSeconds(1f);
-                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
-                yield return new WaitForSeconds(0.5f);
-                AITurn.active = false;
-                yield break;
             }
         }
 
@@ -122,18 +121,17 @@ public class AIController : MonoBehaviour
         // Okay, I can't win let's move towards the goal using the ball to boost movement
         foreach (Player player in ai_players)
         {
-            player.CheckMove();
-            yield return new WaitForSeconds(1f);
-            FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
-            yield return new WaitForSeconds(0.5f);
-
             // Can we pass it to anyone who hasn't moved?
             if (player.HasBall())
             {
-                player.CheckPass();
-                foreach (Tile tile in player.highlighted_tiles)
+                player.CheckMove();
+                yield return new WaitForSeconds(1f);
+                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                yield return new WaitForSeconds(0.5f);
+
+                if (player.CheckPass())
                 {
-                    if (tile.HasPlayer())
+                    foreach (Tile tile in player.highlighted_tiles)
                     {
                         if (!tile.GetPlayer().took_move)
                         {
@@ -142,7 +140,39 @@ public class AIController : MonoBehaviour
                             break;
                         }
                     }
+                    player.SetInactive();
                 }
+                else
+                {
+                    player.SetInactive();
+                }
+            }
+            else
+            {
+                // Can we push anyone away from the ball carrier first? 
+                if (player.CheckPush())
+                {
+                    foreach (Tile tile in player.highlighted_tiles)
+                    {
+                        Tile potential_tile = player.VisualizePush(tile.GetPlayer());
+                        if (potential_tile == null) continue;
+
+                        if (Utils.GetDistanceFromAToBForTeam(potential_tile, GetAIPlayerWithBall().current_tile, Team.A) >
+                            Utils.GetDistanceFromAToBForTeam(tile, GetAIPlayerWithBall().current_tile, Team.A))
+                        {
+                            // It's better for us to push this guy
+                            yield return new WaitForSeconds(0.5f);
+                            tile.OnMouseDown();
+                            break;
+                        }
+                    }
+                }
+
+                // Move toward hoop
+                player.CheckMove();
+                yield return new WaitForSeconds(1f);
+                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
@@ -153,6 +183,8 @@ public class AIController : MonoBehaviour
 
     IEnumerator GiveHimTheBall(Player target_player)
     {
+        if (target_player.HasBall()) yield break;
+
         Debug.Log("Trying to get the ball to " + target_player.name);
         foreach (Player player in ai_players)
         {
@@ -229,7 +261,7 @@ public class AIController : MonoBehaviour
 
         foreach (Tile highlighted_tile in moving_player.highlighted_tiles)
         {
-            int check_dist = Utils.GetDistance(target_tile.position, highlighted_tile.position);
+            int check_dist = Utils.GetDistanceFromAToBForTeam(target_tile, highlighted_tile, moving_player.team);
             if (check_dist < min_dist)
             {
                 min_tiles.Clear();
@@ -312,5 +344,17 @@ public class AIController : MonoBehaviour
             }
         }
         ai_players.Insert(0, ball_carrier);
+    }
+
+    Player GetAIPlayerWithBall()
+    {
+        foreach (Player player in ai_players)
+        {
+            if (player.HasBall())
+            {
+                return player;
+            }
+        }
+        return null;
     }
 }

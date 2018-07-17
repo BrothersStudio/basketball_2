@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void CheckPass()
+    public bool CheckPass()
     {
         if (!took_attack && !passing)
         {
@@ -59,6 +59,19 @@ public class Player : MonoBehaviour
                     highlighted_tiles.Add(player.current_tile);
                 }
             }
+
+            if (highlighted_tiles.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -110,6 +123,12 @@ public class Player : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public Tile VisualizePush(Player other_player)
+    {
+        Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
+        return Utils.FindTileAtLocation(new_tile_coordinate);
     }
 
     public void Push(Player other_player)
@@ -169,12 +188,15 @@ public class Player : MonoBehaviour
             {
                 if (!tile.HasPlayer())
                 {
+                    // If on defense, can't stand next to hoop
+                    if (this.team != Possession.team && Utils.IsAdjacentToHoop(tile)) continue;
+                    
                     tile.Highlight(this);
                     highlighted_tiles.Add(tile);
                 }
             }
 
-            // This makes AI stuff a little easier later..
+            // This makes AI stuff a little easier later. Adding current tile.
             current_tile.Highlight(this);
             highlighted_tiles.Add(current_tile);
         }

@@ -43,6 +43,18 @@ public static class Utils
         }
     }
 
+    public static bool IsAdjacentToHoop(Tile tile)
+    {
+        if (GetDistance(GameObject.FindObjectOfType<Hoop>().current_tile.position, tile.position) == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static List<Player> ReturnAdjacentOpponents(Player input_player)
     {
         List<Player> adjacent_players = new List<Player>();

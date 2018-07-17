@@ -18,7 +18,7 @@ public class CommandWindow : MonoBehaviour
         {
             attack_button.interactable = true;
             attack_button.onClick.RemoveAllListeners();
-            attack_button.onClick.AddListener(selected_player.CheckPass);
+            attack_button.onClick.AddListener(delegate { selected_player.CheckPass(); });
 
             attack_button.gameObject.GetComponentInChildren<Text>().text = "Pass";
         }

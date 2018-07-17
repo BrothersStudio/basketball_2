@@ -15,6 +15,16 @@ public class PhaseController : MonoBehaviour
 
         field_generator = FindObjectOfType<FieldGenerator>();
         field_generator.GenerateField(1);
+        StartCoroutine(StartGame());
+    }
+
+    IEnumerator StartGame()
+    {
+        yield return new WaitForSeconds(1f);
+        if (current_phase == Phase.TeamBAct && AiOn)
+        {
+            GetComponent<AIController>().StartAITurn();
+        }
     }
 
     public void ChangePhase()
