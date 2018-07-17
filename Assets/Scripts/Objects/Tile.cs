@@ -50,6 +50,11 @@ public class Tile : MonoBehaviour
         this.querying_player = querying_player;
 
         GetComponent<SpriteRenderer>().color = Color.red;
+
+        if (standing_player != null)
+        {
+            standing_player.GetComponent<BoxCollider2D>().enabled = true;
+        }
     }
 
     public void Dehighlight()

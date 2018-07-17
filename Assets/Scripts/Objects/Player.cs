@@ -49,6 +49,8 @@ public class Player : MonoBehaviour
         {
             passing = true;
 
+            Utils.RemovePlayerColliders();
+
             Player[] players = FindObjectsOfType<Player>();
             foreach (Player player in players)
             {
@@ -94,6 +96,8 @@ public class Player : MonoBehaviour
         if (!took_attack && !pushing && !HasBall())
         {
             pushing = true;
+
+            Utils.RemovePlayerColliders();
 
             foreach (Player player in Utils.ReturnAdjacentOpponents(this))
             {
@@ -159,6 +163,8 @@ public class Player : MonoBehaviour
         if (!took_move && !moving)
         {
             moving = true;
+
+            Utils.RemovePlayerColliders();
 
             HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
             tiles_to_walk.Add(current_tile);
@@ -239,21 +245,6 @@ public class Player : MonoBehaviour
     void EndAction()
     {
         SetInactive();
-
-        // See if pushing or passing is possible
-        if (took_move)
-        {
-            if (!CheckPush())
-            {
-                SetInactive();
-                if (!CheckPass())
-                {
-                    took_attack = true;
-                }
-            }
-        }
-        SetInactive();
-
         CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }

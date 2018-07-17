@@ -98,11 +98,24 @@ public static class Utils
         return true;
     }
 
+    public static void RemovePlayerColliders()
+    {
+        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        {
+            player.GetComponent<BoxCollider2D>().enabled = false;
+        }
+    }
+
     public static void DehighlightTiles()
     {
         foreach (Tile tile in GameObject.FindObjectsOfType<Tile>())
         {
             tile.Dehighlight();
+        }
+
+        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        {
+            player.GetComponent<BoxCollider2D>().enabled = true;
         }
     }
 

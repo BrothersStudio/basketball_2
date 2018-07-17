@@ -16,6 +16,7 @@ public class PhaseController : MonoBehaviour
         field_generator = FindObjectOfType<FieldGenerator>();
         field_generator.GenerateField(1);
         StartCoroutine(StartGame());
+        Utils.DehighlightTiles();
     }
 
     IEnumerator StartGame()
