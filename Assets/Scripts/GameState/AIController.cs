@@ -142,11 +142,6 @@ public class AIController : MonoBehaviour
                             break;
                         }
                     }
-                    player.SetInactive();
-                }
-                else
-                {
-                    player.SetInactive();
                 }
             }
             else
@@ -171,12 +166,29 @@ public class AIController : MonoBehaviour
                     player.SetInactive();
                 }
 
-                // Move toward hoop
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
-                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
-                yield return new WaitForSeconds(0.5f);
+
+                if (Random.Range(0, 100) < 50)
+                {
+                    // Move toward hoop
+                    FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                {
+                    // Move and push an enemy
+                    Player enemy = FindClosestEnemyTo(player);
+                    FindClosestHighlightedTileTo(player, enemy.current_tile).OnMouseDown();
+                    yield return new WaitForSeconds(0.5f);
+                    if (player.CheckPush())
+                    {
+                        Player chosen_player = player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].GetPlayer();
+                        player.Push(chosen_player);
+                    }
+                }
             }
+            player.SetInactive();
         }
 
         GetComponent<PhaseController>().ChangePhase();
@@ -346,6 +358,8 @@ public class AIController : MonoBehaviour
                 }
             }
         }
+
+        ai_players.Shuffle();
         ai_players.Insert(0, ball_carrier);
     }
 
