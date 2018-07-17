@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
 
     public bool CheckPass()
     {
-        if (!took_attack && !passing)
+        if ((!took_attack && !passing) && HasBall())
         {
             passing = true;
 
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
 
     public bool CheckPush()
     {
-        if (!took_attack && !pushing)
+        if (!took_attack && !pushing && !HasBall())
         {
             pushing = true;
 
@@ -239,6 +239,21 @@ public class Player : MonoBehaviour
     void EndAction()
     {
         SetInactive();
+
+        // See if pushing or passing is possible
+        if (took_move)
+        {
+            if (!CheckPush())
+            {
+                SetInactive();
+                if (!CheckPass())
+                {
+                    took_attack = true;
+                }
+            }
+        }
+        SetInactive();
+
         CheckTurn();
         canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
     }
