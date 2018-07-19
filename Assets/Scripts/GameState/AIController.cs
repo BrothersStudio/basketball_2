@@ -24,8 +24,6 @@ public class AIController : MonoBehaviour
 
     public void StartAITurn()
     {
-        AITurn.active = true;
-
         if (ai_players.Count == 0)
         {
             foreach (Player player in FindObjectsOfType<Player>())
@@ -87,9 +85,9 @@ public class AIController : MonoBehaviour
                 pushed = true;
             }
         }
+
         GetComponent<PhaseController>().ChangePhase();
         yield return new WaitForSeconds(0.5f);
-        AITurn.active = false;
     }
 
     IEnumerator Attack()
@@ -115,7 +113,6 @@ public class AIController : MonoBehaviour
                 yield return new WaitForSeconds(1f);
                 FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
                 yield return new WaitForSeconds(0.5f);
-                AITurn.active = false;
                 yield break;
             }
         }
@@ -193,7 +190,6 @@ public class AIController : MonoBehaviour
 
         GetComponent<PhaseController>().ChangePhase();
         yield return new WaitForSeconds(0.5f);
-        AITurn.active = false;
     }
 
     IEnumerator GiveHimTheBall(Player target_player)

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class AITurn 
 {
-    public static bool active = false;
+    public static bool active = true;
 }

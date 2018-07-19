@@ -24,12 +24,15 @@ public class PhaseController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         if (current_phase == Phase.TeamBAct && AiOn)
         {
+            AITurn.active = true;
             GetComponent<AIController>().StartAITurn();
         }
     }
 
     public void ChangePhase()
     {
+        AITurn.active = !AITurn.active;
+
         foreach (Player player in FindObjectsOfType<Player>())
         {
             player.SetInactive();
