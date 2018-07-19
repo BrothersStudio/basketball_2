@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: 4babc77f82f12d74ab300387c923df05
+guid: 3e8d4348e66a30948a589832068a73db
 TextureImporter:
   fileIDToRecycleName:
-    21300000: afro_forward_right
-    21300002: afro_backward_right
+    21300000: redhead_forward_right
+    21300002: redhead_backward_right
   externalObjects: {}
   serializedVersion: 5
   mipmaps:
@@ -84,13 +84,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: afro_forward_right
+      name: redhead_forward_right
       rect:
         serializedVersion: 2
         x: 2
         y: 2
-        width: 19
-        height: 43
+        width: 18
+        height: 44
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -98,19 +98,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0531da71bb577694ba8e29e3820f3a51
+      spriteID: 8d5357c80a7e6614a875eb37a365c1ab
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: afro_backward_right
+      name: redhead_backward_right
       rect:
         serializedVersion: 2
-        x: 21
+        x: 20
         y: 4
-        width: 18
-        height: 41
+        width: 17
+        height: 42
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,7 +118,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7faa964b3b958254e88edc27f1635171
+      spriteID: 1519623fa7646c0418d044bf7633fac7
       vertices: []
       indices: 
       edges: []
@@ -126,7 +126,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: b28ce3d593dfc99449eb80fe0d733add
+    spriteID: dea17c44db98c24479cadbddb725525f
     vertices: []
     indices: 
     edges: []
