@@ -7,6 +7,7 @@ public class FieldGenerator : MonoBehaviour
     public GameObject tile_prefab;
     public GameObject hoop_prefab;
     public GameObject player_prefab;
+    public GameObject highlight_prefab;
 
     public int rows;
     public int columns;
@@ -131,7 +132,7 @@ public class FieldGenerator : MonoBehaviour
                         all_objects.Add(new_player);
                         if (defensive_team == Team.A)
                         {
-                            new_player.GetComponent<SpriteRenderer>().color = Color.red;
+                            new_player.GetComponent<SpriteRenderer>().color = Color.blue;
                         }
 
                         if (!gave_ball && n == gave_ball_ind)
@@ -139,7 +140,11 @@ public class FieldGenerator : MonoBehaviour
                             gave_ball = true;
 
                             // Add the ball so we can cleanly destroy it later
-                            all_objects.Add(new_player.transform.GetChild(0).gameObject); 
+                            all_objects.Add(new_player.transform.GetChild(0).gameObject);
+
+                            // Start highlight on this tile
+                            GameObject highlight = Instantiate(highlight_prefab, new_tile.transform);
+                            all_objects.Add(highlight);
                         }
                         else
                         {
@@ -160,7 +165,7 @@ public class FieldGenerator : MonoBehaviour
 
                         if (defensive_team == Team.B)
                         {
-                            new_player.GetComponent<SpriteRenderer>().color = Color.red;
+                            new_player.GetComponent<SpriteRenderer>().color = Color.blue;
                         }
 
                         all_objects.Add(new_player);

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    public bool has_cursor = false;
+
     public bool highlighted = false;
     public Vector2 position;
     Player standing_player = null;
@@ -16,31 +18,19 @@ public class Tile : MonoBehaviour
     {
         Vector2 position_1 = new Vector2(position.x + 1, position.y);
         Tile pos_1_tile = Utils.FindTileAtLocation(position_1);
-        if (pos_1_tile != null)
-        {
-            adjacent_tiles.Add(pos_1_tile);
-        }
+        adjacent_tiles.Add(pos_1_tile);
 
         Vector2 position_2 = new Vector2(position.x - 1, position.y);
         Tile pos_2_tile = Utils.FindTileAtLocation(position_2);
-        if (pos_2_tile != null)
-        {
-            adjacent_tiles.Add(pos_2_tile);
-        }
+        adjacent_tiles.Add(pos_2_tile);
 
         Vector2 position_3 = new Vector2(position.x, position.y + 1);
         Tile pos_3_tile = Utils.FindTileAtLocation(position_3);
-        if (pos_3_tile != null)
-        {
-            adjacent_tiles.Add(pos_3_tile);
-        } 
+        adjacent_tiles.Add(pos_3_tile);
 
         Vector2 position_4 = new Vector2(position.x, position.y - 1);
         Tile pos_4_tile = Utils.FindTileAtLocation(position_4);
-        if (pos_4_tile != null)
-        {
-            adjacent_tiles.Add(pos_4_tile);
-        }
+        adjacent_tiles.Add(pos_4_tile);
     }
 
     public void Highlight(Player querying_player)
@@ -50,11 +40,6 @@ public class Tile : MonoBehaviour
         this.querying_player = querying_player;
 
         GetComponent<SpriteRenderer>().color = Color.red;
-
-        if (standing_player != null)
-        {
-            standing_player.GetComponent<BoxCollider2D>().enabled = true;
-        }
     }
 
     public void Dehighlight()
@@ -64,7 +49,7 @@ public class Tile : MonoBehaviour
         GetComponent<SpriteRenderer>().color = Color.white;
     }
 
-    public void OnMouseDown()
+    public void Confirm()
     {
         if (highlighted)
         {
@@ -80,6 +65,10 @@ public class Tile : MonoBehaviour
             {
                 querying_player.Push(standing_player);
             }
+        }
+        else if (HasPlayer())
+        {
+            standing_player.Confirm();
         }
     }
 

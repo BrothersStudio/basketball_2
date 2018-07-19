@@ -1,19 +1,85 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CommandWindow : MonoBehaviour
 {
     Player selected_player;
 
+    public GameObject arrow;
+
+    public Button attack_button;
+    public Button move_button;
+    public Button cancel_button;
+
+    public GameObject highlight;
+
+    Button current_button;
+
+    void Update()
+    {
+        if (Input.GetKeyDown("up"))
+        {
+            HandleUp();
+        }
+        else if (Input.GetKeyDown("down"))
+        {
+            HandleDown();
+        }
+        else if (Input.GetKeyDown("space"))
+        {
+            HandleEnter();
+        }
+        else if (Input.GetKeyDown("escape"))
+        {
+            Cancel();
+        }
+    }
+
+    void HandleUp()
+    {
+        if (current_button == move_button)
+        {
+            current_button = attack_button;
+        }
+        else if (current_button == cancel_button)
+        {
+            current_button = move_button;
+        }
+        arrow.transform.SetParent(current_button.transform, false);
+    }
+
+    void HandleDown()
+    {
+        if (current_button == attack_button)
+        {
+            current_button = move_button;
+        }
+        else if (current_button == move_button)
+        {
+            current_button = cancel_button;
+        }
+        arrow.transform.SetParent(current_button.transform, false);
+    }
+
+    void HandleEnter()
+    {
+        current_button.onClick.Invoke();
+    }
+
     public void SetButtons(Player player)
     {
         selected_player = player;
+        FindObjectOfType<Highlight>().InMenu();
 
         bool has_ball = selected_player.HasBall();
 
-        Button attack_button = transform.Find("Attack Button").GetComponent<Button>();
+        current_button = attack_button;
+        arrow.transform.SetParent(current_button.transform, false);
+
+        // Attack
         if (has_ball && !selected_player.took_attack)
         {
             attack_button.interactable = true;
@@ -44,7 +110,7 @@ public class CommandWindow : MonoBehaviour
             }
         }
 
-        Button move_button = transform.Find("Move Button").GetComponent<Button>();
+        // Move
         if (!selected_player.took_move)
         {
             move_button.interactable = true;
@@ -68,5 +134,6 @@ public class CommandWindow : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+        highlight.SetActive(true);
     }
 }

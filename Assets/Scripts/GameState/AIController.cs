@@ -55,7 +55,7 @@ public class AIController : MonoBehaviour
             // Moving
             player.CheckMove();
             yield return new WaitForSeconds(1f);
-            FindClosestHighlightedTileTo(player, FindClosestEnemyTo(player).current_tile).OnMouseDown();
+            FindClosestHighlightedTileTo(player, FindClosestEnemyTo(player).current_tile).Confirm();
 
             yield return new WaitForSeconds(0.5f);
 
@@ -71,7 +71,7 @@ public class AIController : MonoBehaviour
                 {
                     if (tile.GetPlayer().HasBall())
                     {
-                        tile.OnMouseDown();
+                        tile.Confirm();
                         pushed = true;
                         break;
                     }
@@ -81,7 +81,7 @@ public class AIController : MonoBehaviour
             // If no ball carrier, push a random guy I guess
             if (!pushed && player.highlighted_tiles.Count != 0)
             {
-                player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].OnMouseDown();
+                player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].Confirm();
                 pushed = true;
             }
         }
@@ -111,7 +111,7 @@ public class AIController : MonoBehaviour
             {
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
-                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
                 yield return new WaitForSeconds(0.5f);
                 yield break;
             }
@@ -125,7 +125,7 @@ public class AIController : MonoBehaviour
             {
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
-                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
                 yield return new WaitForSeconds(0.5f);
 
                 if (player.CheckPass())
@@ -135,7 +135,7 @@ public class AIController : MonoBehaviour
                         if (!tile.GetPlayer().took_move)
                         {
                             yield return new WaitForSeconds(0.5f);
-                            tile.OnMouseDown();
+                            tile.Confirm();
                             break;
                         }
                     }
@@ -156,7 +156,7 @@ public class AIController : MonoBehaviour
                         {
                             // It's better for us to push this guy
                             yield return new WaitForSeconds(0.5f);
-                            tile.OnMouseDown();
+                            tile.Confirm();
                             break;
                         }
                     }
@@ -169,14 +169,14 @@ public class AIController : MonoBehaviour
                 if (Random.Range(0, 100) < 50)
                 {
                     // Move toward hoop
-                    FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).OnMouseDown();
+                    FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
                     yield return new WaitForSeconds(0.5f);
                 }
                 else
                 {
                     // Move and push an enemy
                     Player enemy = FindClosestEnemyTo(player);
-                    FindClosestHighlightedTileTo(player, enemy.current_tile).OnMouseDown();
+                    FindClosestHighlightedTileTo(player, enemy.current_tile).Confirm();
                     yield return new WaitForSeconds(0.5f);
                     if (player.CheckPush())
                     {
@@ -235,7 +235,7 @@ public class AIController : MonoBehaviour
         origin.CheckMove();
         Tile closest_tile = FindClosestHighlightedTileTo(origin, target.current_tile);
         yield return new WaitForSeconds(1f);
-        closest_tile.OnMouseDown();
+        closest_tile.Confirm();
         origin.CheckPass();
         yield return new WaitForSeconds(0.5f);
         origin.Pass(target);
@@ -355,7 +355,6 @@ public class AIController : MonoBehaviour
             }
         }
 
-        ai_players.Shuffle();
         ai_players.Insert(0, ball_carrier);
     }
 

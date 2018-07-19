@@ -25,6 +25,8 @@ public static class Utils
             {
                 foreach (Tile adjacent_tile in tile.adjacent_tiles)
                 {
+                    if (adjacent_tile == null) continue;
+
                     if (adjacent_tile == tile_2)
                     {
                         return counter;
@@ -61,6 +63,8 @@ public static class Utils
         List<Player> adjacent_players = new List<Player>();
         foreach (Tile tile in input_player.current_tile.adjacent_tiles)
         {
+            if (tile == null) continue;
+
             Player player = tile.GetPlayer();
             if (player != null)
             {
@@ -99,24 +103,11 @@ public static class Utils
         return true;
     }
 
-    public static void RemovePlayerColliders()
-    {
-        foreach (Player player in GameObject.FindObjectsOfType<Player>())
-        {
-            player.GetComponent<BoxCollider2D>().enabled = false;
-        }
-    }
-
     public static void DehighlightTiles()
     {
         foreach (Tile tile in GameObject.FindObjectsOfType<Tile>())
         {
             tile.Dehighlight();
-        }
-
-        foreach (Player player in GameObject.FindObjectsOfType<Player>())
-        {
-            player.GetComponent<BoxCollider2D>().enabled = true;
         }
     }
 

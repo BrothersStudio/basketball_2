@@ -11,27 +11,31 @@ public class PhaseController : MonoBehaviour
 
     void Awake()
     {
-        current_phase = Phase.TeamBAct;
+        current_phase = Phase.TeamAAct;
 
         field_generator = FindObjectOfType<FieldGenerator>();
-        field_generator.GenerateField(1);
+        field_generator.GenerateField(0);
         StartCoroutine(StartGame());
         Utils.DehighlightTiles();
     }
 
     IEnumerator StartGame()
     {
-        yield return new WaitForSeconds(1f);
         if (current_phase == Phase.TeamBAct && AiOn)
         {
-            AITurn.active = true;
+            AITurn.Activity = true;
+            yield return new WaitForSeconds(1f);
             GetComponent<AIController>().StartAITurn();
+        }
+        else
+        {
+            AITurn.Activity = false;
         }
     }
 
     public void ChangePhase()
     {
-        AITurn.active = !AITurn.active;
+        AITurn.Activity = !AITurn.Activity;
 
         foreach (Player player in FindObjectsOfType<Player>())
         {

@@ -4,5 +4,16 @@ using UnityEngine;
 
 public static class AITurn 
 {
-    public static bool active = true;
+    static bool active;
+    public static bool Activity
+    {
+        get
+        {
+            return active;
+        }
+        set
+        {
+            active = value;
+        }
+    }
 }

@@ -49,8 +49,6 @@ public class Player : MonoBehaviour
         {
             passing = true;
 
-            Utils.RemovePlayerColliders();
-
             Player[] players = FindObjectsOfType<Player>();
             foreach (Player player in players)
             {
@@ -96,8 +94,6 @@ public class Player : MonoBehaviour
         if (!took_attack && !pushing && !HasBall())
         {
             pushing = true;
-
-            Utils.RemovePlayerColliders();
 
             foreach (Player player in Utils.ReturnAdjacentOpponents(this))
             {
@@ -164,8 +160,6 @@ public class Player : MonoBehaviour
         {
             moving = true;
 
-            Utils.RemovePlayerColliders();
-
             HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
             tiles_to_walk.Add(current_tile);
 
@@ -178,6 +172,8 @@ public class Player : MonoBehaviour
                 {
                     foreach (Tile adjacent_tile in tile.adjacent_tiles)
                     {
+                        if (adjacent_tile == null) continue;
+
                         if (adjacent_tile.HasPlayer())
                         {
                             if (adjacent_tile.GetPlayer().team != this.team)
@@ -304,14 +300,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnMouseDown()
+    public void Confirm()
     {
-        if (current_tile.highlighted)
-        {
-            current_tile.OnMouseDown();
-        }
-        else if (!(took_move && took_attack) && (team != Team.B) && (!AITurn.active))
-        //else if (!(took_move && took_attack))
+        if (!(took_move && took_attack) && (team != Team.B) && (!AITurn.Activity))
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
         }
