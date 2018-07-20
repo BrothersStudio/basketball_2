@@ -296,7 +296,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            GetComponent<SpriteRenderer>().color = Color.red;
+            GetComponent<SpriteRenderer>().color = Color.blue;
         }
     }
 

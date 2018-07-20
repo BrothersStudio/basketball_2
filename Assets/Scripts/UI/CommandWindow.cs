@@ -157,6 +157,10 @@ public class CommandWindow : MonoBehaviour
         gameObject.SetActive(false);
 
         lock_arrow = false;
-        highlight.Reset();
+
+        if (!AITurn.Activity)
+        {
+            highlight.Reset();
+        }
     }
 }

@@ -63,6 +63,9 @@ public class EndTurnWindow : MonoBehaviour
     public void Cancel()
     {
         transform.parent.gameObject.SetActive(false);
-        highlight.Reset();
+        if (!AITurn.Activity)
+        {
+            highlight.Reset();
+        }
     }
 }

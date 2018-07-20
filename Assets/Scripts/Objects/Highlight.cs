@@ -13,7 +13,7 @@ public class Highlight : MonoBehaviour
     float end_turn_buffer = 0.4f;
     GameObject end_turn_window;
 
-    void Start()
+    void Awake()
     {
         current_tile = transform.parent.GetComponent<Tile>();
         current_tile.has_cursor = true;
@@ -28,7 +28,13 @@ public class Highlight : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log("Enabled");
         current_buffer = Time.timeSinceLevelLoad;
+    }
+
+    void OnDisable()
+    {
+        Debug.Log("Disabled");
     }
 
     public void Reset()

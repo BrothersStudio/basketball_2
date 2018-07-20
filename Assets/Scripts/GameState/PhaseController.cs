@@ -13,10 +13,10 @@ public class PhaseController : MonoBehaviour
 
     void Awake()
     {
-        current_phase = Phase.TeamAAct;
+        current_phase = Phase.TeamBAct;
 
         field_generator = FindObjectOfType<FieldGenerator>();
-        field_generator.GenerateField(0);
+        field_generator.GenerateField(1);
         StartCoroutine(StartGame());
         Utils.DehighlightTiles();
     }
@@ -26,6 +26,7 @@ public class PhaseController : MonoBehaviour
         if (current_phase == Phase.TeamBAct && AiOn)
         {
             AITurn.Activity = true;
+            highlight.SetActive(false);
             yield return new WaitForSeconds(1f);
             GetComponent<AIController>().StartAITurn();
         }
@@ -38,7 +39,6 @@ public class PhaseController : MonoBehaviour
     public void ChangePhase()
     {
         AITurn.Activity = !AITurn.Activity;
-        
 
         foreach (Player player in FindObjectsOfType<Player>())
         {
