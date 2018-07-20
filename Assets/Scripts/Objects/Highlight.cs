@@ -9,6 +9,8 @@ public class Highlight : MonoBehaviour
     int cycle_ind;
     Player cycle_player = null;
 
+    float current_buffer = 0;
+    float end_turn_buffer = 0.4f;
     GameObject end_turn_window;
 
     void Start()
@@ -22,6 +24,11 @@ public class Highlight : MonoBehaviour
         GameObject.Find("Canvas").transform.Find("End Turn Fade/End Turn Window").GetComponent<EndTurnWindow>().highlight = this;
 
         GameObject.Find("Game Controller").GetComponent<PhaseController>().highlight = gameObject;
+    }
+
+    void OnEnable()
+    {
+        current_buffer = Time.timeSinceLevelLoad;
     }
 
     public void Reset()
@@ -85,7 +92,7 @@ public class Highlight : MonoBehaviour
         {
             Confirm();
         }
-        else if (Input.GetKey("escape"))
+        else if (Input.GetKey("escape") && Time.timeSinceLevelLoad > end_turn_buffer + current_buffer)
         {
             end_turn_window.SetActive(true);
         }
