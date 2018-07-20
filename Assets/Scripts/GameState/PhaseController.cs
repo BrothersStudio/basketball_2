@@ -9,6 +9,8 @@ public class PhaseController : MonoBehaviour
 
     public bool AiOn;
 
+    public GameObject highlight;
+
     void Awake()
     {
         current_phase = Phase.TeamAAct;
@@ -36,6 +38,7 @@ public class PhaseController : MonoBehaviour
     public void ChangePhase()
     {
         AITurn.Activity = !AITurn.Activity;
+        
 
         foreach (Player player in FindObjectsOfType<Player>())
         {
@@ -49,6 +52,7 @@ public class PhaseController : MonoBehaviour
             FindObjectOfType<TurnText>().StartMoving("B");
             if (AiOn)
             {
+                highlight.SetActive(false);
                 GetComponent<AIController>().StartAITurn();
             }
         }
@@ -58,6 +62,8 @@ public class PhaseController : MonoBehaviour
 
             current_phase = Phase.TeamAAct;
             FindObjectOfType<TurnText>().StartMoving("A");
+
+            highlight.SetActive(true);
         }
 
         FindObjectOfType<TimeCounter>().DecreaseTime();

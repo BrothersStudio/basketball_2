@@ -9,30 +9,36 @@ public class CommandWindow : MonoBehaviour
     Player selected_player;
 
     public GameObject arrow;
+    bool lock_arrow = false;
 
     public Button attack_button;
     public Button move_button;
     public Button cancel_button;
 
-    public GameObject highlight;
+    [HideInInspector]
+    public Highlight highlight;
 
     Button current_button;
 
     void Update()
     {
-        if (Input.GetKeyDown("up"))
+        if (!lock_arrow)
         {
-            HandleUp();
+            if (Input.GetKeyDown("up"))
+            {
+                HandleUp();
+            }
+            else if (Input.GetKeyDown("down"))
+            {
+                HandleDown();
+            }
+            else if (Input.GetKeyDown("space"))
+            {
+                HandleEnter();
+            }
         }
-        else if (Input.GetKeyDown("down"))
-        {
-            HandleDown();
-        }
-        else if (Input.GetKeyDown("space"))
-        {
-            HandleEnter();
-        }
-        else if (Input.GetKeyDown("escape"))
+
+        if (Input.GetKeyDown("escape") || Input.GetKeyDown("return"))
         {
             Cancel();
         }
@@ -66,13 +72,16 @@ public class CommandWindow : MonoBehaviour
 
     void HandleEnter()
     {
-        current_button.onClick.Invoke();
+        if (current_button.interactable)
+        {
+            current_button.onClick.Invoke();
+        }
     }
 
     public void SetButtons(Player player)
     {
         selected_player = player;
-        FindObjectOfType<Highlight>().InMenu();
+        highlight.InMenu();
 
         bool has_ball = selected_player.HasBall();
 
@@ -84,7 +93,11 @@ public class CommandWindow : MonoBehaviour
         {
             attack_button.interactable = true;
             attack_button.onClick.RemoveAllListeners();
-            attack_button.onClick.AddListener(delegate { selected_player.CheckPass(); });
+            attack_button.onClick.AddListener(delegate {
+                lock_arrow = true;
+                selected_player.CheckPass();
+                highlight.SelectCycleTarget(selected_player);
+            });
 
             attack_button.gameObject.GetComponentInChildren<Text>().text = "Pass";
         }
@@ -92,7 +105,11 @@ public class CommandWindow : MonoBehaviour
         {
             attack_button.interactable = true;
             attack_button.onClick.RemoveAllListeners();
-            attack_button.onClick.AddListener(delegate { selected_player.CheckPush(); });
+            attack_button.onClick.AddListener(delegate {
+                lock_arrow = true;
+                selected_player.CheckPush();
+                highlight.SelectCycleTarget(selected_player);
+            });
 
             attack_button.gameObject.GetComponentInChildren<Text>().text = "Push";
         }
@@ -115,7 +132,11 @@ public class CommandWindow : MonoBehaviour
         {
             move_button.interactable = true;
             move_button.onClick.RemoveAllListeners();
-            move_button.onClick.AddListener(delegate { selected_player.CheckMove(); });
+            move_button.onClick.AddListener(delegate {
+                lock_arrow = true;
+                highlight.SelectMove();
+                selected_player.CheckMove();
+            });
         }
         else
         {
@@ -134,6 +155,8 @@ public class CommandWindow : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        highlight.SetActive(true);
+
+        lock_arrow = false;
+        highlight.Reset();
     }
 }

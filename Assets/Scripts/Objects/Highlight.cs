@@ -6,40 +6,88 @@ public class Highlight : MonoBehaviour
 {
     Tile current_tile;
 
+    int cycle_ind;
+    Player cycle_player = null;
+
+    GameObject end_turn_window;
+
     void Start()
     {
         current_tile = transform.parent.GetComponent<Tile>();
         current_tile.has_cursor = true;
 
-        GameObject.Find("Canvas").transform.Find("Command Window").GetComponent<CommandWindow>().highlight = gameObject;
+        GameObject.Find("Canvas").transform.Find("Command Window").GetComponent<CommandWindow>().highlight = this;
+
+        end_turn_window = GameObject.Find("Canvas").transform.Find("End Turn Fade").gameObject;
+        GameObject.Find("Canvas").transform.Find("End Turn Fade/End Turn Window").GetComponent<EndTurnWindow>().highlight = this;
+
+        GameObject.Find("Game Controller").GetComponent<PhaseController>().highlight = gameObject;
+    }
+
+    public void Reset()
+    {
+        cycle_player = null;
+
+        gameObject.SetActive(true);
+    }
+
+    public void SelectMove()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void SelectCycleTarget(Player player)
+    {
+        cycle_ind = 0;
+        cycle_player = player;
+        Cycle(true);
+
+        gameObject.SetActive(true);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown("up"))
+        if (cycle_player == null)
         {
-            MoveToTile(0);
-        }
-        else if (Input.GetKeyDown("down"))
-        {
-            MoveToTile(1);
-        }
-        else if (Input.GetKeyDown("right"))
-        {
-            MoveToTile(3);
+            if (Input.GetKeyDown("up"))
+            {
+                MoveToAdjacentTile(0);
+            }
+            else if (Input.GetKeyDown("down"))
+            {
+                MoveToAdjacentTile(1);
+            }
+            else if (Input.GetKeyDown("right"))
+            {
+                MoveToAdjacentTile(3);
 
+            }
+            else if ((Input.GetKeyDown("left")))
+            {
+                MoveToAdjacentTile(2);
+            }
         }
-        else if ((Input.GetKeyDown("left")))
+        else
         {
-            MoveToTile(2);
+            if (Input.GetKeyDown("right"))
+            {
+                Cycle(forward: true);
+
+            }
+            else if ((Input.GetKeyDown("left")))
+            {
+                Cycle(forward: false);
+            }
         }
-        else if (Input.GetKeyDown("space"))
+
+
+        if (Input.GetKeyDown("space"))
         {
             Confirm();
         }
-        else if (Input.GetKeyDown("escape"))
+        else if (Input.GetKey("escape"))
         {
-            FindObjectOfType<CommandWindow>().Cancel();
+            end_turn_window.SetActive(true);
         }
     }
 
@@ -48,17 +96,33 @@ public class Highlight : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void MoveToTile(int ind)
+    void MoveToAdjacentTile(int ind)
     {
         if (current_tile.adjacent_tiles[ind] != null)
         {
-            current_tile.has_cursor = false;
-            current_tile.adjacent_tiles[ind].has_cursor = true;
-
-            transform.SetParent(current_tile.adjacent_tiles[ind].transform, false);
-
-            current_tile = current_tile.adjacent_tiles[ind];
+            MoveToTile(current_tile.adjacent_tiles[ind]);
         }
+    }
+
+    void MoveToTile(Tile new_tile)
+    {
+        current_tile.has_cursor = false;
+        new_tile.has_cursor = true;
+
+        transform.SetParent(new_tile.transform, false);
+
+        current_tile = new_tile;
+    }
+
+    void Cycle(bool forward)
+    {
+        cycle_ind++;
+        if (cycle_ind == cycle_player.highlighted_tiles.Count)
+        {
+            cycle_ind = 0;
+        }
+
+        MoveToTile(cycle_player.highlighted_tiles[cycle_ind]);
     }
 
     void Confirm()
