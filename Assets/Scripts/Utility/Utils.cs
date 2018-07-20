@@ -15,7 +15,7 @@ public static class Utils
         tiles_to_walk.Add(tile_1);
 
         int counter = 0;
-        while (true)
+        while (counter < 20)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
         {
             counter++;
 
@@ -44,6 +44,49 @@ public static class Utils
                 }
             }
         }
+        return counter;
+    }
+
+    public static int GetDistanceForTeamIfTileImpassible(Tile tile_1, Tile tile_2, Tile impassible_tile, Team team)
+    {
+        HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
+        tiles_to_walk.Add(tile_1);
+
+        int counter = 0;
+        while (counter < 20)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
+        {
+            counter++;
+
+            Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
+            tiles_to_walk.CopyTo(current_walk_tiles);
+            foreach (Tile tile in current_walk_tiles)
+            {
+                foreach (Tile adjacent_tile in tile.adjacent_tiles)
+                {
+                    if (adjacent_tile == null) continue;
+
+                    if (adjacent_tile == tile_2)
+                    {
+                        return counter;
+                    }
+
+                    if (adjacent_tile == impassible_tile)
+                    {
+                        continue;
+                    }
+                    else if (adjacent_tile.HasPlayer())
+                    {
+                        if (adjacent_tile.GetPlayer().team != team)
+                        {
+                            continue;
+                        }
+                    }
+
+                    tiles_to_walk.Add(adjacent_tile);
+                }
+            }
+        }
+        return counter;
     }
 
     public static bool IsAdjacentToHoop(Tile tile)

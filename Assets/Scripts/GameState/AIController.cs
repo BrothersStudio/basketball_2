@@ -48,13 +48,11 @@ public class AIController : MonoBehaviour
     {
         foreach (Player player in ai_players)
         {
-            // Todo: Some kind of logic for if we start our turn next to an enemy?
-
             // Moving
             player.CheckMove();
             yield return new WaitForSeconds(1f);
-            FindClosestHighlightedTileTo(player, FindClosestEnemyTo(player).current_tile).Confirm();
-
+            Player hate_target = FindClosestEnemyTo(player);
+            FindMostInconvienientTileFor(hate_target, player).Confirm();
             yield return new WaitForSeconds(0.5f);
 
             // Pushing
@@ -109,7 +107,7 @@ public class AIController : MonoBehaviour
             {
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
-                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
+                FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
                 yield return new WaitForSeconds(0.5f);
                 yield break;
             }
@@ -123,7 +121,7 @@ public class AIController : MonoBehaviour
             {
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
-                FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
+                FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
                 yield return new WaitForSeconds(0.5f);
 
                 if (player.CheckPass())
@@ -167,14 +165,14 @@ public class AIController : MonoBehaviour
                 if (Random.Range(0, 100) < 50)
                 {
                     // Move toward hoop
-                    FindClosestHighlightedTileTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
+                    FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
                     yield return new WaitForSeconds(0.5f);
                 }
                 else
                 {
                     // Move and push an enemy
                     Player enemy = FindClosestEnemyTo(player);
-                    FindClosestHighlightedTileTo(player, enemy.current_tile).Confirm();
+                    FindClosestInGroupOfTilesTo(player, enemy.current_tile).Confirm();
                     yield return new WaitForSeconds(0.5f);
                     if (player.CheckPush())
                     {
@@ -202,7 +200,7 @@ public class AIController : MonoBehaviour
             Debug.Log("Checking " + player.name);
 
             player.CheckMove(true);
-            Tile closest_tile = FindClosestHighlightedTileTo(player, target_player.current_tile);
+            Tile closest_tile = FindClosestInGroupOfTilesTo(player, target_player.current_tile);
             if (Utils.GetDistance(closest_tile.position, target_player.current_tile.position) <= 3)
             {
                 player.ai_pass_check = true;
@@ -231,7 +229,7 @@ public class AIController : MonoBehaviour
     IEnumerator PassTo(Player origin, Player target)
     {
         origin.CheckMove();
-        Tile closest_tile = FindClosestHighlightedTileTo(origin, target.current_tile);
+        Tile closest_tile = FindClosestInGroupOfTilesTo(origin, target.current_tile);
         yield return new WaitForSeconds(1f);
         closest_tile.Confirm();
         origin.CheckPass();
@@ -243,7 +241,7 @@ public class AIController : MonoBehaviour
 
     Player FindClosestEnemyTo(Player searching_player)
     {
-        Player min_player = null;
+        List<Player> min_players = new List<Player>();
         int min_dist = 100;
 
         // Let's find the nearest enemy then go to the highlighted tile nearest to him
@@ -252,23 +250,44 @@ public class AIController : MonoBehaviour
             if (enemy_player.team == Team.A)
             {
                 int check_dist = Utils.GetDistance(enemy_player.current_tile.position, searching_player.current_tile.position);
-                if (check_dist < min_dist)
+                if (check_dist <= min_dist)
                 {
-                    min_player = enemy_player;
+                    min_players.Add(enemy_player);
                     min_dist = check_dist;
                 }
             }
         }
 
-        return min_player;
+        // Break ties with player holding ball
+        foreach (Player player in min_players)
+        {
+            if (player.HasBall())
+            {
+                return player;
+            }
+        }
+
+        // Else, random tiebreaker is fine
+        return min_players[Random.Range(0, min_players.Count)];
     }
 
-    Tile FindClosestHighlightedTileTo(Player moving_player, Tile target_tile)
+    Tile FindClosestInGroupOfTilesTo(Player moving_player, Tile target_tile, List<Tile> input_tiles = null)
     {
         List<Tile> min_tiles = new List<Tile>();
         int min_dist = 100;
 
-        foreach (Tile highlighted_tile in moving_player.highlighted_tiles)
+        List<Tile> tiles_to_check;
+        if (input_tiles == null)
+        {
+            tiles_to_check = moving_player.highlighted_tiles;
+
+        }
+        else
+        {
+            tiles_to_check = input_tiles;
+        }
+
+        foreach (Tile highlighted_tile in tiles_to_check)
         {
             int check_dist = Utils.GetDistanceFromAToBForTeam(target_tile, highlighted_tile, moving_player.team);
             if (check_dist < min_dist)
@@ -366,5 +385,23 @@ public class AIController : MonoBehaviour
             }
         }
         return null;
+    }
+
+    Tile FindMostInconvienientTileFor(Player hate_player, Player check_player)
+    {
+        Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
+
+        int max_dist = 0;
+        List<Tile> best_tiles = new List<Tile>();
+        foreach (Tile highlighted_tile in check_player.highlighted_tiles)
+        {
+            int check_dist = Utils.GetDistanceForTeamIfTileImpassible(hate_player.current_tile, hoop_tile, highlighted_tile, Team.A);
+            if (check_dist >= max_dist)
+            {
+                max_dist = check_dist;
+                best_tiles.Add(highlighted_tile);
+            }
+        }
+        return FindClosestInGroupOfTilesTo(check_player, hate_player.current_tile, best_tiles);
     }
 }
