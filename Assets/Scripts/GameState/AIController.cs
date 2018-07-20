@@ -24,14 +24,12 @@ public class AIController : MonoBehaviour
 
     public void StartAITurn()
     {
-        if (ai_players.Count == 0)
+        ai_players.Clear();
+        foreach (Player player in FindObjectsOfType<Player>())
         {
-            foreach (Player player in FindObjectsOfType<Player>())
+            if (player.team == Team.B)
             {
-                if (player.team == Team.B)
-                {
-                    ai_players.Add(player);
-                }
+                ai_players.Add(player);
             }
         }
 

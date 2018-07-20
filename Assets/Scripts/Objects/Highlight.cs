@@ -28,13 +28,7 @@ public class Highlight : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("Enabled");
         current_buffer = Time.timeSinceLevelLoad;
-    }
-
-    void OnDisable()
-    {
-        Debug.Log("Disabled");
     }
 
     public void Reset()

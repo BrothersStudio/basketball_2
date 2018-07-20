@@ -13,15 +13,15 @@ public class PhaseController : MonoBehaviour
 
     void Awake()
     {
-        current_phase = Phase.TeamBAct;
+        current_phase = Phase.TeamAAct;
 
         field_generator = FindObjectOfType<FieldGenerator>();
-        field_generator.GenerateField(1);
-        StartCoroutine(StartGame());
+        field_generator.GenerateField(0);
+        StartCoroutine(StartRound());
         Utils.DehighlightTiles();
     }
 
-    IEnumerator StartGame()
+    IEnumerator StartRound()
     {
         if (current_phase == Phase.TeamBAct && AiOn)
         {
@@ -74,13 +74,17 @@ public class PhaseController : MonoBehaviour
         FindObjectOfType<MovingUI>().StartMoving();
         if (Possession.team == Team.A)
         {
-            field_generator.GenerateField(1);
+            current_phase = Phase.TeamBAct;
             Possession.team = Team.B;
+            field_generator.GenerateField(1);
+            StartCoroutine(StartRound());
         }
         else
         {
-            field_generator.GenerateField(0);
+            current_phase = Phase.TeamAAct;
             Possession.team = Team.A;
+            field_generator.GenerateField(0);
+            StartCoroutine(StartRound());
         }
     }
 }
