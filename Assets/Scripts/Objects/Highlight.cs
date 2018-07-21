@@ -13,6 +13,8 @@ public class Highlight : MonoBehaviour
     float end_turn_buffer = 0.4f;
     GameObject end_turn_window;
 
+    List<SpriteRenderer> faded_players = new List<SpriteRenderer>();
+
     void Awake()
     {
         current_tile = transform.parent.GetComponent<Tile>();
@@ -119,6 +121,8 @@ public class Highlight : MonoBehaviour
         transform.SetParent(new_tile.transform, false);
 
         current_tile = new_tile;
+
+        FadeAdjacentPlayersTo(current_tile);
     }
 
     void Cycle(bool forward)
@@ -130,6 +134,37 @@ public class Highlight : MonoBehaviour
         }
 
         MoveToTile(cycle_player.highlighted_tiles[cycle_ind]);
+    }
+
+    void ResetFadedPlayers()
+    {
+        foreach (SpriteRenderer sprite in faded_players)
+        {
+            Color current_color = sprite.color;
+            current_color.a = 1;
+            sprite.color = current_color;
+        }
+        faded_players.Clear();
+    }
+
+    void FadeAdjacentPlayersTo(Tile tile)
+    {
+        ResetFadedPlayers();
+        foreach (Tile adjacent_tile in tile.adjacent_tiles)
+        {
+            if (adjacent_tile != null)
+            {
+                Player player = adjacent_tile.GetPlayer();
+                if (player != null)
+                {
+                    SpriteRenderer sprite_renderer = player.gameObject.GetComponent<SpriteRenderer>();
+                    Color current_color = sprite_renderer.color;
+                    current_color.a = 0.5f;
+                    sprite_renderer.color = current_color;
+                    faded_players.Add(sprite_renderer);
+                }
+            }
+        }
     }
 
     void Confirm()
