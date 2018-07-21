@@ -556,6 +556,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d12ad45e392541240b67285e8a5a142a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball_prefab: {fileID: 1639538958796332, guid: b711488caa546104dacbb512a36a8531,
+    type: 2}
   tile_prefab: {fileID: 1653282935156714, guid: fe05a0ed7aa339c4887cc33966898bc2,
     type: 2}
   hoop_prefab: {fileID: 1164313406363022, guid: 0264a3423efac364f8ff4cd806b647d3,
@@ -582,6 +584,8 @@ MonoBehaviour:
   offensive_B_player_columns: 0600000005000000050000000500000005000000
   defensive_B_player_rows: 0500000003000000070000000100000009000000
   defensive_B_player_columns: 0400000003000000030000000300000003000000
+  set_rows: 0
+  set_columns: 0
 --- !u!1 &279036705
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,12 +9,6 @@ public class Ball : MonoBehaviour
     Player pass_destination;
 
     float ball_speed = 0.2f;
-    Vector3 ball_catch_visual_offset;
-
-    void Start()
-    {
-        ball_catch_visual_offset = transform.localPosition;
-    }
 
     public void Pass(Player new_player)
     {
@@ -22,11 +16,6 @@ public class Ball : MonoBehaviour
         pass_destination = new_player;
     }
 	
-    public void SetCaught()
-    {
-        transform.localPosition = ball_catch_visual_offset;
-    }
-
 	void Update ()
     {
         if (passing)
@@ -35,11 +24,30 @@ public class Ball : MonoBehaviour
             if (current_distance < 0.1f)
             {
                 passing = false;
-                SetCaught();
+                FixPositionFacing(pass_destination);
                 return;
             }
 
             transform.position = Vector2.MoveTowards(transform.position, pass_destination.transform.position, ball_speed);
         }
 	}
+
+    public void FixPositionFacing(Player player)
+    {
+        switch (player.facing)
+        {
+            case SpriteFacing.SE:
+                transform.localPosition = new Vector3(0.06f, -0.03f, -0.25f);
+                break;
+            case SpriteFacing.SW:
+                transform.localPosition = new Vector3(-0.06f, -0.03f, -0.25f);
+                break;
+            case SpriteFacing.NE:
+                transform.localPosition = new Vector3(0.06f, -0.03f, 0.25f);
+                break;
+            case SpriteFacing.NW:
+                transform.localPosition = new Vector3(-0.06f, -0.03f, 0.25f);
+                break;
+        }
+    }
 }

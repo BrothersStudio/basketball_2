@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FieldGenerator : MonoBehaviour
 {
+    public GameObject ball_prefab;
     public GameObject tile_prefab;
     public GameObject hoop_prefab;
     public GameObject player_prefab;
@@ -117,6 +118,7 @@ public class FieldGenerator : MonoBehaviour
                 {
                     GameObject new_hoop = Instantiate(hoop_prefab, new_tile.transform);
                     new_hoop.GetComponent<Hoop>().current_tile = new_tile.GetComponent<Tile>();
+                    new_hoop.GetComponent<SpriteRenderer>().flipX = setup == 0 ? true : false;
                     all_objects.Add(new_hoop);
                 }
 
@@ -138,16 +140,12 @@ public class FieldGenerator : MonoBehaviour
                         {
                             gave_ball = true;
 
-                            // Add the ball so we can cleanly destroy it later
-                            all_objects.Add(new_player.transform.GetChild(0).gameObject);
+                            GameObject new_ball = Instantiate(ball_prefab, new_player.transform);
+                            all_objects.Add(new_ball);
 
                             // Start highlight on this tile
                             GameObject highlight = Instantiate(highlight_prefab, new_tile.transform);
                             all_objects.Add(highlight);
-                        }
-                        else
-                        {
-                            Destroy(new_player.transform.GetChild(0).gameObject);
                         }
                     }
                 }
@@ -160,7 +158,6 @@ public class FieldGenerator : MonoBehaviour
                         new_player.name = "Defender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
                         new_player.GetComponent<Player>().team = defensive_team;
-                        Destroy(new_player.transform.GetChild(0).gameObject);  // Remove ball
 
                         if (defensive_team == Team.B)
                         {
@@ -176,6 +173,23 @@ public class FieldGenerator : MonoBehaviour
         foreach (Tile tile in FindObjectsOfType<Tile>())
         {
             tile.SetAdjacency();
+        }
+
+        Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
+        Tile ball_tile = FindObjectOfType<Ball>().transform.parent.GetComponent<Player>().current_tile;
+        Debug.Log(ball_tile);
+        foreach (Player player in FindObjectsOfType<Player>())
+        {
+            if (player.team == Possession.team)
+            {
+                // Offensive facing
+                player.DetermineSpriteFacing(player.current_tile, hoop_tile);
+            }
+            else
+            {
+                // Defensive facing
+                player.DetermineSpriteFacing(player.current_tile, ball_tile);
+            }
         }
     }
 

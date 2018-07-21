@@ -10,7 +10,9 @@ public class Tile : MonoBehaviour
     public Vector2 position;
     Player standing_player = null;
 
-    Player querying_player;
+    Player querying_player = null;
+
+    public Tile previous_walk_tile = null;
 
     public List<Tile> adjacent_tiles = new List<Tile>();
 
@@ -45,6 +47,7 @@ public class Tile : MonoBehaviour
     public void Dehighlight()
     {
         highlighted = false;
+        previous_walk_tile = null;
         querying_player = null;
         GetComponent<SpriteRenderer>().color = Color.white;
     }

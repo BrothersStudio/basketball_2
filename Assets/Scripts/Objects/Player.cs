@@ -13,6 +13,10 @@ public class Player : MonoBehaviour
 
     public bool ai_pass_check = false;
 
+    // Sprites
+    public SpriteFacing facing;
+    public List<Sprite> player_sprites;
+
     // Stats
     int move = 2;
 
@@ -175,7 +179,7 @@ public class Player : MonoBehaviour
     {
         if (new_tile != null)
         {
-            MoveToTile(new_tile);
+            StartCoroutine(MoveToTile(new_tile));
         }
     }
 
@@ -213,6 +217,12 @@ public class Player : MonoBehaviour
                                 continue;
                             }
                         }
+                        
+                        // If it's not already registered, figure out the tile that came before for walking purposes
+                        if (!tiles_to_walk.Contains(adjacent_tile))
+                        {
+                            adjacent_tile.previous_walk_tile = tile;
+                        }
                         tiles_to_walk.Add(adjacent_tile);
                     }
                 }
@@ -247,22 +257,89 @@ public class Player : MonoBehaviour
         {
             moving = false;
 
-            MoveToTile(new_tile);
+            StartCoroutine(MoveToTile(new_tile));
 
             took_move = true;
             EndAction();
         }
     }
 
-    void MoveToTile(Tile new_tile)
+    IEnumerator MoveToTile(Tile new_tile)
     {
-        transform.SetParent(new_tile.transform, false);
+        Tile current_walking_tile = new_tile;
+        List<Tile> tile_route = new List<Tile>();
+        while (current_walking_tile != current_tile)
+        {
+            tile_route.Add(current_walking_tile);
+            current_walking_tile = current_walking_tile.previous_walk_tile;
+        }
+        tile_route.Reverse();
+
+        Tile previous_tile = current_tile;
+        foreach (Tile next_tile in tile_route)
+        {
+            transform.SetParent(next_tile.transform, false);
+            DetermineSpriteFacing(previous_tile, next_tile);
+            yield return new WaitForSeconds(0.2f);
+            previous_tile = next_tile;
+        }
 
         current_tile.RemovePlayer();
         new_tile.SetPlayer(this);
         current_tile = new_tile;
 
         CheckIfScored();
+    }
+
+    public void DetermineSpriteFacing(Tile previous_tile, Tile next_tile)
+    {
+        Vector2 difference = next_tile.position - previous_tile.position;
+        difference.Normalize();
+        Debug.Log(gameObject.name);
+        Debug.Log(difference);
+
+        if (Mathf.Abs(difference.x) > Mathf.Abs(difference.y))
+        {
+            difference = new Vector2(Mathf.RoundToInt(difference.x), 0);
+        }
+        else
+        {
+            difference = new Vector2(0, Mathf.RoundToInt(difference.y));
+        }
+
+        if (difference == new Vector2(1, 0))
+        {
+            GetComponent<SpriteRenderer>().sprite = player_sprites[1];
+            GetComponent<SpriteRenderer>().flipX = true;
+            facing = SpriteFacing.NW;
+        }
+        else if (difference == new Vector2(0, 1))
+        {
+            GetComponent<SpriteRenderer>().sprite = player_sprites[0];
+            GetComponent<SpriteRenderer>().flipX = true;
+            facing = SpriteFacing.SW;
+        }
+        else if (difference == new Vector2(-1, 0))
+        {
+            GetComponent<SpriteRenderer>().sprite = player_sprites[0];
+            GetComponent<SpriteRenderer>().flipX = false;
+            facing = SpriteFacing.SE;
+        }
+        else if (difference == new Vector2(0, -1))
+        {
+            GetComponent<SpriteRenderer>().sprite = player_sprites[1];
+            GetComponent<SpriteRenderer>().flipX = false;
+            facing = SpriteFacing.NE;
+        }
+        else
+        {
+            Debug.LogWarning("No matching facing direction");
+        }
+
+        if (HasBall())
+        {
+            GetComponentInChildren<Ball>().FixPositionFacing(this);
+        }
     }
 
     void CheckIfScored()
@@ -350,4 +427,12 @@ public enum Team
 {
     A,
     B
+}
+
+public enum SpriteFacing
+{
+    NW,
+    SW,
+    NE,
+    SE
 }
