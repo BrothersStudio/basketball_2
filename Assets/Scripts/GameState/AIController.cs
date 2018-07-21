@@ -121,6 +121,29 @@ public class AIController : MonoBehaviour
         // Do a normal defensive turn
         foreach (Player player in ai_players)
         {
+            bool pushed = false;
+
+            // If I can already push, do so and then move annoyingly
+            if (player.CheckPush())
+            {
+                foreach (Tile tile in player.highlighted_tiles)
+                {
+                    Tile potential_tile = player.current_tile.VisualizePushingOtherFromHere(tile);
+                    if (potential_tile == null) continue;
+
+                    if (GetDistanceFromAToBForTeam(potential_tile, FindObjectOfType<Hoop>().current_tile, Team.A) >
+                        GetDistanceFromAToBForTeam(tile, FindObjectOfType<Hoop>().current_tile, Team.A))
+                    {
+                        // It's better for us to push this guy
+                        yield return new WaitForSeconds(1f);
+                        tile.Confirm();
+                        pushed = true;
+                        break;
+                    }
+                }
+                player.SetInactive();
+            }
+
             // Moving
             player.CheckMove();
             yield return new WaitForSeconds(1f);
@@ -128,30 +151,26 @@ public class AIController : MonoBehaviour
             FindMostInconvienientTileFor(hate_target, player).Confirm();
             yield return new WaitForSeconds(1f);
 
-            // Pushing
-            player.CheckPush();
-            yield return new WaitForSeconds(1f);
-            bool pushed = false;
-
-            // Push ball carrier if you have the option
-            foreach (Tile tile in player.highlighted_tiles)
+            // If we still haven't pushed...
+            if (!pushed)
             {
-                if (tile.HasPlayer())
+                player.CheckPush();
+                foreach (Tile tile in player.highlighted_tiles)
                 {
-                    if (tile.GetPlayer().HasBall())
+                    Tile potential_tile = player.current_tile.VisualizePushingOtherFromHere(tile);
+                    if (potential_tile == null) continue;
+
+                    if (GetDistanceFromAToBForTeam(potential_tile, FindObjectOfType<Hoop>().current_tile, Team.A) >
+                        GetDistanceFromAToBForTeam(tile, FindObjectOfType<Hoop>().current_tile, Team.A))
                     {
+                        // It's better for us to push this guy
+                        yield return new WaitForSeconds(1f);
                         tile.Confirm();
                         pushed = true;
                         break;
                     }
                 }
-            }
-
-            // If no ball carrier, push a random guy I guess
-            if (!pushed && player.highlighted_tiles.Count != 0)
-            {
-                player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].Confirm();
-                pushed = true;
+                player.SetInactive();
             }
         }
 
