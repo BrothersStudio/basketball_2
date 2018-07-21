@@ -88,6 +88,7 @@ public class Player : MonoBehaviour
             GetComponentInChildren<Ball>().Pass(pass_player);
             GetComponentInChildren<Ball>().transform.SetParent(pass_player.transform, true);
 
+            FindObjectOfType<CameraShake>().Shake(0.1f);
             took_attack = true;
             EndAction();
         }
@@ -171,6 +172,7 @@ public class Player : MonoBehaviour
                 other_player.PushedTo(new_tile);
             }
 
+            FindObjectOfType<CameraShake>().Shake(0.3f);
             took_attack = true;
             EndAction();
         }

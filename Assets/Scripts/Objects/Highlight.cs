@@ -13,7 +13,7 @@ public class Highlight : MonoBehaviour
     float end_turn_buffer = 0.4f;
     GameObject end_turn_window;
 
-    List<SpriteRenderer> faded_players = new List<SpriteRenderer>();
+    List<GameObject> faded_players = new List<GameObject>();
 
     void Awake()
     {
@@ -138,13 +138,19 @@ public class Highlight : MonoBehaviour
 
     void ResetFadedPlayers()
     {
-        foreach (SpriteRenderer sprite in faded_players)
+        foreach (GameObject player in faded_players)
         {
-            Color current_color = sprite.color;
-            current_color.a = 1;
-            sprite.color = current_color;
+            Unfade(player);
         }
         faded_players.Clear();
+    }
+
+    void Unfade(GameObject player)
+    {
+        SpriteRenderer sprite = player.GetComponent<SpriteRenderer>();
+        Color current_color = sprite.color;
+        current_color.a = 1;
+        sprite.color = current_color;
     }
 
     void FadeAdjacentPlayersTo(Tile tile)
@@ -157,11 +163,14 @@ public class Highlight : MonoBehaviour
                 Player player = adjacent_tile.GetPlayer();
                 if (player != null)
                 {
-                    SpriteRenderer sprite_renderer = player.gameObject.GetComponent<SpriteRenderer>();
-                    Color current_color = sprite_renderer.color;
-                    current_color.a = 0.5f;
-                    sprite_renderer.color = current_color;
-                    faded_players.Add(sprite_renderer);
+                    if (!player.moving)
+                    {
+                        SpriteRenderer sprite_renderer = player.gameObject.GetComponent<SpriteRenderer>();
+                        Color current_color = sprite_renderer.color;
+                        current_color.a = 0.5f;
+                        sprite_renderer.color = current_color;
+                        faded_players.Add(sprite_renderer.gameObject);
+                    }
                 }
             }
         }
