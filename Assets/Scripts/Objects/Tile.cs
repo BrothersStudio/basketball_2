@@ -98,4 +98,31 @@ public class Tile : MonoBehaviour
             return false;
         }
     }
+
+    public bool OnEdge()
+    {
+        FieldGenerator field = FindObjectOfType<FieldGenerator>();
+        if (position.x == field.set_rows - 1)
+        {
+            return true;
+        }
+        else if (position.y == field.set_columns - 1)
+        {
+            return true;
+        }
+        else if (position.x == 0 || position.y == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public Tile VisualizePushingOtherFromHere(Tile other_tile)
+    {
+        Vector2 new_tile_coordinate = (other_tile.position - position) + other_tile.position;
+        return Utils.FindTileAtLocation(new_tile_coordinate);
+    }
 }

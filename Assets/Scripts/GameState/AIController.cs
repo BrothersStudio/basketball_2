@@ -46,6 +46,79 @@ public class AIController : MonoBehaviour
 
     IEnumerator Defend()
     {
+        // Can anyone push the ball carrier off?
+        Player ball_carrier = GetPlayerWithBall();
+        if (IsNearEdge(ball_carrier))
+        {
+            foreach (Player player in ai_players)
+            {
+                player.CheckMove();
+                List<Tile> check_tile = ReturnAnyAdjacentTo(player.highlighted_tiles, ball_carrier.current_tile);
+                if (check_tile.Count != 0)
+                {
+                    foreach (Tile tile in check_tile)
+                    {
+                        Tile test_tile = tile.VisualizePushingOtherFromHere(ball_carrier.current_tile);
+                        if (test_tile == null)
+                        {
+                            yield return new WaitForSeconds(1f);
+                            player.Move(tile);
+                            yield return new WaitForSeconds(1f);
+                            player.CheckPush();
+                            yield return new WaitForSeconds(1f);
+                            player.Push(ball_carrier);
+                            yield break;
+                        }
+                        else if (test_tile.OnEdge())
+                        {
+                            foreach (Player other_player in ai_players)
+                            {
+                                if (player == other_player) continue;
+
+                                other_player.CheckMove(ignore_other_players: true);
+                                List<Tile> other_check_tile = ReturnAnyAdjacentTo(other_player.highlighted_tiles, test_tile);
+                                if (other_check_tile.Count != 0)
+                                {
+                                    foreach (Tile other_tile in other_check_tile)
+                                    {
+                                        Tile other_test_tile = other_tile.VisualizePushingOtherFromHere(test_tile);
+                                        if (other_test_tile == null)
+                                        {
+                                            player.SetInactive();
+                                            other_player.SetInactive();
+
+                                            // First move/push
+                                            player.CheckMove();
+                                            yield return new WaitForSeconds(1f);
+                                            player.Move(tile);
+                                            yield return new WaitForSeconds(1f);
+                                            player.CheckPush();
+                                            yield return new WaitForSeconds(1f);
+                                            player.Push(ball_carrier);
+                                            yield return new WaitForSeconds(1f);
+
+                                            // Second
+                                            other_player.CheckMove();
+                                            yield return new WaitForSeconds(1f);
+                                            other_player.Move(other_tile);
+                                            yield return new WaitForSeconds(1f);
+                                            other_player.CheckPush();
+                                            yield return new WaitForSeconds(1f);
+                                            other_player.Push(ball_carrier);
+                                            yield break;
+                                        }
+                                    }
+                                }
+                                other_player.SetInactive();
+                            }
+                        }
+                    }
+                }
+                player.SetInactive();
+            }
+        }
+
+        // Do a normal defensive turn
         foreach (Player player in ai_players)
         {
             // Moving
@@ -53,7 +126,7 @@ public class AIController : MonoBehaviour
             yield return new WaitForSeconds(1f);
             Player hate_target = FindClosestEnemyTo(player);
             FindMostInconvienientTileFor(hate_target, player).Confirm();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
 
             // Pushing
             player.CheckPush();
@@ -83,7 +156,7 @@ public class AIController : MonoBehaviour
         }
 
         GetComponent<PhaseController>().ChangePhase();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
     }
 
     IEnumerator Attack()
@@ -108,7 +181,7 @@ public class AIController : MonoBehaviour
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
                 FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1f);
                 yield break;
             }
         }
@@ -122,7 +195,7 @@ public class AIController : MonoBehaviour
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
                 FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1f);
 
                 if (player.CheckPass())
                 {
@@ -130,7 +203,7 @@ public class AIController : MonoBehaviour
                     {
                         if (!tile.GetPlayer().took_move)
                         {
-                            yield return new WaitForSeconds(0.5f);
+                            yield return new WaitForSeconds(1f);
                             tile.Confirm();
                             break;
                         }
@@ -144,14 +217,14 @@ public class AIController : MonoBehaviour
                 {
                     foreach (Tile tile in player.highlighted_tiles)
                     {
-                        Tile potential_tile = player.VisualizePush(tile.GetPlayer());
+                        Tile potential_tile = player.VisualizePushing(tile.GetPlayer());
                         if (potential_tile == null) continue;
 
-                        if (Utils.GetDistanceFromAToBForTeam(potential_tile, GetAIPlayerWithBall().current_tile, Team.A) >
-                            Utils.GetDistanceFromAToBForTeam(tile, GetAIPlayerWithBall().current_tile, Team.A))
+                        if (GetDistanceFromAToBForTeam(potential_tile, GetPlayerWithBall().current_tile, Team.A) >
+                            GetDistanceFromAToBForTeam(tile, GetPlayerWithBall().current_tile, Team.A))
                         {
                             // It's better for us to push this guy
-                            yield return new WaitForSeconds(0.5f);
+                            yield return new WaitForSeconds(1f);
                             tile.Confirm();
                             break;
                         }
@@ -166,14 +239,14 @@ public class AIController : MonoBehaviour
                 {
                     // Move toward hoop
                     FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(1f);
                 }
                 else
                 {
                     // Move and push an enemy
                     Player enemy = FindClosestEnemyTo(player);
                     FindClosestInGroupOfTilesTo(player, enemy.current_tile).Confirm();
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(1f);
                     if (player.CheckPush())
                     {
                         Player chosen_player = player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].GetPlayer();
@@ -185,7 +258,7 @@ public class AIController : MonoBehaviour
         }
 
         GetComponent<PhaseController>().ChangePhase();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
     }
 
     IEnumerator GiveHimTheBall(Player target_player)
@@ -223,7 +296,7 @@ public class AIController : MonoBehaviour
             }
             player.SetInactive();
         }
-        Utils.ResetPassChecks();
+        ResetPassChecks();
     }
 
     IEnumerator PassTo(Player origin, Player target)
@@ -233,9 +306,9 @@ public class AIController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         closest_tile.Confirm();
         origin.CheckPass();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         origin.Pass(target);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         //Utils.ResetPassChecks();
     }
 
@@ -289,7 +362,7 @@ public class AIController : MonoBehaviour
 
         foreach (Tile highlighted_tile in tiles_to_check)
         {
-            int check_dist = Utils.GetDistanceFromAToBForTeam(target_tile, highlighted_tile, moving_player.team);
+            int check_dist = GetDistanceFromAToBForTeam(target_tile, highlighted_tile, moving_player.team);
             if (check_dist < min_dist)
             {
                 min_tiles.Clear();
@@ -315,7 +388,7 @@ public class AIController : MonoBehaviour
             min_dist = 100;
             foreach (Tile tile in min_tiles)
             {
-                int check_dist = Utils.GetDistanceFromAToBForTeam(tile, hoop_tile, Team.B);
+                int check_dist = GetDistanceFromAToBForTeam(tile, hoop_tile, Team.B);
                 if (check_dist < min_dist)
                 {
                     min_dist = check_dist;
@@ -375,9 +448,9 @@ public class AIController : MonoBehaviour
         ai_players.Insert(0, ball_carrier);
     }
 
-    Player GetAIPlayerWithBall()
+    Player GetPlayerWithBall()
     {
-        foreach (Player player in ai_players)
+        foreach (Player player in FindObjectsOfType<Player>())
         {
             if (player.HasBall())
             {
@@ -395,7 +468,7 @@ public class AIController : MonoBehaviour
         List<Tile> best_tiles = new List<Tile>();
         foreach (Tile highlighted_tile in check_player.highlighted_tiles)
         {
-            int check_dist = Utils.GetDistanceForTeamIfTileImpassible(hate_player.current_tile, hoop_tile, highlighted_tile, Team.A);
+            int check_dist = GetDistanceForTeamIfTileImpassible(hate_player.current_tile, hoop_tile, highlighted_tile, Team.A);
             if (check_dist >= max_dist)
             {
                 max_dist = check_dist;
@@ -403,5 +476,126 @@ public class AIController : MonoBehaviour
             }
         }
         return FindClosestInGroupOfTilesTo(check_player, hate_player.current_tile, best_tiles);
+    }
+
+    int GetDistanceFromAToBForTeam(Tile tile_1, Tile tile_2, Team team)
+    {
+        HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
+        tiles_to_walk.Add(tile_1);
+
+        int counter = 0;
+        while (counter < 20)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
+        {
+            counter++;
+
+            Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
+            tiles_to_walk.CopyTo(current_walk_tiles);
+            foreach (Tile tile in current_walk_tiles)
+            {
+                foreach (Tile adjacent_tile in tile.adjacent_tiles)
+                {
+                    if (adjacent_tile == null) continue;
+
+                    if (adjacent_tile == tile_2)
+                    {
+                        return counter;
+                    }
+
+                    if (adjacent_tile.HasPlayer())
+                    {
+                        if (adjacent_tile.GetPlayer().team != team)
+                        {
+                            continue;
+                        }
+                    }
+
+                    tiles_to_walk.Add(adjacent_tile);
+                }
+            }
+        }
+        return counter;
+    }
+
+    int GetDistanceForTeamIfTileImpassible(Tile tile_1, Tile tile_2, Tile impassible_tile, Team team)
+    {
+        HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
+        tiles_to_walk.Add(tile_1);
+
+        int counter = 0;
+        while (counter < 20)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
+        {
+            counter++;
+
+            Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
+            tiles_to_walk.CopyTo(current_walk_tiles);
+            foreach (Tile tile in current_walk_tiles)
+            {
+                foreach (Tile adjacent_tile in tile.adjacent_tiles)
+                {
+                    if (adjacent_tile == null) continue;
+
+                    if (adjacent_tile == tile_2)
+                    {
+                        return counter;
+                    }
+
+                    if (adjacent_tile == impassible_tile)
+                    {
+                        continue;
+                    }
+                    else if (adjacent_tile.HasPlayer())
+                    {
+                        if (adjacent_tile.GetPlayer().team != team)
+                        {
+                            continue;
+                        }
+                    }
+
+                    tiles_to_walk.Add(adjacent_tile);
+                }
+            }
+        }
+        return counter;
+    }
+
+    bool IsNearEdge(Player player)
+    {
+        foreach (Tile adjacent_tile in player.current_tile.adjacent_tiles)
+        {
+            if (adjacent_tile == null)
+            {
+                return true;
+            }
+
+            if (adjacent_tile.OnEdge())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    List<Tile> ReturnAnyAdjacentTo(List<Tile> highlighted_tiles, Tile target_tile)
+    {
+        List<Tile> output_tiles = new List<Tile>();
+        foreach (Tile tile in highlighted_tiles)
+        {
+            foreach (Tile adjacent_tile in target_tile.adjacent_tiles)
+            {
+                if (tile == adjacent_tile)
+                {
+                    output_tiles.Add(tile);
+                }
+            }
+        }
+        return output_tiles;
+    }
+
+    public static void ResetPassChecks()
+    {
+        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        {
+            player.ai_pass_check = false;
+        }
     }
 }

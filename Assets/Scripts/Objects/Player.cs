@@ -108,6 +108,12 @@ public class Player : MonoBehaviour
                         highlighted_tiles.Add(player.current_tile);
                     }
                 }
+                else if (new_tile == null && player.HasBall())
+                {
+                    // On edge
+                    player.current_tile.Highlight(this);
+                    highlighted_tiles.Add(player.current_tile);
+                }
             }
 
             if (highlighted_tiles.Count > 0)
@@ -125,9 +131,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    public Tile VisualizePush(Player other_player)
+    public bool OnEdge()
+    {
+        return current_tile.OnEdge();
+    }
+
+    public Tile VisualizePushing(Player other_player)
     {
         Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
+        return Utils.FindTileAtLocation(new_tile_coordinate);
+    }
+
+    public Tile VisualizePushing(Tile other_tile)
+    {
+        Vector2 new_tile_coordinate = (other_tile.position - current_tile.position) + other_tile.position;
         return Utils.FindTileAtLocation(new_tile_coordinate);
     }
 
@@ -139,7 +156,15 @@ public class Player : MonoBehaviour
 
             Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
             Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
-            other_player.PushedTo(new_tile);
+            if (new_tile == null)
+            {
+                other_player.PushedToFall(this);
+                return;
+            }
+            else
+            {
+                other_player.PushedTo(new_tile);
+            }
 
             took_attack = true;
             EndAction();
@@ -154,7 +179,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void CheckMove(bool checking = false)
+    public void PushedToFall(Player pushing_player)
+    {
+        Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
+        rb.AddForce((transform.position - pushing_player.gameObject.transform.position) * 1000);
+        Invoke("DelayChange", 1f);
+    }
+
+    public void CheckMove(bool checking = false, bool ignore_other_players = false)
     {
         if (!took_move && !moving)
         {
@@ -174,7 +206,7 @@ public class Player : MonoBehaviour
                     {
                         if (adjacent_tile == null) continue;
 
-                        if (adjacent_tile.HasPlayer())
+                        if (adjacent_tile.HasPlayer() && !ignore_other_players)
                         {
                             if (adjacent_tile.GetPlayer().team != this.team)
                             {
@@ -193,6 +225,11 @@ public class Player : MonoBehaviour
                     // If on defense, can't stand next to hoop
                     if (this.team != Possession.team && Utils.IsAdjacentToHoop(tile)) continue;
                     
+                    tile.Highlight(this);
+                    highlighted_tiles.Add(tile);
+                }
+                else if (ignore_other_players)
+                {
                     tile.Highlight(this);
                     highlighted_tiles.Add(tile);
                 }

@@ -34,6 +34,8 @@ public class FieldGenerator : MonoBehaviour
     int B_field_hoop_row = 5;
     int B_field_hoop_column = 0;
 
+    public int set_rows;
+    public int set_columns;
 
     public void GenerateField(int setup)
     {
@@ -49,9 +51,6 @@ public class FieldGenerator : MonoBehaviour
 
         int hoop_row;
         int hoop_column;
-
-        int set_rows;
-        int set_columns;
 
         int gave_ball_ind;
 

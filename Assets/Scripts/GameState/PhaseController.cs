@@ -9,6 +9,7 @@ public class PhaseController : MonoBehaviour
 
     public bool AiOn;
 
+    [HideInInspector]
     public GameObject highlight;
 
     void Awake()
@@ -71,6 +72,10 @@ public class PhaseController : MonoBehaviour
 
     public void ChangeSides()
     {
+        // Stop normal "end turn" text, if applicable
+        FindObjectOfType<TurnText>().StopAndReset();
+
+        // Move "switch sides" text
         FindObjectOfType<MovingUI>().StartMoving();
         if (Possession.team == Team.A)
         {

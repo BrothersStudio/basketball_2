@@ -14,6 +14,12 @@ public class TurnText : MonoBehaviour
         default_position = GetComponent<RectTransform>().position;
     }
 
+    public void StopAndReset()
+    {
+        moving = false;
+        GetComponent<RectTransform>().position = default_position;
+    }
+
     public void StartMoving(string team)
     {
         moving = true;
