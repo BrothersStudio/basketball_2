@@ -89,8 +89,10 @@ public class CommandWindow : MonoBehaviour
         arrow.transform.SetParent(current_button.transform, false);
 
         // Attack
-        if (has_ball && !selected_player.took_attack)
+        if (has_ball && !selected_player.took_attack && selected_player.CheckPass())
         {
+            selected_player.SetInactive();  // Remove highlighted pass tiles
+
             attack_button.interactable = true;
             attack_button.onClick.RemoveAllListeners();
             attack_button.onClick.AddListener(delegate {

@@ -177,7 +177,6 @@ public class FieldGenerator : MonoBehaviour
 
         Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
         Tile ball_tile = FindObjectOfType<Ball>().transform.parent.GetComponent<Player>().current_tile;
-        Debug.Log(ball_tile);
         foreach (Player player in FindObjectsOfType<Player>())
         {
             if (player.team == Possession.team)

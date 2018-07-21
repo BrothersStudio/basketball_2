@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
             passing = false;
 
             GetComponentInChildren<Ball>().Pass(pass_player);
-            transform.Find("Ball").SetParent(pass_player.transform, true);
+            GetComponentInChildren<Ball>().transform.SetParent(pass_player.transform, true);
 
             took_attack = true;
             EndAction();
@@ -160,6 +160,7 @@ public class Player : MonoBehaviour
 
             Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
             Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+            DetermineSpriteFacing(current_tile, other_player.current_tile);
             if (new_tile == null)
             {
                 other_player.PushedToFall(this);
@@ -179,7 +180,7 @@ public class Player : MonoBehaviour
     {
         if (new_tile != null)
         {
-            StartCoroutine(MoveToTile(new_tile));
+            StartCoroutine(MoveToTile(new_tile, pushed: true));
         }
     }
 
@@ -264,22 +265,33 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator MoveToTile(Tile new_tile)
+    IEnumerator MoveToTile(Tile new_tile, bool pushed = false)
     {
-        Tile current_walking_tile = new_tile;
+        
         List<Tile> tile_route = new List<Tile>();
-        while (current_walking_tile != current_tile)
+        if (!pushed)
         {
-            tile_route.Add(current_walking_tile);
-            current_walking_tile = current_walking_tile.previous_walk_tile;
+            Tile current_walking_tile = new_tile;
+            while (current_walking_tile != current_tile)
+            {
+                tile_route.Add(current_walking_tile);
+                current_walking_tile = current_walking_tile.previous_walk_tile;
+            }
+            tile_route.Reverse();
         }
-        tile_route.Reverse();
+        else
+        {
+            tile_route.Add(new_tile);
+        }
 
         Tile previous_tile = current_tile;
         foreach (Tile next_tile in tile_route)
         {
             transform.SetParent(next_tile.transform, false);
-            DetermineSpriteFacing(previous_tile, next_tile);
+            if (!pushed)
+            {
+                DetermineSpriteFacing(previous_tile, next_tile);
+            }
             yield return new WaitForSeconds(0.2f);
             previous_tile = next_tile;
         }
@@ -295,9 +307,6 @@ public class Player : MonoBehaviour
     {
         Vector2 difference = next_tile.position - previous_tile.position;
         difference.Normalize();
-        Debug.Log(gameObject.name);
-        Debug.Log(difference);
-
         if (Mathf.Abs(difference.x) > Mathf.Abs(difference.y))
         {
             difference = new Vector2(Mathf.RoundToInt(difference.x), 0);

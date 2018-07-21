@@ -14,7 +14,7 @@ public class PhaseController : MonoBehaviour
 
     void Awake()
     {
-        current_phase = Phase.TeamBAct;
+        current_phase = Phase.TeamAAct;
 
         field_generator = FindObjectOfType<FieldGenerator>();
         field_generator.GenerateField(0);
@@ -65,6 +65,8 @@ public class PhaseController : MonoBehaviour
             FindObjectOfType<TurnText>().StartMoving("A");
 
             highlight.SetActive(true);
+
+            FindObjectOfType<ShotClock>().DecreaseTime();
         }
 
         FindObjectOfType<TimeCounter>().DecreaseTime();
@@ -91,6 +93,7 @@ public class PhaseController : MonoBehaviour
             field_generator.GenerateField(0);
             StartCoroutine(StartRound());
         }
+        FindObjectOfType<ShotClock>().Restart();
     }
 }
 
