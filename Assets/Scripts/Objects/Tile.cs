@@ -35,6 +35,11 @@ public class Tile : MonoBehaviour
         adjacent_tiles.Add(pos_4_tile);
     }
 
+    public void Hover()
+    {
+        GetComponent<SpriteRenderer>().color = Color.green;
+    }
+
     public void Highlight(Player querying_player)
     {
         highlighted = true;

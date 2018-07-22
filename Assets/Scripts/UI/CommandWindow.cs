@@ -54,6 +54,7 @@ public class CommandWindow : MonoBehaviour
         {
             current_button = move_button;
         }
+        HandleHover();
         arrow.transform.SetParent(current_button.transform, false);
     }
 
@@ -67,6 +68,7 @@ public class CommandWindow : MonoBehaviour
         {
             current_button = cancel_button;
         }
+        HandleHover();
         arrow.transform.SetParent(current_button.transform, false);
     }
 
@@ -75,6 +77,34 @@ public class CommandWindow : MonoBehaviour
         if (current_button.interactable)
         {
             current_button.onClick.Invoke();
+        }
+    }
+
+    void HandleHover()
+    {
+        if (current_button == attack_button)
+        {
+            Utils.DehighlightTiles();
+            if (selected_player.HasBall() && !selected_player.took_attack)
+            {
+                selected_player.HoverPass();
+            }
+            else if (!selected_player.HasBall() && !selected_player.took_attack)
+            {
+                //selected_player.HoverPush();
+            }
+        }
+        else if (current_button == move_button)
+        {
+            Utils.DehighlightTiles();
+            if (!selected_player.took_move)
+            {
+                //selected_player.HoverMove();
+            }
+        }
+        else
+        {
+            Utils.DehighlightTiles();
         }
     }
 
@@ -145,6 +175,7 @@ public class CommandWindow : MonoBehaviour
             move_button.interactable = false;
         }
 
+        HandleHover();
         gameObject.SetActive(true);
     }
 

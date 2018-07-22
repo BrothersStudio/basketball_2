@@ -47,6 +47,37 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void HoverPass()
+    {
+        // Got a little lazy sorry
+        foreach (Tile tile in current_tile.adjacent_tiles)
+        {
+            if (tile != null)
+            {
+                tile.Hover();
+                foreach (Tile next_tile in tile.adjacent_tiles)
+                {
+                    if (next_tile != null)
+                    {
+                        next_tile.Hover();
+                        foreach (Tile next_next_tile in next_tile.adjacent_tiles)
+                        {
+                            if (next_next_tile != null)
+                            {
+                                next_next_tile.Hover();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void RemoveHoverPass()
+    {
+        Utils.DehighlightTiles();
+    }
+
     public bool CheckPass()
     {
         if ((!took_attack && !passing) && HasBall())

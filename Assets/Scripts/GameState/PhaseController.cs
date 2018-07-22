@@ -14,10 +14,10 @@ public class PhaseController : MonoBehaviour
 
     void Awake()
     {
-        current_phase = Phase.TeamBAct;
+        current_phase = Phase.TeamAAct;
 
         field_generator = FindObjectOfType<FieldGenerator>();
-        field_generator.GenerateField(1);
+        field_generator.GenerateField(0);
         StartCoroutine(StartRound());
         Utils.DehighlightTiles();
     }
