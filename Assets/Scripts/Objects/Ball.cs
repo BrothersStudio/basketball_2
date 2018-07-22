@@ -29,6 +29,7 @@ public class Ball : MonoBehaviour
             }
 
             transform.position = Vector2.MoveTowards(transform.position, pass_destination.transform.position, ball_speed);
+            transform.Rotate(new Vector3(0, 0, 20f));
         }
 	}
 
