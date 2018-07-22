@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4940724072194486}
   - component: {fileID: 212474895009431732}
   - component: {fileID: 114453569850657858}
+  - component: {fileID: 114637717228303078}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -65,6 +66,17 @@ MonoBehaviour:
   team: 0
   current_tile: {fileID: 0}
   highlighted_tiles: []
+--- !u!114 &114637717228303078
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1617530440883408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bd59b8638f365429a864e130685a92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212474895009431732
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -100,12 +112,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 501ce3e5f596bd1439b47f29342b4cdf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3e8d4348e66a30948a589832068a73db, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.25, y: 0.36}
+  m_Size: {x: 0.18, y: 0.44}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

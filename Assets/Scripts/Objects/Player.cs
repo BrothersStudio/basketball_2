@@ -390,6 +390,7 @@ public class Player : MonoBehaviour
         if (took_attack && took_move)
         {
             GetComponent<SpriteRenderer>().color = Color.gray;
+            GetComponent<Bounce>().stop = true;
 
             if (Utils.TeamIsDoneTurn(team))
             {
@@ -414,6 +415,8 @@ public class Player : MonoBehaviour
     {
         took_attack = false;
         took_move = false;
+
+        GetComponent<Bounce>().stop = false;
 
         if (team == Team.A)
         {
