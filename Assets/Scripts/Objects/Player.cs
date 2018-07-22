@@ -73,11 +73,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void RemoveHoverPass()
-    {
-        Utils.DehighlightTiles();
-    }
-
     public bool CheckPass()
     {
         if ((!took_attack && !passing) && HasBall())
@@ -122,6 +117,17 @@ public class Player : MonoBehaviour
             FindObjectOfType<CameraShake>().Shake(0.2f);
             took_attack = true;
             EndAction();
+        }
+    }
+
+    public void HoverPush()
+    {
+        foreach (Tile tile in current_tile.adjacent_tiles)
+        {
+            if (tile != null)
+            {
+                tile.Hover();
+            }
         }
     }
 

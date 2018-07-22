@@ -91,7 +91,7 @@ public class CommandWindow : MonoBehaviour
             }
             else if (!selected_player.HasBall() && !selected_player.took_attack)
             {
-                //selected_player.HoverPush();
+                selected_player.HoverPush();
             }
         }
         else if (current_button == move_button)
