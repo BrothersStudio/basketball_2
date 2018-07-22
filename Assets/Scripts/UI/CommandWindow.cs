@@ -99,7 +99,7 @@ public class CommandWindow : MonoBehaviour
             Utils.DehighlightTiles();
             if (!selected_player.took_move)
             {
-                //selected_player.HoverMove();
+                selected_player.HoverMove();
             }
         }
         else

@@ -230,6 +230,54 @@ public class Player : MonoBehaviour
         Invoke("DelayChange", 1f);
     }
 
+    public void HoverMove()
+    {
+        HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
+        tiles_to_walk.Add(current_tile);
+
+        int distance_to_walk = move + (HasBall()? 1 : 0);
+        for (int i = 0; i < distance_to_walk; i++)
+        {
+            Tile[] current_walk_tiles = new Tile[tiles_to_walk.Count];
+            tiles_to_walk.CopyTo(current_walk_tiles);
+            foreach (Tile tile in current_walk_tiles)
+            {
+                foreach (Tile adjacent_tile in tile.adjacent_tiles)
+                {
+                    if (adjacent_tile == null) continue;
+
+                    if (adjacent_tile.HasPlayer())
+                    {
+                        if (adjacent_tile.GetPlayer().team != this.team)
+                        {
+                            continue;
+                        }
+                    }
+
+                    // If it's not already registered, figure out the tile that came before for walking purposes
+                    if (!tiles_to_walk.Contains(adjacent_tile))
+                    {
+                        adjacent_tile.previous_walk_tile = tile;
+                    }
+                    tiles_to_walk.Add(adjacent_tile);
+                }
+            }
+        }
+
+        foreach (Tile tile in tiles_to_walk)
+        {
+            if (!tile.HasPlayer())
+            {
+                // If on defense, can't stand next to hoop
+                if (this.team != Possession.team && Utils.IsAdjacentToHoop(tile)) continue;
+
+                tile.Hover();
+            }
+        }
+
+        current_tile.Hover();
+    }
+
     public void CheckMove(bool checking = false, bool ignore_other_players = false)
     {
         if (!took_move && !moving)
