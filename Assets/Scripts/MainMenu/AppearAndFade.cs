@@ -10,6 +10,15 @@ public class AppearAndFade : MonoBehaviour
         StartCoroutine(DisplayText());
     }
 
+    void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            CancelInvoke();
+            Destroy(gameObject);
+        }
+    }
+
     IEnumerator DisplayText()
     {
         // 0.3 seconds per word

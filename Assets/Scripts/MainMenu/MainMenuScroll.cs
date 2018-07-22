@@ -48,9 +48,17 @@ public class MainMenuScroll : MonoBehaviour
 
     void Update()
     {
-        if (press_button && Input.anyKey)
+        if (press_button && Input.anyKeyDown)
         {
             SceneManager.LoadScene("Game");
+        }
+        else if (Input.anyKeyDown)
+        {
+            moving = false;
+
+            CancelInvoke();
+            transform.position = top;
+            AppearTextSoon();
         }
     }
 }
