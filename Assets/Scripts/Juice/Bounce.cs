@@ -10,28 +10,28 @@ public class Bounce : MonoBehaviour
     bool shorten = false;
 
     public float x_growth = 0;
-    float max_x = 0.05f;
-    float min_x = -0.05f;
+    float max_x = 0.04f;
+    float min_x = -0.04f;
 
     float y_growth = 0;
 
     float grow_speed = 0.005f;
 
+    bool values_set = false;
     Vector3 original_position;
     Vector3 original_scale;
 
-	void Start ()
+    void Start()
     {
-        original_position = transform.localPosition;
         original_scale = transform.localScale;
 
         x_growth = Random.Range(min_x, max_x);
         y_growth = -x_growth;
-	}
-	
+    }
+
 	void Update ()
     {
-        if (!stop)
+        if (!stop && GetComponent<FallIntoPlace>().done)
         {
             if (tallen && x_growth > min_x)
             {
@@ -54,7 +54,7 @@ public class Bounce : MonoBehaviour
                 shorten = false;
             }
 
-            transform.localPosition = original_position + new Vector3(0, y_growth / 10f, 0);
+            //transform.localPosition = original_position + new Vector3(0, y_growth / 10f, 0);
             transform.localScale = new Vector3(original_scale.x + x_growth, original_scale.y + y_growth, 1);
         }
 	}

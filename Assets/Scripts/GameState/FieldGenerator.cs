@@ -108,7 +108,12 @@ public class FieldGenerator : MonoBehaviour
                 GameObject new_tile = Instantiate(tile_prefab, transform);
                 new_tile.GetComponent<SpriteRenderer>().sprite = tile_sprites[Random.Range(0, tile_sprites.Length)];
 
-                new_tile.transform.SetPositionAndRotation(new Vector3(j * -1.06f + i * -1.04f, j * -0.36f + i * 0.36f, j * -0.01f + i * 1f), Quaternion.identity);
+                // Set final position, and then move tile upwards so it can drop into place
+                Vector3 tile_final_position = new Vector3(j * -1.06f + i * -1.04f, j * -0.36f + i * 0.36f, j * -0.01f + i * 1f);
+                new_tile.transform.position = tile_final_position;
+                new_tile.GetComponent<FallIntoPlace>().SetFinalPosition(tile_final_position);
+                new_tile.GetComponent<FallIntoPlace>().FallSoon();
+
                 new_tile.name = "Tile " + i.ToString() + "," + j.ToString();
                 new_tile.GetComponent<Tile>().position = new Vector2(i, j);
 
@@ -117,6 +122,11 @@ public class FieldGenerator : MonoBehaviour
                 if (i == hoop_row && j == hoop_column)
                 {
                     GameObject new_hoop = Instantiate(hoop_prefab, new_tile.transform);
+
+                    Vector3 hoop_final_position = new_hoop.transform.position;
+                    new_hoop.transform.Translate(new Vector3(0, 10, 0), Space.World);
+                    new_hoop.GetComponent<FallIntoPlace>().SetFinalPosition(hoop_final_position);
+
                     new_hoop.GetComponent<Hoop>().current_tile = new_tile.GetComponent<Tile>();
                     new_hoop.GetComponent<SpriteRenderer>().flipX = setup == 0 ? true : false;
                     all_objects.Add(new_hoop);
@@ -127,6 +137,10 @@ public class FieldGenerator : MonoBehaviour
                     if (i == offensive_player_rows[n] && j == offensive_player_columns[n])
                     {
                         GameObject new_player = Instantiate(player_prefab, new_tile.transform);
+
+                        Vector3 player_final_position = new_player.transform.position;
+                        new_player.GetComponent<FallIntoPlace>().SetFinalPosition(player_final_position);
+
                         new_player.name = "Offender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
                         new_player.GetComponent<Player>().team = offensive_team;
@@ -141,12 +155,18 @@ public class FieldGenerator : MonoBehaviour
                             gave_ball = true;
 
                             GameObject new_ball = Instantiate(ball_prefab, new_player.transform);
+
+                            Vector3 ball_final_position = new_ball.transform.position;
+                            new_ball.GetComponent<FallIntoPlace>().SetFinalPosition(ball_final_position);
+
                             all_objects.Add(new_ball);
 
                             // Start highlight on this tile
                             GameObject highlight = Instantiate(highlight_prefab, new_tile.transform);
                             all_objects.Add(highlight);
                         }
+
+                        new_player.transform.Translate(new Vector3(0, 10, 0), Space.World);
                     }
                 }
 
@@ -155,6 +175,11 @@ public class FieldGenerator : MonoBehaviour
                     if (i == defensive_player_rows[n] && j == defensive_player_columns[n])
                     {
                         GameObject new_player = Instantiate(player_prefab, new_tile.transform);
+
+                        Vector3 player_final_position = new_player.transform.position;
+                        new_player.GetComponent<FallIntoPlace>().SetFinalPosition(player_final_position);
+                        new_player.transform.Translate(new Vector3(0, 10, 0), Space.World);
+
                         new_player.name = "Defender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
                         new_player.GetComponent<Player>().team = defensive_team;
@@ -167,6 +192,9 @@ public class FieldGenerator : MonoBehaviour
                         all_objects.Add(new_player);
                     }
                 }
+
+                // For the fall
+                new_tile.transform.Translate(new Vector3(0, 10, 0), Space.World);
             }
         }        
 

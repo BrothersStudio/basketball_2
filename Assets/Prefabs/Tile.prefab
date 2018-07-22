@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4728081326616320}
   - component: {fileID: 212524921270805036}
   - component: {fileID: 114669224145192972}
+  - component: {fileID: 114794833938969822}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -52,9 +53,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7815623713cbb204788ec97b1ad30db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  has_cursor: 0
   highlighted: 0
   position: {x: 0, y: 0}
+  previous_walk_tile: {fileID: 0}
   adjacent_tiles: []
+--- !u!114 &114794833938969822
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1653282935156714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d797db8c47ccb824697fe5ea33325eec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212524921270805036
 SpriteRenderer:
   m_ObjectHideFlags: 1
