@@ -8,7 +8,7 @@ public class ScoreCounter : MonoBehaviour
     int team_A_score = 0;
     int team_B_score = 0;
 
-    void PlayerScored(Player player)
+    public void PlayerScored(Player player)
     {
         if (player.team == Team.A)
         {

@@ -358,7 +358,7 @@ public class Player : MonoBehaviour
         Hoop hoop = FindObjectOfType<Hoop>();
         if (Utils.GetDistance(current_tile.position, hoop.current_tile.position) <= 1)
         {
-            FindObjectOfType<ScoreCounter>();
+            FindObjectOfType<ScoreCounter>().PlayerScored(this);
             Invoke("DelayChange", 0.5f);
         }
     }
