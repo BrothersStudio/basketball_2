@@ -12,6 +12,8 @@ public class PhaseController : MonoBehaviour
     [HideInInspector]
     public GameObject highlight;
 
+    bool game_over = false;
+
     void Awake()
     {
         current_phase = Phase.TeamAAct;
@@ -39,61 +41,91 @@ public class PhaseController : MonoBehaviour
 
     public void ChangePhase()
     {
-        AITurn.Activity = !AITurn.Activity;
-
-        foreach (Player player in FindObjectsOfType<Player>())
+        if (!game_over)
         {
-            player.SetInactive();
-            player.RefreshTurn();
-        }
+            AITurn.Activity = !AITurn.Activity;
 
-        if (current_phase == Phase.TeamAAct)
-        {
-            current_phase = Phase.TeamBAct;
-            FindObjectOfType<TurnText>().StartMoving("B");
-            if (AiOn)
+            foreach (Player player in FindObjectsOfType<Player>())
             {
-                highlight.SetActive(false);
-                GetComponent<AIController>().StartAITurn();
+                player.SetInactive();
+                player.RefreshTurn();
             }
+
+            if (current_phase == Phase.TeamAAct)
+            {
+                current_phase = Phase.TeamBAct;
+                FindObjectOfType<TurnText>().StartMoving("B");
+                if (AiOn)
+                {
+                    highlight.SetActive(false);
+                    GetComponent<AIController>().StartAITurn();
+                }
+            }
+            else if (current_phase == Phase.TeamBAct)
+            {
+                GetComponent<AIController>().StopAllCoroutines();
+
+                current_phase = Phase.TeamAAct;
+                FindObjectOfType<TurnText>().StartMoving("A");
+
+                highlight.SetActive(true);
+
+                FindObjectOfType<ShotClock>().DecreaseTime();
+            }
+
+            FindObjectOfType<TimeCounter>().DecreaseTime();
         }
-        else if (current_phase == Phase.TeamBAct)
-        {
-            GetComponent<AIController>().StopAllCoroutines();
-
-            current_phase = Phase.TeamAAct;
-            FindObjectOfType<TurnText>().StartMoving("A");
-
-            highlight.SetActive(true);
-
-            FindObjectOfType<ShotClock>().DecreaseTime();
-        }
-
-        FindObjectOfType<TimeCounter>().DecreaseTime();
     }
 
     public void ChangeSides()
     {
-        // Stop normal "end turn" text, if applicable
-        FindObjectOfType<TurnText>().StopAndReset();
+        if (!game_over)
+        {
+            // Stop normal "end turn" text, if applicable
+            FindObjectOfType<TurnText>().StopAndReset();
 
-        // Move "switch sides" text
-        FindObjectOfType<MovingUI>().StartMoving();
-        if (Possession.team == Team.A)
-        {
-            current_phase = Phase.TeamBAct;
-            Possession.team = Team.B;
-            field_generator.GenerateField(1);
-            StartCoroutine(StartRound());
+            // Move "switch sides" text
+            FindObjectOfType<MovingUI>().StartMoving();
+            if (Possession.team == Team.A)
+            {
+                current_phase = Phase.TeamBAct;
+                Possession.team = Team.B;
+                field_generator.GenerateField(1);
+                StartCoroutine(StartRound());
+            }
+            else
+            {
+                current_phase = Phase.TeamAAct;
+                Possession.team = Team.A;
+                field_generator.GenerateField(0);
+                StartCoroutine(StartRound());
+            }
+            FindObjectOfType<ShotClock>().Restart();
         }
-        else
+    }
+
+    public void GameOver()
+    {
+        game_over = true;
+
+        StopAllCoroutines();
+
+        Destroy(FindObjectOfType<TurnText>().gameObject);
+        Highlight highlight = FindObjectOfType<Highlight>();
+        if (highlight != null)
         {
-            current_phase = Phase.TeamAAct;
-            Possession.team = Team.A;
-            field_generator.GenerateField(0);
-            StartCoroutine(StartRound());
+            Destroy(highlight.gameObject);
         }
-        FindObjectOfType<ShotClock>().Restart();
+        Transform canvas = GameObject.Find("Canvas").transform;
+        Destroy(canvas.Find("End Turn Fade").gameObject);
+        Destroy(canvas.Find("Command Window").gameObject);
+
+        GetComponent<AIController>().StopAllCoroutines();
+        
+        Utils.DehighlightTiles();
+        Utils.DeactivatePlayers();
+
+        FindObjectOfType<MovingUI>().GameOver();
     }
 }
 

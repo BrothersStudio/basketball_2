@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class MovingUI : MonoBehaviour
 {
     bool moving = false;
+    bool game_over = false;
+
     float speed = 20;
     Vector3 default_position;
 
@@ -20,6 +22,15 @@ public class MovingUI : MonoBehaviour
         GetComponent<RectTransform>().position = default_position;
     }
 
+    public void GameOver()
+    {
+        moving = true;
+        game_over = true;
+        GetComponent<RectTransform>().position = default_position;
+
+        GetComponentInChildren<Text>().text = "Game Over";
+    }
+
     void Update ()
     {
         if (moving)
@@ -31,6 +42,10 @@ public class MovingUI : MonoBehaviour
                     GetComponent<RectTransform>().position.z);
 
             if (GetComponent<RectTransform>().position.x > 3000)
+            {
+                moving = false;
+            }
+            else if (game_over && GetComponent<RectTransform>().position.x > 1000)
             {
                 moving = false;
             }

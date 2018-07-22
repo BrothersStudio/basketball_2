@@ -73,4 +73,15 @@ public static class Utils
             tile.Dehighlight();
         }
     }
+
+    public static void DeactivatePlayers()
+    {
+        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        {
+            player.StopAllCoroutines();
+
+            player.took_attack = true;
+            player.took_move = true;
+        }
+    }
 }

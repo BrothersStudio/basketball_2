@@ -137,6 +137,7 @@ public class AIController : MonoBehaviour
                         // It's better for us to push this guy
                         yield return new WaitForSeconds(1f);
                         tile.Confirm();
+                        yield return new WaitForSeconds(1f);
                         pushed = true;
                         break;
                     }
@@ -166,6 +167,7 @@ public class AIController : MonoBehaviour
                         // It's better for us to push this guy
                         yield return new WaitForSeconds(1f);
                         tile.Confirm();
+                        yield return new WaitForSeconds(1f);
                         pushed = true;
                         break;
                     }
@@ -245,6 +247,7 @@ public class AIController : MonoBehaviour
                             // It's better for us to push this guy
                             yield return new WaitForSeconds(1f);
                             tile.Confirm();
+                            yield return new WaitForSeconds(1f);
                             break;
                         }
                     }
@@ -270,6 +273,7 @@ public class AIController : MonoBehaviour
                     {
                         Player chosen_player = player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].GetPlayer();
                         player.Push(chosen_player);
+                        yield return new WaitForSeconds(1f);
                     }
                 }
             }

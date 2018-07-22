@@ -6,16 +6,19 @@ using UnityEngine.UI;
 
 public class TimeCounter : MonoBehaviour
 {
-    TimeSpan quater_time;
+    TimeSpan current_quarter_time;
+    TimeSpan max_quarter_time;
 
     void Start()
     {
-        quater_time = new TimeSpan(0, 15, 0);
+        max_quarter_time = new TimeSpan(0, 10, 0);
+
+        current_quarter_time = max_quarter_time;
     }
 
     public void DecreaseTime()
     {
-        quater_time -= new TimeSpan(0, 0, 30);
+        current_quarter_time -= new TimeSpan(0, 0, 30);
 
         CheckQuarter();
         UpdateTimeDisplay();
@@ -23,12 +26,12 @@ public class TimeCounter : MonoBehaviour
 
     void UpdateTimeDisplay()
     {
-        transform.Find("Time").GetComponent<Text>().text = quater_time.Minutes.ToString() + ":" + quater_time.Seconds.ToString("D2");
+        transform.Find("Time").GetComponent<Text>().text = current_quarter_time.Minutes.ToString() + ":" + current_quarter_time.Seconds.ToString("D2");
     }
 
     void CheckQuarter()
     {
-        if (quater_time.TotalSeconds <= 0)
+        if (current_quarter_time.TotalSeconds <= 0)
         {
             NextQuarter();
         }
@@ -49,11 +52,12 @@ public class TimeCounter : MonoBehaviour
                 quarter_field.text = "4th";
                 break;
             case "4th":
-                quater_time = new TimeSpan(0, 0, 0);
+                current_quarter_time = new TimeSpan(0, 0, 0);
                 quarter_field.text = "End";
+                FindObjectOfType<PhaseController>().GameOver();
                 return;
         }
 
-        quater_time = new TimeSpan(0, 15, 0);
+        current_quarter_time = max_quarter_time;
     }
 }

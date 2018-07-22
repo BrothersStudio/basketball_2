@@ -17,7 +17,6 @@ public class Bounce : MonoBehaviour
 
     float grow_speed = 0.005f;
 
-    bool values_set = false;
     Vector3 original_position;
     Vector3 original_scale;
 
