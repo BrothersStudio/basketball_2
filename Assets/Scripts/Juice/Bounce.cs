@@ -21,8 +21,14 @@ public class Bounce : MonoBehaviour
     Vector3 original_position;
     Vector3 original_scale;
 
+    Team team;
+    PhaseController phase;
+
     void Start()
     {
+        team = GetComponent<Player>().team;
+        phase = FindObjectOfType<PhaseController>();
+
         original_scale = transform.localScale;
 
         x_growth = Random.Range(min_x, max_x);
@@ -31,6 +37,7 @@ public class Bounce : MonoBehaviour
 
 	void Update ()
     {
+        CheckPhase();
         if (!stop && GetComponent<FallIntoPlace>().done)
         {
             if (tallen && x_growth > min_x)
@@ -58,4 +65,28 @@ public class Bounce : MonoBehaviour
             transform.localScale = new Vector3(original_scale.x + x_growth, original_scale.y + y_growth, 1);
         }
 	}
+
+    void CheckPhase()
+    {
+        if (GetComponent<Player>().IsDone())
+        {
+            stop = true;
+        }
+        else if (phase.current_phase == Phase.TeamAAct && team == Team.A)
+        {
+            stop = false;
+        }
+        else if (phase.current_phase == Phase.TeamAAct && team == Team.B)
+        {
+            stop = true;
+        }
+        else if (phase.current_phase == Phase.TeamBAct && team == Team.B)
+        {
+            stop = false;
+        }
+        else if (phase.current_phase == Phase.TeamBAct && team == Team.A)
+        {
+            stop = true;
+        }
+    }
 }

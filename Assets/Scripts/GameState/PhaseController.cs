@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PhaseController : MonoBehaviour
 {
-    Phase current_phase;
+    public Phase current_phase;
     FieldGenerator field_generator;
 
     public bool AiOn;

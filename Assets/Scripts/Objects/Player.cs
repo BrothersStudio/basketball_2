@@ -390,7 +390,6 @@ public class Player : MonoBehaviour
         if (took_attack && took_move)
         {
             GetComponent<SpriteRenderer>().color = Color.gray;
-            GetComponent<Bounce>().stop = true;
 
             if (Utils.TeamIsDoneTurn(team))
             {
