@@ -74,7 +74,7 @@ public class FieldGenerator : MonoBehaviour
 
             gave_ball_ind = 1;
 
-            Camera.main.transform.position = new Vector3(-8.41f, 0.33f, -10f);
+            Camera.main.transform.position = new Vector3(-8.41f, 0.75f, -10f);
         }
         else
         {
@@ -95,7 +95,7 @@ public class FieldGenerator : MonoBehaviour
 
             gave_ball_ind = 0;
 
-            Camera.main.transform.position = new Vector3(-8.41f, 1.21f, -10f);
+            Camera.main.transform.position = new Vector3(-8.41f, 2.2f, -10f);
         }
 
         Possession.team = offensive_team;
@@ -155,10 +155,6 @@ public class FieldGenerator : MonoBehaviour
                             gave_ball = true;
 
                             GameObject new_ball = Instantiate(ball_prefab, new_player.transform);
-
-                            Vector3 ball_final_position = new_ball.transform.position;
-                            new_ball.GetComponent<FallIntoPlace>().SetFinalPosition(ball_final_position);
-
                             all_objects.Add(new_ball);
 
                             // Start highlight on this tile

@@ -6,7 +6,7 @@ public class FallIntoPlace : MonoBehaviour
 {
     public bool done = false;
     bool falling = false;
-    public Vector3 final_position;
+    Vector3 final_position;
 
     public void SetFinalPosition(Vector3 final_position)
     {
