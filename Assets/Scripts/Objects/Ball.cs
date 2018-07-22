@@ -8,10 +8,13 @@ public class Ball : MonoBehaviour
 
     Player pass_destination;
 
-    float ball_speed = 0.2f;
+    float orig_ball_speed = 0.3f;
+    float current_ball_speed;
 
     public void Pass(Player new_player)
     {
+        current_ball_speed = orig_ball_speed;
+
         passing = true;
         pass_destination = new_player;
     }
@@ -28,7 +31,8 @@ public class Ball : MonoBehaviour
                 return;
             }
 
-            transform.position = Vector2.MoveTowards(transform.position, pass_destination.transform.position, ball_speed);
+            current_ball_speed = Mathf.Clamp(0.92f * current_ball_speed, orig_ball_speed * 0.1f, orig_ball_speed);
+            transform.position = Vector2.MoveTowards(transform.position, pass_destination.transform.position, current_ball_speed);
             transform.Rotate(new Vector3(0, 0, 20f));
         }
 	}
