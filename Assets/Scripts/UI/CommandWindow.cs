@@ -32,13 +32,13 @@ public class CommandWindow : MonoBehaviour
             {
                 HandleDown();
             }
-            else if (Input.GetKeyDown("space"))
+            else if (Input.GetKeyDown("space") || Input.GetKeyDown("return"))
             {
                 HandleEnter();
             }
         }
 
-        if (Input.GetKeyDown("escape") || Input.GetKeyDown("return"))
+        if (Input.GetKeyDown("escape"))
         {
             Cancel();
         }

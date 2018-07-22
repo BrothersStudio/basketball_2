@@ -90,7 +90,7 @@ public class Highlight : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown("space") || Input.GetKeyDown("return"))
         {
             Confirm();
         }
