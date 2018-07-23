@@ -148,7 +148,7 @@ public class AIController : MonoBehaviour
             // Moving
             player.CheckMove();
             yield return new WaitForSeconds(1f);
-            Player hate_target = FindClosestEnemyTo(player);
+            Player hate_target = FindClosestEnemyToHoop();
             FindMostInconvienientTileFor(hate_target, player).Confirm();
             yield return new WaitForSeconds(1f);
 
