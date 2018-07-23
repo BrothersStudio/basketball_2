@@ -459,7 +459,14 @@ public class Player : MonoBehaviour
     {
         SetInactive();
         CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        if (took_attack && took_move)
+        {
+            canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        }
+        else
+        {
+            canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
+        }
     }
 
     public void SetInactive()
