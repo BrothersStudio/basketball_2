@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
 
     public bool CheckPass()
     {
-        if ((!took_attack && !passing) && HasBall())
+        if (!took_attack && !passing && HasBall())
         {
             passing = true;
 

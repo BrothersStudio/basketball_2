@@ -119,7 +119,7 @@ public class CommandWindow : MonoBehaviour
         arrow.transform.SetParent(current_button.transform, false);
 
         // Attack
-        if (has_ball && !selected_player.took_attack && selected_player.CheckPass())
+        if (selected_player.CheckPass())
         {
             selected_player.SetInactive();  // Remove highlighted pass tiles
 
@@ -133,8 +133,10 @@ public class CommandWindow : MonoBehaviour
 
             attack_button.gameObject.GetComponentInChildren<Text>().text = "Pass";
         }
-        else if (!selected_player.took_attack && Utils.ReturnAdjacentOpponents(selected_player).Count > 0)
+        else if (selected_player.CheckPush())
         {
+            selected_player.SetInactive();
+
             attack_button.interactable = true;
             attack_button.onClick.RemoveAllListeners();
             attack_button.onClick.AddListener(delegate {

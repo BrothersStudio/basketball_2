@@ -614,9 +614,36 @@ public class AIController : MonoBehaviour
         return output_tiles;
     }
 
+    Player FindClosestEnemyToHoop()
+    {
+        Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
+
+        int min_dist = 100;
+        Player min_player = null;
+        foreach (Player player in FindObjectsOfType<Player>())
+        {
+            if (player.team == Team.A)
+            {
+                int check_dist = GetDistanceFromAToBForTeam(player.current_tile, hoop_tile, Team.A);
+                if (check_dist < min_dist)
+                {
+                    min_dist = check_dist;
+                    min_player = player;
+                }
+                else if (check_dist == min_dist && player.HasBall())
+                {
+                    min_dist = check_dist;
+                    min_player = player;
+                }
+            }
+        }
+        Debug.Log(min_player.gameObject.name + " is closest!");
+        return min_player;
+    }
+
     public static void ResetPassChecks()
     {
-        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        foreach (Player player in FindObjectsOfType<Player>())
         {
             player.ai_pass_check = false;
         }
