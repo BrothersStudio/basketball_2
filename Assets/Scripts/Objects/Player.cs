@@ -281,8 +281,6 @@ public class Player : MonoBehaviour
                 tile.Hover();
             }
         }
-
-        current_tile.Hover();
     }
 
     public void CheckMove(bool checking = false, bool ignore_other_players = false)
@@ -339,10 +337,6 @@ public class Player : MonoBehaviour
                     highlighted_tiles.Add(tile);
                 }
             }
-
-            // This makes AI stuff a little easier later. Adding current tile.
-            current_tile.Highlight(this);
-            highlighted_tiles.Add(current_tile);
         }
     }
 
