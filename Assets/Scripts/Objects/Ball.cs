@@ -11,12 +11,16 @@ public class Ball : MonoBehaviour
     float orig_ball_speed = 0.3f;
     float current_ball_speed;
 
+    public GameObject sweat_particle_prefab;
+
     public void Pass(Player new_player)
     {
         current_ball_speed = orig_ball_speed;
 
         passing = true;
         pass_destination = new_player;
+
+        GameObject sweat = Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
     }
 	
 	void Update ()
@@ -28,6 +32,7 @@ public class Ball : MonoBehaviour
             {
                 passing = false;
                 FixPositionFacing(pass_destination);
+                GameObject sweat = Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
                 return;
             }
 

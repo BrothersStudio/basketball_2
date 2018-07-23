@@ -115,6 +115,7 @@ public class Player : MonoBehaviour
             GetComponentInChildren<Ball>().transform.SetParent(pass_player.transform, true);
 
             FindObjectOfType<CameraShake>().Shake(0.2f);
+
             took_attack = true;
             EndAction();
         }

@@ -64,6 +64,8 @@ MonoBehaviour:
   player_sprites:
   - {fileID: 21300000, guid: 3e8d4348e66a30948a589832068a73db, type: 3}
   - {fileID: 21300002, guid: 3e8d4348e66a30948a589832068a73db, type: 3}
+  sweat_particle_prefab: {fileID: 1930888459080794, guid: 730fc0bbd2d7c8c4cab3cbd900da4041,
+    type: 2}
   team: 0
   current_tile: {fileID: 0}
   highlighted_tiles: []
@@ -91,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d797db8c47ccb824697fe5ea33325eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  done: 0
 --- !u!212 &212474895009431732
 SpriteRenderer:
   m_ObjectHideFlags: 1
