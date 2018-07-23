@@ -43,6 +43,7 @@ public class PhaseController : MonoBehaviour
     {
         if (!game_over)
         {
+            GetComponent<AIController>().StopAllCoroutines();
             AITurn.Activity = !AITurn.Activity;
 
             foreach (Player player in FindObjectsOfType<Player>())
@@ -63,8 +64,6 @@ public class PhaseController : MonoBehaviour
             }
             else if (current_phase == Phase.TeamBAct)
             {
-                GetComponent<AIController>().StopAllCoroutines();
-
                 current_phase = Phase.TeamAAct;
                 FindObjectOfType<TurnText>().StartMoving("A");
 
@@ -81,6 +80,8 @@ public class PhaseController : MonoBehaviour
     {
         if (!game_over)
         {
+            GetComponent<AIController>().StopAllCoroutines();
+
             // Stop normal "end turn" text, if applicable
             FindObjectOfType<TurnText>().StopAndReset();
 
