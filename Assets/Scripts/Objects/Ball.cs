@@ -42,16 +42,16 @@ public class Ball : MonoBehaviour
         switch (player.facing)
         {
             case SpriteFacing.SE:
-                transform.localPosition = new Vector3(0.06f, -0.03f, -0.25f);
+                transform.localPosition = new Vector3(0.06f, -0.01f, -0.25f);
                 break;
             case SpriteFacing.SW:
-                transform.localPosition = new Vector3(-0.06f, -0.03f, -0.25f);
+                transform.localPosition = new Vector3(-0.06f, -0.01f, -0.25f);
                 break;
             case SpriteFacing.NE:
-                transform.localPosition = new Vector3(0.06f, -0.03f, 0.25f);
+                transform.localPosition = new Vector3(0.06f, -0.01f, 0.25f);
                 break;
             case SpriteFacing.NW:
-                transform.localPosition = new Vector3(-0.06f, -0.03f, 0.25f);
+                transform.localPosition = new Vector3(-0.06f, -0.01f, 0.25f);
                 break;
         }
     }
