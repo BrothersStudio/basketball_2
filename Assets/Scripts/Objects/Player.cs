@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     public SpriteFacing facing;
     public List<Sprite> player_sprites;
 
+    // Particles
+    public GameObject sweat_particle_prefab;
+
     // Stats
     int move = 2;
 
@@ -196,6 +199,9 @@ public class Player : MonoBehaviour
         if (!took_attack)
         {
             pushing = false;
+
+            Vector3 average_pos = (transform.position + other_player.transform.position) / 2f;
+            Instantiate(sweat_particle_prefab, average_pos, Quaternion.identity);
 
             Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
             Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);

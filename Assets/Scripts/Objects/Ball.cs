@@ -20,7 +20,7 @@ public class Ball : MonoBehaviour
         passing = true;
         pass_destination = new_player;
 
-        GameObject sweat = Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
+        Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
     }
 	
 	void Update ()
@@ -32,7 +32,7 @@ public class Ball : MonoBehaviour
             {
                 passing = false;
                 FixPositionFacing(pass_destination);
-                GameObject sweat = Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
+                Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
                 return;
             }
 
