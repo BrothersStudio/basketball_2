@@ -14,12 +14,16 @@ public class EndTurnWindow : MonoBehaviour
     [HideInInspector]
     public Highlight highlight;
 
+    float quit_game_timer = Mathf.Infinity;
+
     void OnEnable()
     {
         highlight.InMenu();
 
         current_button = confirm_button;
         arrow.SetParent(current_button.transform, false);
+
+        quit_game_timer = Time.timeSinceLevelLoad;
     }
 
     void Update()
@@ -39,6 +43,18 @@ public class EndTurnWindow : MonoBehaviour
         else if (Input.GetKeyDown("escape"))
         {
             Cancel();
+        }
+        else if (Input.GetKey("escape"))
+        {
+            if (Time.timeSinceLevelLoad > quit_game_timer + 1.75f)
+            {
+                Debug.Log("QUIT");
+                Application.Quit();
+            }
+        }
+        else
+        {
+            quit_game_timer = Time.timeSinceLevelLoad;
         }
     }
 
