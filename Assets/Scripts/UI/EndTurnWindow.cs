@@ -38,6 +38,7 @@ public class EndTurnWindow : MonoBehaviour
         }
         else if (Input.GetKeyDown("space") || Input.GetKeyDown("return"))
         {
+            Camera.main.GetComponent<AudioSource>().Play();
             HandleEnter();
         }
         else if (Input.GetKeyDown("escape"))
