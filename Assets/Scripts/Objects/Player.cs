@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     public bool pushing = false;
     public bool moving = false;
 
+    bool animating = false;
+
     public bool took_attack = false;
     public bool took_move = false;
 
@@ -78,7 +80,7 @@ public class Player : MonoBehaviour
 
     public bool CheckPass()
     {
-        if (!took_attack && !passing && HasBall())
+        if (!took_attack && !passing && HasBall() && !animating)
         {
             passing = true;
 
@@ -137,7 +139,7 @@ public class Player : MonoBehaviour
 
     public bool CheckPush()
     {
-        if (!took_attack && !pushing && !HasBall())
+        if (!took_attack && !pushing && !HasBall() && !animating)
         {
             pushing = true;
 
@@ -347,15 +349,13 @@ public class Player : MonoBehaviour
             moving = false;
 
             StartCoroutine(MoveToTile(new_tile));
-
-            took_move = true;
-            EndAction();
         }
     }
 
     IEnumerator MoveToTile(Tile new_tile, bool pushed = false)
     {
-        
+        animating = true;
+
         List<Tile> tile_route = new List<Tile>();
         if (!pushed)
         {
@@ -389,6 +389,13 @@ public class Player : MonoBehaviour
         current_tile = new_tile;
 
         CheckIfScored();
+
+        animating = false;
+        if (!pushed)
+        {
+            took_move = true;
+            EndAction();
+        }
     }
 
     public void DetermineSpriteFacing(Tile previous_tile, Tile next_tile)
