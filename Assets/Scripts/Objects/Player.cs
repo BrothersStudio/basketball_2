@@ -127,10 +127,29 @@ public class Player : MonoBehaviour
             GetComponentInChildren<Ball>().transform.SetParent(pass_player.transform, true);
 
             FindObjectOfType<CameraShake>().Shake(0.2f);
+            PlayPassAudio();
 
             took_attack = true;
             EndAction();
         }
+    }
+
+    void PlayPassAudio()
+    {
+        switch (Possession.passes_this_turn)
+        {
+            case 0:
+                GetComponent<AudioSource>().clip = pass_1_sound;
+                break;
+            case 1:
+                GetComponent<AudioSource>().clip = pass_2_sound;
+                break;
+            default:
+                GetComponent<AudioSource>().clip = pass_3_sound;
+                break;
+        }
+        GetComponent<AudioSource>().Play();
+        Possession.passes_this_turn++;
     }
 
     public void HoverPush()

@@ -43,6 +43,7 @@ public class PhaseController : MonoBehaviour
     {
         if (!game_over)
         {
+            Possession.passes_this_turn = 0;
             GetComponent<AIController>().StopAllCoroutines();
             AITurn.Activity = !AITurn.Activity;
 
@@ -80,6 +81,7 @@ public class PhaseController : MonoBehaviour
     {
         if (!game_over)
         {
+            Possession.passes_this_turn = 0;
             GetComponent<AIController>().StopAllCoroutines();
 
             // Stop normal "end turn" text, if applicable
