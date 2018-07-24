@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b47951d741eee80428b724e76f54cfbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sweat_particle_prefab: {fileID: 1930888459080794, guid: 730fc0bbd2d7c8c4cab3cbd900da4041,
+    type: 2}
 --- !u!212 &212377447467758538
 SpriteRenderer:
   m_ObjectHideFlags: 1

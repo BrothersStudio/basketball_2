@@ -11,12 +11,16 @@ public class Ball : MonoBehaviour
     float orig_ball_speed = 0.3f;
     float current_ball_speed;
 
+    public GameObject sweat_particle_prefab;
+
     public void Pass(Player new_player)
     {
         current_ball_speed = orig_ball_speed;
 
         passing = true;
         pass_destination = new_player;
+
+        Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
     }
 	
 	void Update ()
@@ -28,6 +32,7 @@ public class Ball : MonoBehaviour
             {
                 passing = false;
                 FixPositionFacing(pass_destination);
+                Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
                 return;
             }
 
@@ -42,16 +47,16 @@ public class Ball : MonoBehaviour
         switch (player.facing)
         {
             case SpriteFacing.SE:
-                transform.localPosition = new Vector3(0.06f, -0.03f, -0.25f);
+                transform.localPosition = new Vector3(0.06f, -0.01f, -0.25f);
                 break;
             case SpriteFacing.SW:
-                transform.localPosition = new Vector3(-0.06f, -0.03f, -0.25f);
+                transform.localPosition = new Vector3(-0.06f, -0.01f, -0.25f);
                 break;
             case SpriteFacing.NE:
-                transform.localPosition = new Vector3(0.06f, -0.03f, 0.25f);
+                transform.localPosition = new Vector3(0.06f, -0.01f, 0.25f);
                 break;
             case SpriteFacing.NW:
-                transform.localPosition = new Vector3(-0.06f, -0.03f, 0.25f);
+                transform.localPosition = new Vector3(-0.06f, -0.01f, 0.25f);
                 break;
         }
     }

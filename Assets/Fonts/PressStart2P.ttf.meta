@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0ec179a7c75563545b5e04b5a4ef3bfe
+guid: ce1abc3f3c91a234e8580b3dd930d935
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Coda Caption
+  fontName: Press Start 2P
   fontNames:
-  - Coda Caption
+  - Press Start 2P
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

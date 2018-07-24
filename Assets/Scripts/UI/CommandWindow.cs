@@ -111,10 +111,12 @@ public class CommandWindow : MonoBehaviour
     public void SetButtons(Player player)
     {
         selected_player = player;
+        highlight.Reset();
         highlight.InMenu();
 
         bool has_ball = selected_player.HasBall();
 
+        lock_arrow = false;
         current_button = attack_button;
         arrow.transform.SetParent(current_button.transform, false);
 
