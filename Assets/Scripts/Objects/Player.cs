@@ -465,10 +465,10 @@ public class Player : MonoBehaviour
             SetInactive();
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
         }
-        else
+        else 
         {
             SetInactive();
-            canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
+            Confirm();
         }
     }
 
