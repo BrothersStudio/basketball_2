@@ -151,21 +151,25 @@ public class Highlight : MonoBehaviour
     void FadeAdjacentPlayersTo(Tile tile)
     {
         ResetFadedPlayers();
-        foreach (Tile adjacent_tile in tile.adjacent_tiles)
+        SetTransparentOnTile(tile.adjacent_tiles[1]);
+        SetTransparentOnTile(tile.adjacent_tiles[2]);
+        SetTransparentOnTile(tile.adjacent_tiles[2].adjacent_tiles[1]);
+    }
+
+    void SetTransparentOnTile(Tile tile)
+    {
+        if (tile != null)
         {
-            if (adjacent_tile != null)
+            Player player = tile.GetPlayer();
+            if (player != null)
             {
-                Player player = adjacent_tile.GetPlayer();
-                if (player != null)
+                if (!player.moving)
                 {
-                    if (!player.moving)
-                    {
-                        SpriteRenderer sprite_renderer = player.gameObject.GetComponent<SpriteRenderer>();
-                        Color current_color = sprite_renderer.color;
-                        current_color.a = 0.5f;
-                        sprite_renderer.color = current_color;
-                        faded_players.Add(sprite_renderer.gameObject);
-                    }
+                    SpriteRenderer sprite_renderer = player.gameObject.GetComponent<SpriteRenderer>();
+                    Color current_color = sprite_renderer.color;
+                    current_color.a = 0.5f;
+                    sprite_renderer.color = current_color;
+                    faded_players.Add(sprite_renderer.gameObject);
                 }
             }
         }
