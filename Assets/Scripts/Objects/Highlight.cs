@@ -10,7 +10,7 @@ public class Highlight : MonoBehaviour
     Player cycle_player = null;
 
     float current_buffer = 0;
-    float end_turn_buffer = 0.4f;
+    float end_turn_buffer = 0.5f;
     GameObject end_turn_window;
 
     List<GameObject> faded_players = new List<GameObject>();
@@ -28,15 +28,10 @@ public class Highlight : MonoBehaviour
         GameObject.Find("Game Controller").GetComponent<PhaseController>().highlight = gameObject;
     }
 
-    void OnEnable()
-    {
-        current_buffer = Time.timeSinceLevelLoad;
-    }
-
     public void Reset()
     {
         cycle_player = null;
-
+        current_buffer = Time.timeSinceLevelLoad;
         gameObject.SetActive(true);
     }
 
