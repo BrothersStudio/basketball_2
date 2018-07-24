@@ -15,6 +15,13 @@ public class Player : MonoBehaviour
 
     public bool ai_pass_check = false;
 
+    // SFX
+    public AudioClip push_sound;
+    public AudioClip out_of_bounds_sound;
+    public AudioClip pass_1_sound;
+    public AudioClip pass_2_sound;
+    public AudioClip pass_3_sound;
+
     // Sprites
     public SpriteFacing facing;
     public List<Sprite> player_sprites;
@@ -205,6 +212,11 @@ public class Player : MonoBehaviour
             Vector3 average_pos = (transform.position + other_player.transform.position) / 2f;
             Instantiate(sweat_particle_prefab, average_pos, Quaternion.identity);
 
+            GetComponent<AudioSource>().clip = push_sound;
+            GetComponent<AudioSource>().Play();
+
+            FindObjectOfType<CameraShake>().Shake(0.3f);
+
             Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
             Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
             DetermineSpriteFacing(current_tile, other_player.current_tile);
@@ -218,7 +230,6 @@ public class Player : MonoBehaviour
                 other_player.PushedTo(new_tile);
             }
 
-            FindObjectOfType<CameraShake>().Shake(0.3f);
             took_attack = true;
             EndAction();
         }
@@ -236,6 +247,10 @@ public class Player : MonoBehaviour
     {
         Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
         rb.AddForce((transform.position - pushing_player.gameObject.transform.position) * 1000);
+
+        GetComponent<AudioSource>().clip = out_of_bounds_sound;
+        GetComponent<AudioSource>().Play();
+
         Invoke("DelayChange", 1f);
     }
 
