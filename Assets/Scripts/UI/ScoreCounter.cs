@@ -24,11 +24,13 @@ public class ScoreCounter : MonoBehaviour
     {
         team_A_score += points;
         transform.Find("Team A BG/Score").GetComponent<Text>().text = team_A_score.ToString();
+        FindObjectOfType<FillText>().AnimateText();
     }
 
     void TeamBScores(int points)
     {
         team_B_score += points;
         transform.Find("Team B BG/Score").GetComponent<Text>().text = team_B_score.ToString();
+        FindObjectOfType<FillText>().AnimateText();
     }
 }
