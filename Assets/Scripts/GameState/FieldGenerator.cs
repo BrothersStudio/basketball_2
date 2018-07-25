@@ -50,7 +50,7 @@ public class FieldGenerator : MonoBehaviour
 
                     give_ball_ind = 1;
 
-                    Camera.main.transform.position = new Vector3(-8.41f, 0.75f, -10f);
+                    Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 0.75f, -10f));
                 }
                 else if (Possession.team == Team.B)
                 {
@@ -68,7 +68,7 @@ public class FieldGenerator : MonoBehaviour
 
                     give_ball_ind = 0;
 
-                    Camera.main.transform.position = new Vector3(-8.41f, 2.2f, -10f);
+                    Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 2.2f, -10f));
                 }
                 break;
             case 2:
