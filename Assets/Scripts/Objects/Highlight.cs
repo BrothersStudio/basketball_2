@@ -153,7 +153,10 @@ public class Highlight : MonoBehaviour
         ResetFadedPlayers();
         SetTransparentOnTile(tile.adjacent_tiles[1]);
         SetTransparentOnTile(tile.adjacent_tiles[2]);
-        SetTransparentOnTile(tile.adjacent_tiles[2].adjacent_tiles[1]);
+        if (tile.adjacent_tiles[2] != null)
+        {
+            SetTransparentOnTile(tile.adjacent_tiles[2].adjacent_tiles[1]);
+        }
     }
 
     void SetTransparentOnTile(Tile tile)
