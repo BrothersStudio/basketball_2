@@ -13,7 +13,11 @@ public class FillText : MonoBehaviour
         Player[] all_players = FindObjectsOfType<Player>();
         focus_player = all_players[Random.Range(0, all_players.Length)];
 
-        string str = InterviewController.GetInterview("tag1", "1", "222222222").message;
+
+        string level = Progression.level.ToString();
+        Debug.Log(string.Format("Level {0}", level));
+
+        string str = InterviewController.GetInterview("tag1", level, "222222222").message;
         Debug.Log(str);
         gameObject.SetActive(true);
         StartCoroutine(AnimateTextRoutine(str));
@@ -32,6 +36,8 @@ public class FillText : MonoBehaviour
             GetComponentInChildren<Text>().text = slow_string;
             yield return new WaitForSeconds(0.03f);
         }
+        yield return new WaitForSeconds(1.00f);
+        gameObject.SetActive(false);
         play_text = false;
     }
 
