@@ -10,96 +10,81 @@ public class FieldGenerator : MonoBehaviour
     public GameObject player_prefab;
     public GameObject highlight_prefab;
 
-    public int rows;
-    public int columns;
     public Sprite[] tile_sprites;
     List<GameObject> all_objects = new List<GameObject>();
 
-    // Team A Offense
-    public List<int> offensive_A_player_rows;
-    public List<int> offensive_A_player_columns;
+    // Level setup variables
+    List<int> offensive_player_rows;
+    List<int> offensive_player_columns;
 
-    public List<int> defensive_A_player_rows;
-    public List<int> defensive_A_player_columns;
+    List<int> defensive_player_rows;
+    List<int> defensive_player_columns;
 
-    int A_field_hoop_row = 6;
-    int A_field_hoop_column = 5;
+    int hoop_row;
+    int hoop_column;
 
-    // Team B Offense
-    public List<int> offensive_B_player_rows;
-    public List<int> offensive_B_player_columns;
+    int give_ball_ind;
 
-    public List<int> defensive_B_player_rows;
-    public List<int> defensive_B_player_columns;
+    [HideInInspector]
+    // Public as they are used by tile to determine where the edge is
+    public int set_rows, set_columns;
 
-    int B_field_hoop_row = 5;
-    int B_field_hoop_column = 0;
+    public void SetupBasedOnLevel()
+    {
+        switch (Progression.level)
+        {
+            case 1:
+                if (Possession.team == Team.A)
+                {
+                    offensive_player_rows    = new List<int>(new int[] { 1, 0, 1, 1, 1 });
+                    offensive_player_columns = new List<int>(new int[] { 1, 5, 9, 3, 7 });
 
-    public int set_rows;
-    public int set_columns;
+                    defensive_player_rows    = new List<int>(new int[] { 3, 2, 3, 3, 3 });
+                    defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9 });
 
-    public void GenerateField(int setup)
+                    hoop_row = 6;
+                    hoop_column = 5;
+
+                    set_rows = 7;
+                    set_columns = 11;
+
+                    give_ball_ind = 1;
+
+                    Camera.main.transform.position = new Vector3(-8.41f, 0.75f, -10f);
+                }
+                else if (Possession.team == Team.B)
+                {
+                    offensive_player_rows    = new List<int>(new int[] { 5, 1, 9, 3, 7 });
+                    offensive_player_columns = new List<int>(new int[] { 6, 5, 5, 5, 5 });
+
+                    defensive_player_rows    = new List<int>(new int[] { 5, 3, 7, 1, 9 });
+                    defensive_player_columns = new List<int>(new int[] { 4, 3, 3, 3, 3 });
+
+                    hoop_row = 5;
+                    hoop_column = 0;
+
+                    set_rows = 11;
+                    set_columns = 7;
+
+                    give_ball_ind = 0;
+
+                    Camera.main.transform.position = new Vector3(-8.41f, 2.2f, -10f);
+                }
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                Debug.LogError("Trying to generate field for unknown level");
+                break;
+        }
+    }
+
+    public void GenerateField()
     {
         RemoveOldObjects();
-
-        Team offensive_team;
-        Team defensive_team;
-
-        List<int> offensive_player_rows;
-        List<int> offensive_player_columns;
-        List<int> defensive_player_rows;
-        List<int> defensive_player_columns;
-
-        int hoop_row;
-        int hoop_column;
-
-        int gave_ball_ind;
-
-        if (setup == 0)
-        {
-            offensive_player_rows = offensive_A_player_rows;
-            offensive_player_columns = offensive_A_player_columns;
-
-            defensive_player_rows = defensive_A_player_rows;
-            defensive_player_columns = defensive_A_player_columns;
-
-            hoop_row = A_field_hoop_row;
-            hoop_column = A_field_hoop_column;
-
-            set_rows = rows;
-            set_columns = columns;
-
-            offensive_team = Team.A;
-            defensive_team = Team.B;
-
-            gave_ball_ind = 1;
-
-            Camera.main.transform.position = new Vector3(-8.41f, 0.75f, -10f);
-        }
-        else
-        {
-            offensive_player_rows = offensive_B_player_rows;
-            offensive_player_columns = offensive_B_player_columns;
-
-            defensive_player_rows = defensive_B_player_rows;
-            defensive_player_columns = defensive_B_player_columns;
-
-            hoop_row = B_field_hoop_row;
-            hoop_column = B_field_hoop_column;
-
-            set_rows = columns;
-            set_columns = rows;
-
-            offensive_team = Team.B;
-            defensive_team = Team.A;
-
-            gave_ball_ind = 0;
-
-            Camera.main.transform.position = new Vector3(-8.41f, 2.2f, -10f);
-        }
-
-        Possession.team = offensive_team;
-        bool gave_ball = false;
+        SetupBasedOnLevel();
 
         for (int i = 0; i < set_rows; i++)
         {
@@ -128,7 +113,7 @@ public class FieldGenerator : MonoBehaviour
                     new_hoop.GetComponent<FallIntoPlace>().SetFinalPosition(hoop_final_position);
 
                     new_hoop.GetComponent<Hoop>().current_tile = new_tile.GetComponent<Tile>();
-                    new_hoop.GetComponent<SpriteRenderer>().flipX = setup == 0 ? true : false;
+                    new_hoop.GetComponent<SpriteRenderer>().flipX = Possession.team == Team.A ? true : false;
                     all_objects.Add(new_hoop);
                 }
 
@@ -143,17 +128,11 @@ public class FieldGenerator : MonoBehaviour
 
                         new_player.name = "Offender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
-                        new_player.GetComponent<Player>().team = offensive_team;
+                        new_player.GetComponent<Player>().team = Possession.team;
                         all_objects.Add(new_player);
-                        if (defensive_team == Team.A)
-                        {
-                            new_player.GetComponent<SpriteRenderer>().color = Color.blue;
-                        }
 
-                        if (!gave_ball && n == gave_ball_ind)
+                        if (n == give_ball_ind)
                         {
-                            gave_ball = true;
-
                             GameObject new_ball = Instantiate(ball_prefab, new_player.transform);
                             all_objects.Add(new_ball);
 
@@ -178,13 +157,7 @@ public class FieldGenerator : MonoBehaviour
 
                         new_player.name = "Defender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
-                        new_player.GetComponent<Player>().team = defensive_team;
-
-                        if (defensive_team == Team.B)
-                        {
-                            new_player.GetComponent<SpriteRenderer>().color = Color.blue;
-                        }
-
+                        new_player.GetComponent<Player>().team = GetDefensiveTeam();
                         all_objects.Add(new_player);
                     }
                 }
@@ -223,5 +196,17 @@ public class FieldGenerator : MonoBehaviour
             Destroy(obj);
         }
         all_objects.Clear();
+    }
+
+    Team GetDefensiveTeam()
+    {
+        if (Possession.team == Team.A)
+        {
+            return Team.B;
+        }
+        else
+        {
+            return Team.A;
+        }
     }
 }
