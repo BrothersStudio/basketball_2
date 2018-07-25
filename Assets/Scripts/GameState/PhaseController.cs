@@ -16,9 +16,17 @@ public class PhaseController : MonoBehaviour
 
     void Awake()
     {
-        current_phase = Phase.TeamAAct;
-
         Possession.team = Team.A;
+
+        if (Possession.team == Team.A)
+        {
+            current_phase = Phase.TeamAAct;
+        }
+        else
+        {
+            current_phase = Phase.TeamBAct;
+        }
+
         field_generator = FindObjectOfType<FieldGenerator>();
         field_generator.GenerateField();
 
