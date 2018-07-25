@@ -8,6 +8,8 @@ public class FallIntoPlace : MonoBehaviour
     bool falling = false;
     Vector3 final_position;
 
+    public AudioClip impact_sound;
+
     public void SetFinalPosition(Vector3 final_position)
     {
         this.final_position = final_position;
@@ -39,10 +41,15 @@ public class FallIntoPlace : MonoBehaviour
             transform.position = position;
 
         }
-        else if (falling)
+        else if (falling)  // Done falling
         {
             done = true;
             falling = false;
+
+            GetComponent<AudioSource>().clip = impact_sound;
+            GetComponent<AudioSource>().pitch = Random.Range(0.8f, 1f);
+            GetComponent<AudioSource>().Play();
+
             if (transform.childCount > 0)
             {
                 if (transform.GetChild(0).GetComponent<FallIntoPlace>() != null)

@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public AudioClip pass_1_sound;
     public AudioClip pass_2_sound;
     public AudioClip pass_3_sound;
+    public List<AudioClip> sneaker_sound;
 
     // Sprites
     public SpriteFacing facing;

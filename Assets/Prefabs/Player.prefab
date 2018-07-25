@@ -161,6 +161,14 @@ MonoBehaviour:
   pass_1_sound: {fileID: 8300000, guid: 81c17dd125c320f40a9eab0c747dd404, type: 3}
   pass_2_sound: {fileID: 8300000, guid: c8d6a73998d4d82498ab0336c982475d, type: 3}
   pass_3_sound: {fileID: 8300000, guid: b3c7094cb0081e640a478b7b4c7e2922, type: 3}
+  sneaker_sound:
+  - {fileID: 8300000, guid: c8a193f853a77294ca27e041d40eea13, type: 3}
+  - {fileID: 8300000, guid: e06a4afbe5f182043ad5319e41cedf9c, type: 3}
+  - {fileID: 8300000, guid: 593e646219cbeb5469f2872061b9b8d0, type: 3}
+  - {fileID: 8300000, guid: 291b77ad17d76e146abf27b58c981dad, type: 3}
+  - {fileID: 8300000, guid: a49f9ab85001de3448889d572480fb98, type: 3}
+  - {fileID: 8300000, guid: c25ab215e64e0f748a9ee3c6a315499a, type: 3}
+  - {fileID: 8300000, guid: 6be49978efc87fe4282100460a1670d8, type: 3}
   facing: 0
   player_sprites:
   - {fileID: 21300000, guid: 3e8d4348e66a30948a589832068a73db, type: 3}
@@ -195,6 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   done: 0
+  impact_sound: {fileID: 8300000, guid: 98d0354901035bd458bf3230423be95d, type: 3}
 --- !u!212 &212474895009431732
 SpriteRenderer:
   m_ObjectHideFlags: 1
