@@ -25,7 +25,6 @@ public class ScoreCounter : MonoBehaviour
     void TeamAScores(int points)
     {
         team_A_score += points;
-        transform.Find("Team A BG/Score").GetComponent<Text>().text = team_A_score.ToString();
         ConvertToSpriteNumbers(team_A_score, transform.Find("Home Score").gameObject);
         FindObjectOfType<FillText>().AnimateText();
     }
@@ -33,7 +32,6 @@ public class ScoreCounter : MonoBehaviour
     void TeamBScores(int points)
     {
         team_B_score += points;
-        transform.Find("Team B BG/Score").GetComponent<Text>().text = team_B_score.ToString();
         ConvertToSpriteNumbers(team_B_score, transform.Find("Away Score").gameObject);
         FindObjectOfType<FillText>().AnimateText();
     }

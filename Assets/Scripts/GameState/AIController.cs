@@ -637,7 +637,6 @@ public class AIController : MonoBehaviour
                 }
             }
         }
-        Debug.Log(min_player.gameObject.name + " is closest!");
         return min_player;
     }
 
