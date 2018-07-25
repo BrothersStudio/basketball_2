@@ -9,13 +9,18 @@ public class CameraShake : MonoBehaviour
     float max_angle = 10f;
     float max_offset = 0.3f;
 
-    Vector3 starting_position;
-    Quaternion starting_rotation;
+    Vector3 default_position;
+    Quaternion default_rotation;
 
     void Start()
     {
-        starting_position = transform.position;
-        starting_rotation = transform.rotation;
+        SetNewPosition(transform.position);
+        default_rotation = transform.rotation;
+    }
+
+    public void SetNewPosition(Vector3 new_position)
+    {
+        default_position = new_position;
     }
 
     public void Shake(float amount)
@@ -30,8 +35,8 @@ public class CameraShake : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.position = starting_position;
-        transform.rotation = starting_rotation;
+        transform.position = default_position;
+        transform.rotation = default_rotation;
 
         float angle = max_angle * Mathf.Pow(trauma, 2) * Random.Range(-1f, 1f);
         transform.Rotate(new Vector3(0, 0, angle));
