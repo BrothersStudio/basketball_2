@@ -8,10 +8,20 @@ public class Player : MonoBehaviour
     public bool pushing = false;
     public bool moving = false;
 
+    bool animating = false;
+
     public bool took_attack = false;
     public bool took_move = false;
 
     public bool ai_pass_check = false;
+
+    // SFX
+    public AudioClip push_sound;
+    public AudioClip out_of_bounds_sound;
+    public AudioClip pass_1_sound;
+    public AudioClip pass_2_sound;
+    public AudioClip pass_3_sound;
+    public List<AudioClip> sneaker_sound;
 
     // Sprites
     public SpriteFacing facing;
@@ -78,7 +88,7 @@ public class Player : MonoBehaviour
 
     public bool CheckPass()
     {
-        if (!took_attack && !passing && HasBall())
+        if (!took_attack && !passing && HasBall() && !animating)
         {
             passing = true;
 
@@ -118,10 +128,29 @@ public class Player : MonoBehaviour
             GetComponentInChildren<Ball>().transform.SetParent(pass_player.transform, true);
 
             FindObjectOfType<CameraShake>().Shake(0.2f);
+            PlayPassAudio();
 
             took_attack = true;
             EndAction();
         }
+    }
+
+    void PlayPassAudio()
+    {
+        switch (Possession.passes_this_turn)
+        {
+            case 0:
+                GetComponent<AudioSource>().clip = pass_1_sound;
+                break;
+            case 1:
+                GetComponent<AudioSource>().clip = pass_2_sound;
+                break;
+            default:
+                GetComponent<AudioSource>().clip = pass_3_sound;
+                break;
+        }
+        GetComponent<AudioSource>().Play();
+        Possession.passes_this_turn++;
     }
 
     public void HoverPush()
@@ -137,7 +166,7 @@ public class Player : MonoBehaviour
 
     public bool CheckPush()
     {
-        if (!took_attack && !pushing && !HasBall())
+        if (!took_attack && !pushing && !HasBall() && !animating)
         {
             pushing = true;
 
@@ -203,6 +232,11 @@ public class Player : MonoBehaviour
             Vector3 average_pos = (transform.position + other_player.transform.position) / 2f;
             Instantiate(sweat_particle_prefab, average_pos, Quaternion.identity);
 
+            GetComponent<AudioSource>().clip = push_sound;
+            GetComponent<AudioSource>().Play();
+
+            FindObjectOfType<CameraShake>().Shake(0.3f);
+
             Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
             Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
             DetermineSpriteFacing(current_tile, other_player.current_tile);
@@ -216,7 +250,6 @@ public class Player : MonoBehaviour
                 other_player.PushedTo(new_tile);
             }
 
-            FindObjectOfType<CameraShake>().Shake(0.3f);
             took_attack = true;
             EndAction();
         }
@@ -234,6 +267,10 @@ public class Player : MonoBehaviour
     {
         Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
         rb.AddForce((transform.position - pushing_player.gameObject.transform.position) * 1000);
+
+        GetComponent<AudioSource>().clip = out_of_bounds_sound;
+        GetComponent<AudioSource>().Play();
+
         Invoke("DelayChange", 1f);
     }
 
@@ -281,8 +318,6 @@ public class Player : MonoBehaviour
                 tile.Hover();
             }
         }
-
-        current_tile.Hover();
     }
 
     public void CheckMove(bool checking = false, bool ignore_other_players = false)
@@ -339,10 +374,6 @@ public class Player : MonoBehaviour
                     highlighted_tiles.Add(tile);
                 }
             }
-
-            // This makes AI stuff a little easier later. Adding current tile.
-            current_tile.Highlight(this);
-            highlighted_tiles.Add(current_tile);
         }
     }
 
@@ -353,15 +384,13 @@ public class Player : MonoBehaviour
             moving = false;
 
             StartCoroutine(MoveToTile(new_tile));
-
-            took_move = true;
-            EndAction();
         }
     }
 
     IEnumerator MoveToTile(Tile new_tile, bool pushed = false)
     {
-        
+        animating = true;
+
         List<Tile> tile_route = new List<Tile>();
         if (!pushed)
         {
@@ -395,6 +424,13 @@ public class Player : MonoBehaviour
         current_tile = new_tile;
 
         CheckIfScored();
+
+        animating = false;
+        if (!pushed)
+        {
+            took_move = true;
+            EndAction();
+        }
     }
 
     public void DetermineSpriteFacing(Tile previous_tile, Tile next_tile)
@@ -459,7 +495,16 @@ public class Player : MonoBehaviour
     {
         SetInactive();
         CheckTurn();
-        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        if (took_attack && took_move || (took_move && !(CheckPass() || CheckPush())))
+        {
+            SetInactive();
+            canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+        }
+        else 
+        {
+            SetInactive();
+            Confirm();
+        }
     }
 
     public void SetInactive()

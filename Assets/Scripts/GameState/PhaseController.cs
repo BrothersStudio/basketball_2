@@ -18,8 +18,10 @@ public class PhaseController : MonoBehaviour
     {
         current_phase = Phase.TeamAAct;
 
+        Possession.team = Team.A;
         field_generator = FindObjectOfType<FieldGenerator>();
-        field_generator.GenerateField(0);
+        field_generator.GenerateField();
+
         StartCoroutine(StartRound());
         Utils.DehighlightTiles();
     }
@@ -43,6 +45,7 @@ public class PhaseController : MonoBehaviour
     {
         if (!game_over)
         {
+            Possession.passes_this_turn = 0;
             GetComponent<AIController>().StopAllCoroutines();
             AITurn.Activity = !AITurn.Activity;
 
@@ -80,6 +83,7 @@ public class PhaseController : MonoBehaviour
     {
         if (!game_over)
         {
+            Possession.passes_this_turn = 0;
             GetComponent<AIController>().StopAllCoroutines();
 
             // Stop normal "end turn" text, if applicable
@@ -91,14 +95,14 @@ public class PhaseController : MonoBehaviour
             {
                 current_phase = Phase.TeamBAct;
                 Possession.team = Team.B;
-                field_generator.GenerateField(1);
+                field_generator.GenerateField();
                 StartCoroutine(StartRound());
             }
             else
             {
                 current_phase = Phase.TeamAAct;
                 Possession.team = Team.A;
-                field_generator.GenerateField(0);
+                field_generator.GenerateField();
                 StartCoroutine(StartRound());
             }
             FindObjectOfType<ShotClock>().Restart();
