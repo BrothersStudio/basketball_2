@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
 
     public void Pass(Player pass_player)
     {
-        if (!took_attack)
+        if (!took_attack && !animating)
         {
             passing = false;
 
@@ -225,7 +225,7 @@ public class Player : MonoBehaviour
 
     public void Push(Player other_player)
     {
-        if (!took_attack)
+        if (!took_attack && !animating)
         {
             pushing = false;
 
