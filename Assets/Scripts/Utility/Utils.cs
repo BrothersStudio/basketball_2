@@ -42,6 +42,11 @@ public static class Utils
         return adjacent_players;
     }
 
+    internal static string[] GetTagList()
+    {
+        throw new NotImplementedException();
+    }
+
     public static Tile FindTileAtLocation(Vector2 location)
     {
         Tile[] all_tiles = GameObject.FindObjectsOfType<Tile>();
@@ -89,7 +94,7 @@ public static class Utils
 
     public static string GetCreateUid()
     {
-        string uid = "";
+        string uid = "0000000000";
 
 #if UNITY_STANDALONE_WIN
         string id_directory = string.Format("{0}\\AppData\\Roaming\\BrothersStudio\\", Environment.GetEnvironmentVariable("HOMEPATH"));
@@ -116,4 +121,5 @@ public static class Utils
         Debug.Log(string.Format("Got uid: {0}", uid));
         return uid;
     }
+
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using UnityEngine;
@@ -6,14 +7,13 @@ using UnityEngine;
 [Serializable]
 public class Interview
 {
-    public string tag;
-    public string message;
     public string level;
+    public string tag;
     public string user_id;
-
+    public string message;
 }
 
-public static class InterviewController
+public static class InterviewApi
 {
     private const string BASE_URL = "http://ec2-18-211-193-5.compute-1.amazonaws.com/";
 
@@ -47,9 +47,25 @@ public static class InterviewController
 
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         string status = ((HttpWebResponse)response).StatusDescription;
-
+        ;
         Debug.Log(String.Format("Interview posted with status {0}", status));
 
         return status;
+    }
+
+    public static List<Interview> GetInterviews(string[] tags, string level, string user_id)
+    {
+        List<Interview> interviews = new List<Interview>();
+
+        foreach (string tag in tags)
+        {
+            Interview cur = GetInterview(tag, level, user_id);
+            if (cur.message == "null")
+                continue;
+            else
+                interviews.Add(cur);
+        }
+
+        return interviews;
     }
 }
