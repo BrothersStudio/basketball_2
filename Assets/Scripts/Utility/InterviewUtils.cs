@@ -4,10 +4,19 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public class AllInterviews
 {
-    public Interview[] all_interviews;
+    public List<Interview> Interviews;
+}
+
+[System.Serializable]
+public class Interview
+{
+    public string level;
+    public string tag;
+    public string user_id;
+    public string message;
 }
 
 public static class InterviewUtils {
@@ -29,9 +38,7 @@ public static class InterviewUtils {
         TextAsset interview_json = Resources.Load("default_interviews") as TextAsset;
         AllInterviews loaded_json = JsonUtility.FromJson<AllInterviews>(interview_json.text);
 
-        Debug.Log(loaded_json.all_interviews);
-        var ret_list = new List<Interview>();
-        ret_list.AddRange(loaded_json.all_interviews);
-        return ret_list;
+        Debug.Log(loaded_json.Interviews);
+        return loaded_json.Interviews;
     }
 }

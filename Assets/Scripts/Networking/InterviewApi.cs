@@ -4,14 +4,6 @@ using System.IO;
 using System.Net;
 using UnityEngine;
 
-[Serializable]
-public class Interview
-{
-    public string level;
-    public string tag;
-    public string user_id;
-    public string message;
-}
 
 public static class InterviewApi
 {
