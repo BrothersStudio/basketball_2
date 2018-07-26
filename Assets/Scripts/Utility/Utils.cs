@@ -42,6 +42,11 @@ public static class Utils
         return adjacent_players;
     }
 
+    internal static string[] GetTagList()
+    {
+        throw new NotImplementedException();
+    }
+
     public static Tile FindTileAtLocation(Vector2 location)
     {
         Tile[] all_tiles = GameObject.FindObjectsOfType<Tile>();
@@ -76,6 +81,13 @@ public static class Utils
         }
     }
 
+    public static List<Interview> ListConcat(List<Interview> list1, List<Interview> list2)
+    {
+        List<Interview> new_list = list1;
+        new_list.AddRange(list2);
+        return new_list;
+    }
+
     public static void DeactivatePlayers()
     {
         foreach (Player player in GameObject.FindObjectsOfType<Player>())
@@ -89,7 +101,7 @@ public static class Utils
 
     public static string GetCreateUid()
     {
-        string uid = "";
+        string uid = "0000000000";
 
 #if UNITY_STANDALONE_WIN
         string id_directory = string.Format("{0}\\AppData\\Roaming\\BrothersStudio\\", Environment.GetEnvironmentVariable("HOMEPATH"));
@@ -116,4 +128,5 @@ public static class Utils
         Debug.Log(string.Format("Got uid: {0}", uid));
         return uid;
     }
+
 }

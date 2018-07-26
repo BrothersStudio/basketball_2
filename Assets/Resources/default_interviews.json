@@ -1,0 +1,65 @@
+{
+  "Interviews":
+  [
+    {
+      "level": "1", 
+      "tag": "user-dunk", 
+      "user_id": "system_account",
+      "message": "Now we're just getting started!"
+    },
+    {
+      "level": "1",
+      "tag": "ai-dunk",
+      "user_id": "system_account",
+      "message": "Don't get too cocky!'"
+    },
+    {
+      "level": "1",
+      "tag": "user-cliffhanger",
+      "user_id": "system_account",
+      "message": "Enjoy the fall!"
+    },
+    {
+      "level": "1",
+      "tag": "ai-cliffhanger",
+      "user_id": "system_account",
+      "message": "How's the weather down there?"
+    },
+    {
+      "level": "1",
+      "tag": "ai-victory",
+      "user_id": "system_account",
+      "message": "Better luck next time, bud."
+    },
+    {
+      "level": "1",
+      "tag": "user-victory",
+      "user_id": "system_account",
+      "message": "Can we get a real challenge?"
+    },
+    {
+      "level": "1",
+      "tag": "triple-pass",
+      "user_id": "system_account",
+      "message": "Now we're cooking with gas!"
+    },
+    {
+      "level": "1",
+      "tag": "push",
+      "user_id": "system_account",
+      "message": "Get out of the way!"
+    },
+    {
+      "level": "1",
+      "tag": "ai-push",
+      "user_id": "system_account",
+      "message": "You think you stand a chance on our turf?"
+    },
+    {
+      "level": "1",
+      "tag": "shotclock-expire",
+      "user_id": "system_account",
+      "message": "Where's my team?!"
+    }
+  ]
+}
