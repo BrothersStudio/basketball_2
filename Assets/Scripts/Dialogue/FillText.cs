@@ -17,7 +17,7 @@ public class FillText : MonoBehaviour
         string level = Progression.level.ToString();
         Debug.Log(string.Format("Level {0}", level));
 
-        string str = InterviewController.GetInterview("tag1", level, "222222222").message;
+        string str = "";
         Debug.Log(str);
         gameObject.SetActive(true);
         StartCoroutine(AnimateTextRoutine(str));
@@ -36,7 +36,7 @@ public class FillText : MonoBehaviour
             GetComponentInChildren<Text>().text = slow_string;
             yield return new WaitForSeconds(0.03f);
         }
-        yield return new WaitForSeconds(1.00f);
+        yield return new WaitForSeconds(3.00f);
         gameObject.SetActive(false);
         play_text = false;
     }
