@@ -36,7 +36,7 @@ public class Ball : MonoBehaviour
                 return;
             }
 
-            current_ball_speed = Mathf.Clamp(0.92f * current_ball_speed, orig_ball_speed * 0.1f, orig_ball_speed);
+            current_ball_speed = Mathf.Clamp(0.95f * current_ball_speed, orig_ball_speed * 0.2f, orig_ball_speed);
             transform.position = Vector2.MoveTowards(transform.position, pass_destination.transform.position, current_ball_speed);
             transform.Rotate(new Vector3(0, 0, 20f));
         }

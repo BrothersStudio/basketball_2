@@ -114,7 +114,7 @@ public class PhaseController : MonoBehaviour
                 StartCoroutine(StartRound());
             }
             FindObjectOfType<ShotClock>().Restart();
-            GameObject.Find("Canvas").transform.Find("Box").GetComponent<FillText>().AnimateText();
+            //GameObject.Find("Canvas").transform.Find("Box").GetComponent<FillText>().AnimateText();
         }
     }
 

@@ -423,7 +423,10 @@ public class Player : MonoBehaviour
         new_tile.SetPlayer(this);
         current_tile = new_tile;
 
-        CheckIfScored();
+        if (HasBall())
+        {
+            CheckIfScored();
+        }
 
         animating = false;
         if (!pushed)
@@ -487,7 +490,8 @@ public class Player : MonoBehaviour
         if (Utils.GetDistance(current_tile.position, hoop.current_tile.position) <= 1)
         {
             FindObjectOfType<ScoreCounter>().PlayerScored(this);
-            Invoke("DelayChange", 0.5f);
+            FindObjectOfType<DunkBannerMove>().Dunk();
+            Invoke("DelayChange", 3.5f);
         }
     }
 

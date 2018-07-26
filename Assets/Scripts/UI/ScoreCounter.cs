@@ -26,14 +26,14 @@ public class ScoreCounter : MonoBehaviour
     {
         team_A_score += points;
         ConvertToSpriteNumbers(team_A_score, transform.Find("Home Score").gameObject);
-        GameObject.Find("Canvas").transform.Find("Box").GetComponent<FillText>().AnimateText();
+        //GameObject.Find("Canvas").transform.Find("Box").GetComponent<FillText>().AnimateText();
     }
 
     void TeamBScores(int points)
     {
         team_B_score += points;
         ConvertToSpriteNumbers(team_B_score, transform.Find("Away Score").gameObject);
-        GameObject.Find("Canvas").transform.Find("Box").GetComponent<FillText>().AnimateText();
+        //GameObject.Find("Canvas").transform.Find("Box").GetComponent<FillText>().AnimateText();
     }
 
     void ConvertToSpriteNumbers(int score, GameObject panel)

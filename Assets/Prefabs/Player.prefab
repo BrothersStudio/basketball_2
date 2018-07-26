@@ -171,8 +171,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6be49978efc87fe4282100460a1670d8, type: 3}
   facing: 0
   player_sprites:
-  - {fileID: 21300000, guid: 3e8d4348e66a30948a589832068a73db, type: 3}
-  - {fileID: 21300002, guid: 3e8d4348e66a30948a589832068a73db, type: 3}
+  - {fileID: 21300000, guid: 230b9a0ec6c8eca41a3668707a7b0f96, type: 3}
+  - {fileID: 21300002, guid: 230b9a0ec6c8eca41a3668707a7b0f96, type: 3}
   sweat_particle_prefab: {fileID: 1930888459080794, guid: 730fc0bbd2d7c8c4cab3cbd900da4041,
     type: 2}
   team: 0
