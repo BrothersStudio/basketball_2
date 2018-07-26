@@ -81,6 +81,13 @@ public static class Utils
         }
     }
 
+    public static List<Interview> ListConcat(List<Interview> list1, List<Interview> list2)
+    {
+        List<Interview> new_list = list1;
+        new_list.AddRange(list2);
+        return new_list;
+    }
+
     public static void DeactivatePlayers()
     {
         foreach (Player player in GameObject.FindObjectsOfType<Player>())

@@ -32,5 +32,5 @@ public static class Progression
     public static DateTime session_start = DateTime.Now;
     public static Stats session_stats = new Stats();
     public static string user_id = Utils.GetCreateUid();
-    public static List<Interview> interviews = InterviewUtils.default_interviews;
+    public static List<Interview> interviews = Utils.ListConcat(InterviewApi.GetInterviews(InterviewUtils.GetTagList(), level.ToString(), user_id), InterviewUtils.default_interviews);
 }
