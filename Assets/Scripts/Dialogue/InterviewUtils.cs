@@ -19,8 +19,8 @@ public class Interview
     public string message;
 }
 
-public static class InterviewUtils {
-
+public static class InterviewUtils 
+{
     public static List<Interview> default_interviews = GetDefaultInterviews();
 
     public static string[] GetTagList()
@@ -37,8 +37,6 @@ public static class InterviewUtils {
     {
         TextAsset interview_json = Resources.Load("default_interviews") as TextAsset;
         AllInterviews loaded_json = JsonUtility.FromJson<AllInterviews>(interview_json.text);
-
-        Debug.Log(loaded_json.Interviews);
         return loaded_json.Interviews;
     }
 }

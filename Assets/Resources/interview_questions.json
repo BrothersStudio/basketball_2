@@ -1,0 +1,45 @@
+{
+  "questions":
+  [
+    {
+      "tag": "user-dunk", 
+      "prompt": "How did it feel to dunk on that team?"
+    },
+    {
+      "tag": "ai-dunk",
+      "prompt": "What did you think when they leap-frog dunked you?"
+    },
+    {
+      "tag": "user-cliffhanger",
+      "prompt": "How did you push 'em off the court so fast?"
+    },
+    {
+      "tag": "ai-cliffhanger",
+      "prompt": "Why didn't you get up quicker after you got decked?"
+    },
+    {
+      "tag": "ai-victory",
+      "prompt": "How will you rebound from this loss?"
+    },
+    {
+      "tag": "user-victory",
+      "prompt": "Will you carry this momentum going forward?"
+    },
+    {
+      "tag": "triple-pass",
+      "prompt": "Do you think your team has chemistry?"
+    },
+    {
+      "tag": "push",
+      "prompt": "It seemed like you were being physical out there. Your thoughts?"
+    },
+    {
+      "tag": "ai-push",
+      "prompt": "What did the other team say to you when they were getting up in your face?"
+    },
+    {
+      "tag": "shotclock-expire",
+      "prompt": "You were a little less coordinated than usual out there, don't you think?"
+    }
+  ]
+}
