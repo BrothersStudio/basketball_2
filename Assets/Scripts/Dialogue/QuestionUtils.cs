@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -19,7 +20,6 @@ public class Question
 
 public static class QuesionUtils
 {
-
     public static List<Question> all_questions = GetAllQuesitions();
 
     public static Question GetQuestionByTag(string tag)
@@ -34,6 +34,11 @@ public static class QuesionUtils
             }
         }
         return return_q;
+    }
+
+    public static Question GetRandomQuestion()
+    {
+        return all_questions.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
     }
 
     public static List<Question> GetAllQuesitions()

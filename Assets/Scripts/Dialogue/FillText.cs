@@ -8,17 +8,15 @@ public class FillText : MonoBehaviour
     Player focus_player;
     bool play_text = false;
 
-    public void AnimateText()
+    public void AnimateText(string tag)
     {
+        string str = InterviewUtils.GetMessageByTagLevel(tag);
+        Debug.Log(string.Format("Displaying interview: {0}", str));
+        if (str.Length == 0)
+            return;
+
         Player[] all_players = FindObjectsOfType<Player>();
         focus_player = all_players[Random.Range(0, all_players.Length)];
-
-
-        string level = Progression.level.ToString();
-        Debug.Log(string.Format("Level {0}", level));
-
-        string str = "";
-        Debug.Log(str);
         gameObject.SetActive(true);
         StartCoroutine(AnimateTextRoutine(str));
     }

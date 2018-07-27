@@ -22,6 +22,7 @@ public class Interview
 public static class InterviewUtils 
 {
     public static List<Interview> default_interviews = GetDefaultInterviews();
+    public static List<Interview> preloaded_interviews = Utils.ListConcat(InterviewApi.GetInterviews(InterviewUtils.GetTagList(), Progression.level.ToString(), Progression.user_id), InterviewUtils.default_interviews);
 
     public static string[] GetTagList()
     {
@@ -31,6 +32,19 @@ public static class InterviewUtils
             tag_list.Add(interview.tag);
         }
         return tag_list.ToArray();
+    }
+
+    public static string GetMessageByTagLevel(string tag, string level="-1")
+    {
+        string ret_val = "";
+        foreach (Interview interview in preloaded_interviews)
+        {
+            if (interview.tag == tag)
+                if (level != "-1" && level == interview.level)
+                    return ret_val;
+            return ret_val;
+        }
+        return ret_val;
     }
 
     public static List<Interview> GetDefaultInterviews()
