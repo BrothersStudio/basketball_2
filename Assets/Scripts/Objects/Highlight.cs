@@ -13,6 +13,9 @@ public class Highlight : MonoBehaviour
     float end_turn_buffer = 0.5f;
     GameObject end_turn_window;
 
+    bool moving = false;
+    Tile move_origin_tile = null;
+
     List<GameObject> faded_players = new List<GameObject>();
 
     void Awake()
@@ -30,6 +33,9 @@ public class Highlight : MonoBehaviour
 
     public void Reset()
     {
+        moving = false;
+        move_origin_tile = null;
+
         cycle_player = null;
         current_buffer = Time.timeSinceLevelLoad;
         gameObject.SetActive(true);
@@ -37,6 +43,9 @@ public class Highlight : MonoBehaviour
 
     public void SelectMove()
     {
+        moving = true;
+        move_origin_tile = current_tile;
+
         gameObject.SetActive(true);
     }
 
@@ -180,6 +189,13 @@ public class Highlight : MonoBehaviour
 
     void Confirm()
     {
-        current_tile.Confirm();
+        if (moving && current_tile == move_origin_tile)
+        {
+            return;
+        }
+        else
+        {
+            current_tile.Confirm();
+        }
     }
 }

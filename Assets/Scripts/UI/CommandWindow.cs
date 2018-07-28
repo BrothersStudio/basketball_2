@@ -152,6 +152,8 @@ public class CommandWindow : MonoBehaviour
         }
         else
         {
+            selected_player.SetInactive();
+
             attack_button.interactable = false;
 
             if (has_ball)
