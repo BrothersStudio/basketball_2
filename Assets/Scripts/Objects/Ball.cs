@@ -13,6 +13,8 @@ public class Ball : MonoBehaviour
 
     public GameObject sweat_particle_prefab;
 
+    Vector3 current_location;
+
     public void Pass(Player new_player)
     {
         current_ball_speed = orig_ball_speed;
@@ -50,19 +52,28 @@ public class Ball : MonoBehaviour
 
     public void FixPositionFacing(Player player)
     {
+        Vector3 position;
         switch (player.facing)
         {
             case SpriteFacing.SE:
-                transform.localPosition = new Vector3(0.06f, -0.01f, -0.25f);
+                position = new Vector3(0.06f, -0.01f, -0.25f);
+                current_location = position;
+                transform.localPosition = position;
                 break;
             case SpriteFacing.SW:
-                transform.localPosition = new Vector3(-0.06f, -0.01f, -0.25f);
+                position = new Vector3(-0.06f, -0.01f, -0.25f);
+                current_location = position;
+                transform.localPosition = position;
                 break;
             case SpriteFacing.NE:
-                transform.localPosition = new Vector3(0.06f, -0.01f, 0.25f);
+                position = new Vector3(0.06f, -0.01f, 0.25f);
+                current_location = position;
+                transform.localPosition = position;
                 break;
             case SpriteFacing.NW:
-                transform.localPosition = new Vector3(-0.06f, -0.01f, 0.25f);
+                position = new Vector3(-0.06f, -0.01f, 0.25f);
+                current_location = position;
+                transform.localPosition = position;
                 break;
         }
     }

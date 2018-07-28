@@ -243,7 +243,15 @@ public class Player : MonoBehaviour
             DetermineSpriteFacing(current_tile, other_player.current_tile);
             if (new_tile == null || new_tile.impassable)
             {
-                other_player.PushedToFall(this, new_tile.impassable);
+                if (new_tile == null)
+                {
+                    other_player.PushedToFall(this);
+                }
+                else
+                {
+                    other_player.PushedToFall(this, is_lava: true);
+                }
+                
                 if (other_player.HasBall())
                 {
                     return;
@@ -267,7 +275,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void PushedToFall(Player pushing_player, bool is_lava)
+    public void PushedToFall(Player pushing_player, bool is_lava = false)
     {
         if (is_lava)
         {
