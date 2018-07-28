@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class DunkBannerMove : MonoBehaviour
 {
     GameObject banner;
-    GameObject dunk_image;
+    GameObject hoop;
+    GameObject player;
+
     Image flash;
 
     public List<AudioClip> crowd_cheers;
@@ -16,16 +18,19 @@ public class DunkBannerMove : MonoBehaviour
     void Start()
     {
         banner = transform.Find("Dunk Banner").gameObject;
-        dunk_image = transform.Find("Dunk Background").gameObject;
         flash = transform.parent.Find("White Flash").GetComponent<Image>();
+        hoop = banner.transform.Find("Hoop Sprite").gameObject;
+        player = banner.transform.Find("Dunk Sprite").gameObject;
 
         ResetBanners();
+        Dunk();
     }
 
     void ResetBanners()
     {
         banner.GetComponent<RectTransform>().anchoredPosition = new Vector2(-2000, 0);
-        dunk_image.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1400, 0);
+        hoop.GetComponent<RectTransform>().anchoredPosition = new Vector2(2000, -123);
+        player.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1100, 0.42f);
     }
 
     public void Dunk()
@@ -33,7 +38,8 @@ public class DunkBannerMove : MonoBehaviour
         ResetBanners();
         StartCoroutine(Flash());
         StartCoroutine(MoveBanner());
-        StartCoroutine(MoveImage());
+        StartCoroutine(MovePlayer());
+        StartCoroutine(MoveHoop());
 
         GetComponent<AudioSource>().clip = crowd_cheers[Random.Range(0, crowd_cheers.Count)];
         GetComponent<AudioSource>().Play();
@@ -57,14 +63,14 @@ public class DunkBannerMove : MonoBehaviour
 
     IEnumerator MoveBanner()
     {
+        score_particles.Play();
         banner.SetActive(true);
-        for (int i = -2000; i < 0; i += 30)
+        for (int i = -2000; i < 0; i += 80)
         {
             banner.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, 0);
             yield return new WaitForEndOfFrame();
-        }
-        score_particles.Play();
-        yield return new WaitForSeconds(2);
+        }        
+        yield return new WaitForSeconds(2.5f);
         for (int i = 0; i < 2000; i += 60)
         {
             banner.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, 0);
@@ -73,19 +79,22 @@ public class DunkBannerMove : MonoBehaviour
         score_particles.Stop();
     }
 
-    IEnumerator MoveImage()
+    IEnumerator MovePlayer()
     {
-        dunk_image.SetActive(true);
-        yield return new WaitForSeconds(1);
-        for (int i = -1400; i < 0; i += 60)
+        yield return new WaitForSeconds(0.5f);
+        for (int i = -1000; i <= 100; i += 20)
         {
-            dunk_image.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, 0);
+            player.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, 0.42f);
             yield return new WaitForEndOfFrame();
         }
-        yield return new WaitForSeconds(1);
-        for (int i = 0; i < 1400; i += 30)
+    }
+
+    IEnumerator MoveHoop()
+    {
+        yield return new WaitForSeconds(1.5f);
+        for (int i = 1000; i > 200; i -= 40)
         {
-            dunk_image.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, 0);
+            hoop.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, -123);
             yield return new WaitForEndOfFrame();
         }
     }
