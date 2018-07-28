@@ -128,7 +128,7 @@ public class FieldGenerator : MonoBehaviour
         RemoveOldObjects();
         SetupBasedOnLevel();
 
-        give_ball_ind = 2; //Random.Range(0, 5);
+        give_ball_ind = Random.Range(0, 5);
 
         for (int i = 0; i < set_rows; i++)
         {
