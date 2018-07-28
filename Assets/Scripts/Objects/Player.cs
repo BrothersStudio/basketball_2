@@ -556,6 +556,7 @@ public class Player : MonoBehaviour
         {
             FindObjectOfType<ScoreCounter>().PlayerScored(this);
             FindObjectOfType<DunkBannerMove>().Dunk();
+            canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
             Invoke("DelayChange", 3.5f);
         }
     }
