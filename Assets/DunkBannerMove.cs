@@ -7,6 +7,8 @@ public class DunkBannerMove : MonoBehaviour
     GameObject banner;
     GameObject dunk_image;
 
+    public List<AudioClip> crowd_cheers;
+
     public ParticleSystem score_particles;
 
     void Start()
@@ -28,6 +30,9 @@ public class DunkBannerMove : MonoBehaviour
         ResetBanners();
         StartCoroutine(MoveBanner());
         StartCoroutine(MoveImage());
+
+        GetComponent<AudioSource>().clip = crowd_cheers[Random.Range(0, crowd_cheers.Count)];
+        GetComponent<AudioSource>().Play();
     }
 
     IEnumerator MoveBanner()

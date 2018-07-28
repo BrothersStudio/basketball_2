@@ -244,7 +244,10 @@ public class Player : MonoBehaviour
             if (new_tile == null || new_tile.impassable)
             {
                 other_player.PushedToFall(this, new_tile.impassable);
-                return;
+                if (other_player.HasBall())
+                {
+                    return;
+                }
             }
             else
             {
