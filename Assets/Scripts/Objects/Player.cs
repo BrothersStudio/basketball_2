@@ -442,6 +442,9 @@ public class Player : MonoBehaviour
             tile_route.Add(new_tile);
         }
 
+        bool squeaked = false;
+        int squeak_chance = 40;
+
         Tile previous_tile = current_tile;
         foreach (Tile next_tile in tile_route)
         {
@@ -452,11 +455,17 @@ public class Player : MonoBehaviour
             }
 
             // Sometimes sneaker squeak
-            if (Random.Range(0, 100) < 50)
+            if (Random.Range(0, squeak_chance) < 50 && !squeaked)
             {
+                squeaked = true;
+
                 GetComponent<AudioSource>().pitch = Random.Range(0.95f, 1.05f);
                 GetComponent<AudioSource>().clip = sneaker_sounds[Random.Range(0, sneaker_sounds.Count)];
                 GetComponent<AudioSource>().Play();
+            }
+            else
+            {
+                squeak_chance += 40;
             }
 
             if (!pushed)
