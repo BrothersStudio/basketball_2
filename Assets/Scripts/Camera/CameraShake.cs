@@ -20,6 +20,7 @@ public class CameraShake : MonoBehaviour
 
     public void SetNewPosition(Vector3 new_position)
     {
+        transform.position = new_position;
         default_position = new_position;
     }
 

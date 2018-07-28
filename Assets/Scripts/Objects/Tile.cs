@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    public bool impassable;
+
     public bool has_cursor = false;
 
     public bool highlighted = false;
@@ -109,23 +111,19 @@ public class Tile : MonoBehaviour
 
     public bool OnEdge()
     {
-        FieldGenerator field = FindObjectOfType<FieldGenerator>();
-        if (position.x == field.set_rows - 1)
+        foreach (Tile adjacent_tile in adjacent_tiles)
         {
-            return true;
+            if (adjacent_tile == null)
+            {
+                return true;
+            }
+            else if (adjacent_tile.impassable)
+            {
+                return true;
+            }
         }
-        else if (position.y == field.set_columns - 1)
-        {
-            return true;
-        }
-        else if (position.x == 0 || position.y == 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public Tile VisualizePushingOtherFromHere(Tile other_tile)

@@ -175,6 +175,7 @@ public class Player : MonoBehaviour
                 // Don't light up tiles when there's a person on the push destination tile, making the push impossible
                 Vector2 new_tile_coordinate = (player.current_tile.position - current_tile.position) + player.current_tile.position;
                 Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+
                 if (new_tile != null)
                 {
                     if (!new_tile.HasPlayer())
@@ -183,7 +184,7 @@ public class Player : MonoBehaviour
                         highlighted_tiles.Add(player.current_tile);
                     }
                 }
-                else if (new_tile == null && player.HasBall())
+                else
                 {
                     // On edge
                     player.current_tile.Highlight(this);
@@ -240,9 +241,9 @@ public class Player : MonoBehaviour
             Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
             Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
             DetermineSpriteFacing(current_tile, other_player.current_tile);
-            if (new_tile == null)
+            if (new_tile == null || new_tile.impassable)
             {
-                other_player.PushedToFall(this);
+                other_player.PushedToFall(this, new_tile.impassable);
                 return;
             }
             else
@@ -263,15 +264,42 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void PushedToFall(Player pushing_player)
+    public void PushedToFall(Player pushing_player, bool is_lava)
     {
-        Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.AddForce((transform.position - pushing_player.gameObject.transform.position) * 1000);
+        if (is_lava)
+        {
+            Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.AddForce((transform.position - pushing_player.gameObject.transform.position) * 500);
+            Invoke("GoUp", 0.1f);
+        }
+        else
+        {
+            Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.AddForce((transform.position - pushing_player.gameObject.transform.position) * 1000);
+        }
 
         GetComponent<AudioSource>().clip = out_of_bounds_sound;
         GetComponent<AudioSource>().Play();
 
-        Invoke("DelayChange", 1f);
+        if (HasBall())
+        {
+            Invoke("DelayChange", 1f);
+        }
+        else
+        {
+            Invoke("RemoveFromStage", 1f);
+        }
+    }
+
+    void GoUp()
+    {
+        GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 2000));
+    }
+
+    void RemoveFromStage()
+    {
+        current_tile.RemovePlayer();
+        Destroy(gameObject);
     }
 
     public void HoverMove()
@@ -288,7 +316,9 @@ public class Player : MonoBehaviour
             {
                 foreach (Tile adjacent_tile in tile.adjacent_tiles)
                 {
+                    // Does tile exist and is walkable
                     if (adjacent_tile == null) continue;
+                    if (adjacent_tile.impassable) continue;
 
                     if (adjacent_tile.HasPlayer())
                     {
@@ -338,11 +368,13 @@ public class Player : MonoBehaviour
                 {
                     foreach (Tile adjacent_tile in tile.adjacent_tiles)
                     {
+                        // Does tile exist and is walkable
                         if (adjacent_tile == null) continue;
+                        if (adjacent_tile.impassable) continue;
 
                         if (adjacent_tile.HasPlayer() && !ignore_other_players)
                         {
-                            if (adjacent_tile.GetPlayer().team != this.team)
+                            if (adjacent_tile.GetPlayer().team != this.team || adjacent_tile.impassable)
                             {
                                 continue;
                             }

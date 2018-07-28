@@ -6,6 +6,7 @@ public class FieldGenerator : MonoBehaviour
 {
     public GameObject ball_prefab;
     public GameObject tile_prefab;
+    public GameObject lava_tile_prefab;
     public GameObject hoop_prefab;
     public GameObject player_prefab;
     public GameObject highlight_prefab;
@@ -20,14 +21,15 @@ public class FieldGenerator : MonoBehaviour
     List<int> defensive_player_rows;
     List<int> defensive_player_columns;
 
+    List<int> lava_rows = new List<int>();
+    List<int> lava_columns = new List<int>();
+
     int hoop_row;
     int hoop_column;
 
     int give_ball_ind;
 
-    [HideInInspector]
-    // Public as they are used by tile to determine where the edge is
-    public int set_rows, set_columns;
+    int set_rows, set_columns;
 
     public void SetupBasedOnLevel()
     {
@@ -41,6 +43,9 @@ public class FieldGenerator : MonoBehaviour
 
                     defensive_player_rows    = new List<int>(new int[] { 3, 2, 3, 3, 3 });
                     defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9 });
+
+                    lava_rows.Clear();
+                    lava_rows.Clear();
 
                     hoop_row = 6;
                     hoop_column = 5;
@@ -58,6 +63,9 @@ public class FieldGenerator : MonoBehaviour
                     defensive_player_rows    = new List<int>(new int[] { 5, 3, 7, 1, 9 });
                     defensive_player_columns = new List<int>(new int[] { 4, 3, 3, 3, 3 });
 
+                    lava_rows.Clear();
+                    lava_rows.Clear();
+
                     hoop_row = 5;
                     hoop_column = 0;
 
@@ -68,6 +76,44 @@ public class FieldGenerator : MonoBehaviour
                 }
                 break;
             case 2:
+                if (Possession.team == Team.A)
+                {
+                    offensive_player_rows    = new List<int>(new int[] { 1, 0, 1, 1, 1 });
+                    offensive_player_columns = new List<int>(new int[] { 1, 5, 9, 3, 7 });
+
+                    defensive_player_rows    = new List<int>(new int[] { 3, 2, 3, 3, 3 });
+                    defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9 });
+
+                    lava_rows    = new List<int>(new int[] { 2, 3, 3, 2, 4, 4 });
+                    lava_columns = new List<int>(new int[] { 8, 6, 4, 2, 8, 2 });
+
+                    hoop_row = 6;
+                    hoop_column = 5;
+
+                    set_rows = 7;
+                    set_columns = 11;
+
+                    Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 0.75f, -10f));
+                }
+                else if (Possession.team == Team.B)
+                {
+                    offensive_player_rows = new List<int>(new int[] { 5, 1, 9, 3, 7 });
+                    offensive_player_columns = new List<int>(new int[] { 6, 5, 5, 5, 5 });
+
+                    defensive_player_rows = new List<int>(new int[] { 5, 3, 7, 1, 9 });
+                    defensive_player_columns = new List<int>(new int[] { 4, 3, 3, 3, 3 });
+
+                    lava_rows    = new List<int>(new int[] { 2, 4, 6, 8, 8, 2});
+                    lava_columns = new List<int>(new int[] { 4, 3, 3, 4, 2, 2});
+
+                    hoop_row = 5;
+                    hoop_column = 0;
+
+                    set_rows = 11;
+                    set_columns = 7;
+
+                    Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 2.2f, -10f));
+                }
                 break;
             case 3:
                 break;
@@ -82,13 +128,21 @@ public class FieldGenerator : MonoBehaviour
         RemoveOldObjects();
         SetupBasedOnLevel();
 
-        give_ball_ind = Random.Range(0, 5);
+        give_ball_ind = 2; //Random.Range(0, 5);
 
         for (int i = 0; i < set_rows; i++)
         {
             for (int j = 0; j < set_columns; j++)
             {
-                GameObject new_tile = Instantiate(tile_prefab, transform);
+                GameObject new_tile;
+                if (IsLavaTile(i, j))
+                {
+                    new_tile = Instantiate(lava_tile_prefab, transform);
+                }
+                else
+                {
+                    new_tile = Instantiate(tile_prefab, transform);
+                }
                 new_tile.GetComponent<SpriteRenderer>().sprite = tile_sprites[Random.Range(0, tile_sprites.Length)];
 
                 // Set final position, and then move tile upwards so it can drop into place
@@ -185,6 +239,18 @@ public class FieldGenerator : MonoBehaviour
                 player.DetermineSpriteFacing(player.current_tile, ball_tile);
             }
         }
+    }
+
+    bool IsLavaTile(int i, int j)
+    {
+        for (int n = 0; n < lava_rows.Count; n++)
+        {
+            if (lava_rows[n] == i && lava_columns[n] == j)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     void RemoveOldObjects()

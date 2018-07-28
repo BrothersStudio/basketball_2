@@ -59,7 +59,7 @@ public class AIController : MonoBehaviour
                     foreach (Tile tile in check_tile)
                     {
                         Tile test_tile = tile.VisualizePushingOtherFromHere(ball_carrier.current_tile);
-                        if (test_tile == null)
+                        if (test_tile == null || test_tile.impassable)
                         {
                             yield return new WaitForSeconds(1f);
                             player.Move(tile);
@@ -82,7 +82,7 @@ public class AIController : MonoBehaviour
                                     foreach (Tile other_tile in other_check_tile)
                                     {
                                         Tile other_test_tile = other_tile.VisualizePushingOtherFromHere(test_tile);
-                                        if (other_test_tile == null)
+                                        if (other_test_tile == null || other_test_tile.impassable)
                                         {
                                             player.SetInactive();
                                             other_player.SetInactive();
@@ -215,7 +215,7 @@ public class AIController : MonoBehaviour
             {
                 player.CheckMove();
                 yield return new WaitForSeconds(1f);
-                FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
+                FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile, GetSafeTiles(player)).Confirm();
                 yield return new WaitForSeconds(1f);
 
                 if (player.CheckPass())
@@ -376,7 +376,6 @@ public class AIController : MonoBehaviour
         if (input_tiles == null)
         {
             tiles_to_check = moving_player.highlighted_tiles;
-
         }
         else
         {
@@ -583,14 +582,18 @@ public class AIController : MonoBehaviour
 
     bool IsNearEdge(Player player)
     {
+        if (player.current_tile.OnEdge())
+        {
+            return true;
+        }
+
         foreach (Tile adjacent_tile in player.current_tile.adjacent_tiles)
         {
             if (adjacent_tile == null)
             {
                 return true;
             }
-
-            if (adjacent_tile.OnEdge())
+            else if (adjacent_tile.OnEdge())
             {
                 return true;
             }
@@ -638,6 +641,27 @@ public class AIController : MonoBehaviour
             }
         }
         return min_player;
+    }
+
+    List<Tile> GetSafeTiles(Player player)
+    {
+        List<Tile> safe_tiles = new List<Tile>();
+        foreach (Tile tile in player.highlighted_tiles)
+        {
+            if (!tile.OnEdge())
+            {
+                safe_tiles.Add(tile);
+            }
+        }
+
+        if (safe_tiles.Count == 0)
+        {
+            return player.highlighted_tiles;
+        }
+        else
+        {
+            return safe_tiles;
+        }
     }
 
     public static void ResetPassChecks()

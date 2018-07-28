@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.496413, b: 0.5748175, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -557,6 +557,8 @@ MonoBehaviour:
   ball_prefab: {fileID: 1639538958796332, guid: b711488caa546104dacbb512a36a8531,
     type: 2}
   tile_prefab: {fileID: 1653282935156714, guid: fe05a0ed7aa339c4887cc33966898bc2,
+    type: 2}
+  lava_tile_prefab: {fileID: 1653282935156714, guid: c5df7ec9a1d3bd4459b285f976de1564,
     type: 2}
   hoop_prefab: {fileID: 1164313406363022, guid: 0264a3423efac364f8ff4cd806b647d3,
     type: 2}
