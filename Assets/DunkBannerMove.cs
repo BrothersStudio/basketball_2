@@ -91,8 +91,8 @@ public class DunkBannerMove : MonoBehaviour
 
     IEnumerator MoveHoop()
     {
-        yield return new WaitForSeconds(1.5f);
-        for (int i = 1000; i > 200; i -= 40)
+        yield return new WaitForSeconds(0.7f);
+        for (int i = 1000; i > 200; i -= 20)
         {
             hoop.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, -123);
             yield return new WaitForEndOfFrame();
