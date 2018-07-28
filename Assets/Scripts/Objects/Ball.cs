@@ -23,6 +23,12 @@ public class Ball : MonoBehaviour
         Instantiate(sweat_particle_prefab, transform.position, Quaternion.identity);
     }
 	
+    public void Dribble()
+    {
+        GetComponent<AudioSource>().pitch = Random.Range(0.9f, 1.1f);
+        GetComponent<AudioSource>().Play();
+    }
+
 	void Update ()
     {
         if (passing)

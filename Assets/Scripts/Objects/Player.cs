@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     public AudioClip pass_1_sound;
     public AudioClip pass_2_sound;
     public AudioClip pass_3_sound;
-    public List<AudioClip> sneaker_sound;
+    public List<AudioClip> sneaker_sounds;
 
     // Sprites
     public SpriteFacing facing;
@@ -446,6 +446,19 @@ public class Player : MonoBehaviour
         foreach (Tile next_tile in tile_route)
         {
             transform.SetParent(next_tile.transform, false);
+            if (HasBall())
+            {
+                GetComponentInChildren<Ball>().Dribble();
+            }
+
+            // Sometimes sneaker squeak
+            if (Random.Range(0, 100) < 50)
+            {
+                GetComponent<AudioSource>().pitch = Random.Range(0.95f, 1.05f);
+                GetComponent<AudioSource>().clip = sneaker_sounds[Random.Range(0, sneaker_sounds.Count)];
+                GetComponent<AudioSource>().Play();
+            }
+
             if (!pushed)
             {
                 DetermineSpriteFacing(previous_tile, next_tile);

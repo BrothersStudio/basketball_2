@@ -161,7 +161,7 @@ MonoBehaviour:
   pass_1_sound: {fileID: 8300000, guid: 81c17dd125c320f40a9eab0c747dd404, type: 3}
   pass_2_sound: {fileID: 8300000, guid: c8d6a73998d4d82498ab0336c982475d, type: 3}
   pass_3_sound: {fileID: 8300000, guid: b3c7094cb0081e640a478b7b4c7e2922, type: 3}
-  sneaker_sound:
+  sneaker_sounds:
   - {fileID: 8300000, guid: c8a193f853a77294ca27e041d40eea13, type: 3}
   - {fileID: 8300000, guid: e06a4afbe5f182043ad5319e41cedf9c, type: 3}
   - {fileID: 8300000, guid: 593e646219cbeb5469f2872061b9b8d0, type: 3}
@@ -247,5 +247,5 @@ SpriteRenderer:
   m_Size: {x: 0.18, y: 0.44}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0

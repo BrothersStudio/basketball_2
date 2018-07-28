@@ -140,6 +140,7 @@ public class PhaseController : MonoBehaviour
         Utils.DeactivatePlayers();
 
         FindObjectOfType<MovingUI>().GameOver();
+        GetComponent<AudioSource>().Play();
     }
 }
 
