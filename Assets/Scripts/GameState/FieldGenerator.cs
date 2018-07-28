@@ -48,8 +48,6 @@ public class FieldGenerator : MonoBehaviour
                     set_rows = 7;
                     set_columns = 11;
 
-                    give_ball_ind = 1;
-
                     Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 0.75f, -10f));
                 }
                 else if (Possession.team == Team.B)
@@ -65,8 +63,6 @@ public class FieldGenerator : MonoBehaviour
 
                     set_rows = 11;
                     set_columns = 7;
-
-                    give_ball_ind = 0;
 
                     Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 2.2f, -10f));
                 }
@@ -85,6 +81,8 @@ public class FieldGenerator : MonoBehaviour
     {
         RemoveOldObjects();
         SetupBasedOnLevel();
+
+        give_ball_ind = Random.Range(0, 5);
 
         for (int i = 0; i < set_rows; i++)
         {
