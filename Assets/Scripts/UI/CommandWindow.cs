@@ -34,7 +34,6 @@ public class CommandWindow : MonoBehaviour
             }
             else if (Input.GetKeyDown("space") || Input.GetKeyDown("return"))
             {
-                Camera.main.GetComponent<AudioSource>().Play();
                 HandleEnter();
             }
         }
@@ -49,10 +48,12 @@ public class CommandWindow : MonoBehaviour
     {
         if (current_button == move_button)
         {
+            Camera.main.GetComponent<ClickSounds>().Move();
             current_button = attack_button;
         }
         else if (current_button == cancel_button)
         {
+            Camera.main.GetComponent<ClickSounds>().Move();
             current_button = move_button;
         }
         HandleHover();
@@ -63,10 +64,12 @@ public class CommandWindow : MonoBehaviour
     {
         if (current_button == attack_button)
         {
+            Camera.main.GetComponent<ClickSounds>().Move();
             current_button = move_button;
         }
         else if (current_button == move_button)
         {
+            Camera.main.GetComponent<ClickSounds>().Move();
             current_button = cancel_button;
         }
         HandleHover();
@@ -77,6 +80,7 @@ public class CommandWindow : MonoBehaviour
     {
         if (current_button.interactable)
         {
+            Camera.main.GetComponent<ClickSounds>().Select();
             current_button.onClick.Invoke();
         }
     }

@@ -61,6 +61,7 @@ public class EndTurnWindow : MonoBehaviour
 
     void Switch()
     {
+        Camera.main.GetComponent<ClickSounds>().Move();
         if (current_button == confirm_button)
         {
             current_button = cancel_button;
@@ -74,6 +75,7 @@ public class EndTurnWindow : MonoBehaviour
 
     void HandleEnter()
     {
+        Camera.main.GetComponent<ClickSounds>().Select();
         current_button.onClick.Invoke();
     }
 
