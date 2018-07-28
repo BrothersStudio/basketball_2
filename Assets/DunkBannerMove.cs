@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DunkBannerMove : MonoBehaviour
 {
     GameObject banner;
     GameObject dunk_image;
+    Image flash;
 
     public List<AudioClip> crowd_cheers;
 
@@ -15,6 +17,7 @@ public class DunkBannerMove : MonoBehaviour
     {
         banner = transform.Find("Dunk Banner").gameObject;
         dunk_image = transform.Find("Dunk Background").gameObject;
+        flash = transform.parent.Find("White Flash").GetComponent<Image>();
 
         ResetBanners();
     }
@@ -28,11 +31,28 @@ public class DunkBannerMove : MonoBehaviour
     public void Dunk()
     {
         ResetBanners();
+        StartCoroutine(Flash());
         StartCoroutine(MoveBanner());
         StartCoroutine(MoveImage());
 
         GetComponent<AudioSource>().clip = crowd_cheers[Random.Range(0, crowd_cheers.Count)];
         GetComponent<AudioSource>().Play();
+    }
+
+    IEnumerator Flash()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            float new_alpha = flash.color.a + 0.05f;
+            flash.color = new Color(flash.color.r, flash.color.g, flash.color.b, new_alpha);
+            yield return new WaitForEndOfFrame();
+        }
+        for (int i = 0; i < 20; i++)
+        {
+            float new_alpha = flash.color.a - 0.05f;
+            flash.color = new Color(flash.color.r, flash.color.g, flash.color.b, new_alpha);
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     IEnumerator MoveBanner()
