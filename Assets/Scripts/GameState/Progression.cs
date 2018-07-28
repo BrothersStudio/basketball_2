@@ -26,10 +26,16 @@ public class Stats
 }
 
 
-public static class Progression
+public class Progression : MonoBehaviour
 {
-    public static int level = 2;
+    public static int level = 1;
+
     public static DateTime session_start = DateTime.Now;
     public static Stats session_stats = new Stats();
     public static string user_id = Utils.GetCreateUid();
+
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
 }

@@ -14,6 +14,7 @@ public class TimeCounter : MonoBehaviour
         max_quarter_time = new TimeSpan(0, 10, 0);
 
         current_quarter_time = max_quarter_time;
+        UpdateTimeDisplay();
     }
 
     public void DecreaseTime()

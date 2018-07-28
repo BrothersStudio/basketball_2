@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PhaseController : MonoBehaviour
 {
@@ -141,6 +142,14 @@ public class PhaseController : MonoBehaviour
 
         FindObjectOfType<MovingUI>().GameOver();
         GetComponent<AudioSource>().Play();
+
+        Progression.level++;
+        Invoke("ChangeScene", 5);
+    }
+
+    void ChangeScene()
+    {
+        SceneManager.LoadScene("Game");
     }
 }
 
