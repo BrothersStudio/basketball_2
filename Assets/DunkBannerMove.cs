@@ -20,7 +20,6 @@ public class DunkBannerMove : MonoBehaviour
         flash = transform.parent.Find("White Flash").GetComponent<Image>();
 
         ResetBanners();
-        Dunk();
     }
 
     void ResetBanners()
