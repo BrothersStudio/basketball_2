@@ -84,8 +84,8 @@ public class FieldGenerator : MonoBehaviour
                     defensive_player_rows    = new List<int>(new int[] { 3, 2, 3, 3, 3 });
                     defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9 });
 
-                    lava_rows    = new List<int>(new int[] { 2, 3, 3, 2, 4, 4 });
-                    lava_columns = new List<int>(new int[] { 8, 6, 4, 2, 8, 2 });
+                    lava_rows    = new List<int>(new int[] { 2, 3, 3, 2, 4, 4, 6, 6 });
+                    lava_columns = new List<int>(new int[] { 8, 6, 4, 2, 8, 2, 7, 3 });
 
                     hoop_row = 6;
                     hoop_column = 5;
@@ -103,8 +103,8 @@ public class FieldGenerator : MonoBehaviour
                     defensive_player_rows = new List<int>(new int[] { 5, 3, 7, 1, 9 });
                     defensive_player_columns = new List<int>(new int[] { 4, 3, 3, 3, 3 });
 
-                    lava_rows    = new List<int>(new int[] { 2, 4, 6, 8, 8, 2});
-                    lava_columns = new List<int>(new int[] { 4, 3, 3, 4, 2, 2});
+                    lava_rows    = new List<int>(new int[] { 2, 4, 6, 8, 8, 2, 3, 7 });
+                    lava_columns = new List<int>(new int[] { 4, 3, 3, 4, 2, 2, 0, 0 });
 
                     hoop_row = 5;
                     hoop_column = 0;
@@ -135,7 +135,7 @@ public class FieldGenerator : MonoBehaviour
             for (int j = 0; j < set_columns; j++)
             {
                 GameObject new_tile;
-                if (IsLavaTile(i, j))
+                if (IsLavaTile(i, j) && Random.Range(0, 100) < 60)
                 {
                     new_tile = Instantiate(lava_tile_prefab, transform);
                 }
