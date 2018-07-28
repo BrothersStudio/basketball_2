@@ -126,6 +126,7 @@ public class Player : MonoBehaviour
 
             GetComponentInChildren<Ball>().Pass(pass_player);
             GetComponentInChildren<Ball>().transform.SetParent(pass_player.transform, true);
+            pass_player.CheckIfScored();
 
             FindObjectOfType<CameraShake>().Shake(0.2f);
             PlayPassAudio();
