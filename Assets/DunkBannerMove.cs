@@ -23,7 +23,6 @@ public class DunkBannerMove : MonoBehaviour
         player = banner.transform.Find("Dunk Sprite").gameObject;
 
         ResetBanners();
-        Dunk();
     }
 
     void ResetBanners()
@@ -82,7 +81,7 @@ public class DunkBannerMove : MonoBehaviour
     IEnumerator MovePlayer()
     {
         yield return new WaitForSeconds(0.5f);
-        for (int i = -1000; i <= 100; i += 20)
+        for (int i = -1000; i <= 100; i += 40)
         {
             player.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, 0.42f);
             yield return new WaitForEndOfFrame();
@@ -91,8 +90,8 @@ public class DunkBannerMove : MonoBehaviour
 
     IEnumerator MoveHoop()
     {
-        yield return new WaitForSeconds(0.7f);
-        for (int i = 1000; i > 200; i -= 20)
+        yield return new WaitForSeconds(0.63f);
+        for (int i = 1000; i > 200; i -= 40)
         {
             hoop.GetComponent<RectTransform>().anchoredPosition = new Vector2(i, -123);
             yield return new WaitForEndOfFrame();
