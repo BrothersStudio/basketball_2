@@ -457,10 +457,6 @@ public class Player : MonoBehaviour
         foreach (Tile next_tile in tile_route)
         {
             transform.SetParent(next_tile.transform, false);
-            if (HasBall())
-            {
-                GetComponentInChildren<Ball>().Dribble();
-            }
 
             // Sometimes sneaker squeak
             if (Random.Range(0, squeak_chance) < 50 && !squeaked)
