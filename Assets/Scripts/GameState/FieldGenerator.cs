@@ -219,24 +219,46 @@ public class FieldGenerator : MonoBehaviour
             }
         }        
 
-        foreach (Tile tile in FindObjectsOfType<Tile>())
+        foreach (GameObject tile in all_objects)
         {
-            tile.SetAdjacency();
+            if (tile.GetComponent<Tile>() != null)
+            {
+                tile.GetComponent<Tile>().SetAdjacency();
+            }
         }
 
-        Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
-        Tile ball_tile = FindObjectOfType<Ball>().transform.parent.GetComponent<Player>().current_tile;
-        foreach (Player player in FindObjectsOfType<Player>())
+        Tile hoop_tile = null;
+        foreach (GameObject hoop in all_objects)
         {
-            if (player.team == Possession.team)
+            if (hoop.GetComponent<Hoop>() != null)
             {
-                // Offensive facing
-                player.DetermineSpriteFacing(player.current_tile, hoop_tile);
+                hoop_tile = hoop.GetComponent<Hoop>().current_tile;
             }
-            else
+        }
+
+        Tile ball_tile = null;
+        foreach (GameObject ball in all_objects)
+        {
+            if (ball.GetComponent<Ball>() != null)
             {
-                // Defensive facing
-                player.DetermineSpriteFacing(player.current_tile, ball_tile);
+                ball_tile = ball.transform.parent.GetComponent<Player>().current_tile;
+            }
+        }
+
+        foreach (GameObject player in all_objects)
+        {
+            if (player.GetComponent<Player>() != null)
+            {
+                if (player.GetComponent<Player>().team == Possession.team)
+                {
+                    // Offensive facing
+                    player.GetComponent<Player>().DetermineSpriteFacing(player.GetComponent<Player>().current_tile, hoop_tile);
+                }
+                else
+                {
+                    // Defensive facing
+                    player.GetComponent<Player>().DetermineSpriteFacing(player.GetComponent<Player>().current_tile, ball_tile);
+                }
             }
         }
     }

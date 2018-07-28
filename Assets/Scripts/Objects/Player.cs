@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public bool pushing = false;
     public bool moving = false;
 
-    bool animating = false;
+    public bool animating = false;
 
     public bool took_attack = false;
     public bool took_move = false;
@@ -486,7 +486,11 @@ public class Player : MonoBehaviour
 
         if (HasBall())
         {
-            CheckIfScored();
+            bool scored = CheckIfScored();
+            if (scored)
+            {
+                yield break;
+            }
         }
 
         animating = false;
@@ -545,15 +549,26 @@ public class Player : MonoBehaviour
         }
     }
 
-    void CheckIfScored()
+    bool CheckIfScored()
     {
         Hoop hoop = FindObjectOfType<Hoop>();
         if (Utils.GetDistance(current_tile.position, hoop.current_tile.position) <= 1)
         {
             FindObjectOfType<ScoreCounter>().PlayerScored(this);
             FindObjectOfType<DunkBannerMove>().Dunk();
+
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
+            GetComponentInChildren<Ball>().gameObject.SetActive(false);
+            StopAllCoroutines();
+
+            Utils.SetDunkAnimation();
+
             Invoke("DelayChange", 3.5f);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -632,7 +647,7 @@ public class Player : MonoBehaviour
 
     public void Confirm()
     {
-        if (!(took_move && took_attack) && (team != Team.B) && (!AITurn.Activity))
+        if (!(took_move && took_attack) && (team != Team.B) && (!AITurn.Activity) && !animating)
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
         }

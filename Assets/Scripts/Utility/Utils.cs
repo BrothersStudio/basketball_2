@@ -81,6 +81,17 @@ public static class Utils
         }
     }
 
+    public static void SetDunkAnimation()
+    {
+        foreach (Player player in GameObject.FindObjectsOfType<Player>())
+        {
+            player.animating = true;
+        }
+
+        GameObject highlight = GameObject.FindObjectOfType<Highlight>().gameObject;
+        highlight.SetActive(false);
+    }
+
     public static List<Interview> ListConcat(List<Interview> list1, List<Interview> list2)
     {
         List<Interview> new_list = list1;
