@@ -65,22 +65,45 @@ public class Highlight : MonoBehaviour
     {
         if (cycle_player == null)
         {
-            if (Input.GetKeyDown("up"))
+            if (Possession.team == Team.A)
             {
-                MoveToAdjacentTile(0);
-            }
-            else if (Input.GetKeyDown("down"))
-            {
-                MoveToAdjacentTile(1);
-            }
-            else if (Input.GetKeyDown("right"))
-            {
-                MoveToAdjacentTile(3);
+                if (Input.GetKeyDown("up"))
+                {
+                    MoveToAdjacentTile(0);
+                }
+                else if (Input.GetKeyDown("down"))
+                {
+                    MoveToAdjacentTile(1);
+                }
+                else if (Input.GetKeyDown("right"))
+                {
+                    MoveToAdjacentTile(3);
 
+                }
+                else if ((Input.GetKeyDown("left")))
+                {
+                    MoveToAdjacentTile(2);
+                }
             }
-            else if ((Input.GetKeyDown("left")))
+            else
             {
-                MoveToAdjacentTile(2);
+                if (Input.GetKeyDown("up"))
+                {
+                    MoveToAdjacentTile(3);
+                }
+                else if (Input.GetKeyDown("down"))
+                {
+                    MoveToAdjacentTile(2);
+                }
+                else if (Input.GetKeyDown("right"))
+                {
+                    MoveToAdjacentTile(1);
+
+                }
+                else if ((Input.GetKeyDown("left")))
+                {
+                    MoveToAdjacentTile(0);
+                }
             }
         }
         else
