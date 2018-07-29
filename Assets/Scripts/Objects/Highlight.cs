@@ -20,7 +20,7 @@ public class Highlight : MonoBehaviour
 
     void Awake()
     {
-        end_turn_buffer = Time.timeSinceLevelLoad;
+        current_buffer = Time.timeSinceLevelLoad;
 
         current_tile = transform.parent.GetComponent<Tile>();
         current_tile.has_cursor = true;
