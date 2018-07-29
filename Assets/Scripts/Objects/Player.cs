@@ -644,6 +644,7 @@ public class Player : MonoBehaviour
 
     void DelayChange()
     {
+        canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
         FindObjectOfType<PhaseController>().ChangeSides();
     }
 

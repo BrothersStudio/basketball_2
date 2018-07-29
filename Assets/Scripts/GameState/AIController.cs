@@ -46,6 +46,8 @@ public class AIController : MonoBehaviour
 
     IEnumerator Defend()
     {
+        yield return new WaitForSeconds(1f);
+
         // Can anyone push the ball carrier off?
         Player ball_carrier = GetPlayerWithBall();
         if (IsNearEdge(ball_carrier))
@@ -190,6 +192,8 @@ public class AIController : MonoBehaviour
 
     IEnumerator Attack()
     {
+        yield return new WaitForSeconds(1f);
+
         // First let's see if any player is in range of the goal
         List<Player> in_score_range = new List<Player>();
         foreach (Player player in ai_players)
