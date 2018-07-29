@@ -28,7 +28,7 @@ public class Stats
 
 public class Progression : MonoBehaviour
 {
-    public static int level = 1;
+    public static int level = 0;
 
     public static DateTime session_start = DateTime.Now;
     public static Stats session_stats = new Stats();

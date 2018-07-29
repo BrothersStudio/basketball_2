@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
 
     public bool ai_pass_check = false;
 
+    // Tutorial
+    public bool can_select = true;
+
     // SFX
     public AudioClip push_sound;
     public AudioClip out_of_bounds_sound;
@@ -123,6 +126,8 @@ public class Player : MonoBehaviour
         if (!took_attack && !animating)
         {
             passing = false;
+
+            pass_player.BroadcastMessage("TutorialGotBall", SendMessageOptions.DontRequireReceiver);
 
             GetComponentInChildren<Ball>().Pass(pass_player);
             GetComponentInChildren<Ball>().transform.SetParent(pass_player.transform, true);
@@ -423,6 +428,15 @@ public class Player : MonoBehaviour
 
     public void Move(Tile new_tile)
     {
+        // Tutorial
+        if (GetComponent<TutorialPlayer>() != null)
+        {
+            if (!Utils.IsAdjacentToHoop(new_tile))
+            {
+                return;
+            }
+        }
+
         if (!took_move)
         {
             moving = false;
@@ -541,7 +555,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No matching facing direction");
+            Debug.LogError("No matching facing direction");
         }
 
         if (HasBall())
@@ -555,7 +569,10 @@ public class Player : MonoBehaviour
         Hoop hoop = FindObjectOfType<Hoop>();
         if (Utils.GetDistance(current_tile.position, hoop.current_tile.position) <= 1)
         {
-            FindObjectOfType<ScoreCounter>().PlayerScored(this);
+            if (GetComponent<TutorialPlayer>() == null)
+            {
+                FindObjectOfType<ScoreCounter>().PlayerScored(this);
+            }
             FindObjectOfType<DunkBannerMove>().Dunk();
 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
@@ -575,6 +592,12 @@ public class Player : MonoBehaviour
 
     void EndAction()
     {
+        // Tutorial
+        if (Progression.level == 0)
+        {
+            return;
+        }
+
         SetInactive();
         CheckTurn();
         if (took_attack && took_move || (took_move && !(CheckPass() || CheckPush())))
@@ -646,9 +669,32 @@ public class Player : MonoBehaviour
         }
     }
 
+    public bool IsTutorialRestricted(TutorialAction action)
+    {
+        if (GetComponent<TutorialPlayer>() != null)
+        {
+            if (action == TutorialAction.Move)
+            {
+                return !GetComponent<TutorialPlayer>().can_move;
+            }
+            else if (action == TutorialAction.Pass)
+            {
+                return !GetComponent<TutorialPlayer>().can_pass;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void Confirm()
     {
-        if (!(took_move && took_attack) && (team != Team.B) && (!AITurn.Activity) && !animating)
+        if (!(took_move && took_attack) && (team != Team.B) && (!AITurn.Activity) && !animating && can_select)
         { 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().SetButtons(this);
         }
@@ -667,4 +713,10 @@ public enum SpriteFacing
     SW,
     NE,
     SE
+}
+
+public enum TutorialAction
+{
+    Move,
+    Pass
 }

@@ -19,11 +19,11 @@ public class FallIntoPlace : MonoBehaviour
     {
         if (!long_time)
         {
-            Invoke("SetFallTime", Random.Range(0, 0.3f));
+            Invoke("SetFallTime", Random.Range(0, 0.5f));
         }
         else
         {
-            Invoke("SetFallTime", Random.Range(0.3f, 0.7f));
+            Invoke("SetFallTime", Random.Range(0.5f, 0.8f));
         }
     }
 
@@ -37,7 +37,7 @@ public class FallIntoPlace : MonoBehaviour
         if (Vector3.Distance(transform.position, final_position) > 0.1f && falling)
         {
             Vector3 position = transform.position;
-            position.y -= 1;
+            position.y -= 0.5f;
             transform.position = position;
 
         }

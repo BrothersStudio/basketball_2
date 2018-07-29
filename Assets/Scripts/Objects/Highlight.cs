@@ -98,7 +98,7 @@ public class Highlight : MonoBehaviour
         {
             Confirm();
         }
-        else if (Input.GetKey("escape") && Time.timeSinceLevelLoad > end_turn_buffer + current_buffer)
+        else if (Input.GetKey("escape") && Time.timeSinceLevelLoad > end_turn_buffer + current_buffer && Progression.level != 0)
         {
             end_turn_window.SetActive(true);
         }

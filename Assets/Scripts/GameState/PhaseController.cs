@@ -90,6 +90,13 @@ public class PhaseController : MonoBehaviour
 
     public void ChangeSides()
     {
+        // Tutorial
+        if (Progression.level == 0)
+        {
+            FindObjectOfType<TutorialController>().Scored();
+            return;
+        }
+
         if (!game_over)
         {
             Possession.passes_this_turn = 0;

@@ -35,6 +35,21 @@ public class FieldGenerator : MonoBehaviour
     {
         switch (Progression.level)
         {
+            case 0:
+                offensive_player_rows = new List<int>(new int[] { 2 });
+                offensive_player_columns = new List<int>(new int[] { 5 });
+
+                defensive_player_rows = new List<int>(new int[] { 4 });
+                defensive_player_columns = new List<int>(new int[] { 5 });
+
+                hoop_row = 6;
+                hoop_column = 5;
+
+                set_rows = 7;
+                set_columns = 11;
+
+                Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 0.75f, -10f));
+                break;
             case 1:
                 if (Possession.team == Team.A)
                 {
@@ -128,7 +143,7 @@ public class FieldGenerator : MonoBehaviour
         RemoveOldObjects();
         SetupBasedOnLevel();
 
-        give_ball_ind = Random.Range(0, 5);
+        give_ball_ind = Random.Range(0, offensive_player_rows.Count);
 
         for (int i = 0; i < set_rows; i++)
         {
@@ -261,6 +276,39 @@ public class FieldGenerator : MonoBehaviour
                 }
             }
         }
+
+        if (Progression.level == 0)
+        {
+            FindObjectOfType<TutorialController>().StartTutorial();
+        }
+    }
+
+    public Player SpawnTutorialPlayer(Vector2 position)
+    {
+        Tile spawn_tile = Utils.FindTileAtLocation(position);
+
+        GameObject new_player = Instantiate(player_prefab, spawn_tile.transform);
+
+        Vector3 player_final_position = new_player.transform.position;
+        new_player.GetComponent<FallIntoPlace>().SetFinalPosition(player_final_position);
+        new_player.GetComponent<FallIntoPlace>().FallSoon();
+
+        new_player.name = "Offender 2";
+        new_player.GetComponent<Player>().current_tile = spawn_tile;
+        new_player.GetComponent<Player>().team = Team.A;
+
+        // Tutorial special
+        new_player.GetComponent<Player>().can_select = false;
+        TutorialPlayer tutorial = new_player.AddComponent<TutorialPlayer>();
+        tutorial.can_move = true;
+
+        all_objects.Add(new_player);
+
+        new_player.GetComponent<Player>().DetermineSpriteFacing(spawn_tile, Utils.FindTileAtLocation(new Vector2(5, 2)));
+
+        new_player.transform.Translate(new Vector3(0, 10, 0), Space.World);
+
+        return new_player.GetComponent<Player>();
     }
 
     bool IsLavaTile(int i, int j)

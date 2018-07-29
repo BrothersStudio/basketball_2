@@ -126,7 +126,7 @@ public class CommandWindow : MonoBehaviour
         arrow.transform.SetParent(current_button.transform, false);
 
         // Attack
-        if (selected_player.CheckPass())
+        if (selected_player.CheckPass() && !selected_player.IsTutorialRestricted(TutorialAction.Pass))
         {
             selected_player.SetInactive();  // Remove highlighted pass tiles
 
@@ -171,7 +171,7 @@ public class CommandWindow : MonoBehaviour
         }
 
         // Move
-        if (!selected_player.took_move)
+        if (!selected_player.took_move && !selected_player.IsTutorialRestricted(TutorialAction.Move))
         {
             move_button.interactable = true;
             move_button.onClick.RemoveAllListeners();

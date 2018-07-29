@@ -7,6 +7,7 @@ public class Ball : MonoBehaviour
     bool dribble_down = true;
 
     bool passing = false;
+    bool dribbling = true;
 
     Player pass_destination;
 
@@ -16,6 +17,11 @@ public class Ball : MonoBehaviour
     public GameObject sweat_particle_prefab;
 
     Vector3 current_location;
+
+    public void ToggleDribble()
+    {
+        dribbling = !dribbling;
+    }
 
     public void Pass(Player new_player)
     {
@@ -58,24 +64,27 @@ public class Ball : MonoBehaviour
         }
         else
         {
-            if (dribble_down && transform.localPosition.y > -0.13f)
+            if (dribbling)
             {
-                transform.Translate(new Vector3(0, -0.03f, 0));
-            }
-            else if (dribble_down && transform.localPosition.y <= -0.13f)
-            {
-                transform.localScale = new Vector3(1.3f, 0.73f, 1);
-                DribbleSound();
-                dribble_down = false;
-            }
-            else if (!dribble_down && transform.localPosition.y < -0.05f)
-            {
-                ScaleTowardOne();
-                transform.Translate(new Vector3(0, 0.03f, 0));
-            }
-            else if (!dribble_down && transform.localPosition.y >= -0.05f)
-            {
-                dribble_down = true;
+                if (dribble_down && transform.localPosition.y > -0.13f)
+                {
+                    transform.Translate(new Vector3(0, -0.03f, 0));
+                }
+                else if (dribble_down && transform.localPosition.y <= -0.13f)
+                {
+                    transform.localScale = new Vector3(1.3f, 0.73f, 1);
+                    DribbleSound();
+                    dribble_down = false;
+                }
+                else if (!dribble_down && transform.localPosition.y < -0.05f)
+                {
+                    ScaleTowardOne();
+                    transform.Translate(new Vector3(0, 0.03f, 0));
+                }
+                else if (!dribble_down && transform.localPosition.y >= -0.05f)
+                {
+                    dribble_down = true;
+                }
             }
         }
 	}
