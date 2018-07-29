@@ -13,7 +13,6 @@ public class AIController : MonoBehaviour
         if (random)
         {
             int seed = System.DateTime.Now.Second + System.DateTime.Now.Minute + System.DateTime.Now.Hour;
-            Debug.Log("Seed: " + seed.ToString());
             Random.InitState(seed);
         }
         else
