@@ -49,14 +49,14 @@ public class TutorialController : MonoBehaviour
         tutorial_strings.Add("Ally falling");
 
         tutorial_strings.Add("Fortunately, you won't be alone!");
-        tutorial_strings.Add("You can pass the ball to allies within 3 squares of you.");
+        tutorial_strings.Add("You can pass the ball to teammates within 3 squares of you.");
         tutorial_strings.Add("Holding the ball\nallows you to move 3 squares, instead of the 2 without.");
         tutorial_strings.Add("Select the ball carrier, pass to your teammate, and score!");
 
         // Action
         tutorial_strings.Add("Player control");
 
-        tutorial_strings.Add("Nice! You're ready for the big league! Good luck!");
+        tutorial_strings.Add("Nice! You're ready for the big time! Good luck!");
     }
 
     public void StartTutorial()
