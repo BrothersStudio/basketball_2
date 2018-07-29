@@ -313,6 +313,7 @@ public class AIController : MonoBehaviour
                     yield return new WaitForSeconds(1f);
                     if (player.CheckPush())
                     {
+                        yield return new WaitForSeconds(1f);
                         Player chosen_player = player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].GetPlayer();
                         player.Push(chosen_player);
                         yield return new WaitForSeconds(1f);
