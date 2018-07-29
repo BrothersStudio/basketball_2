@@ -232,13 +232,22 @@ public class Player : MonoBehaviour
     public Tile VisualizePushing(Player other_player)
     {
         Vector2 new_tile_coordinate = (other_player.current_tile.position - current_tile.position) + other_player.current_tile.position;
-        return Utils.FindTileAtLocation(new_tile_coordinate);
+        Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+        return new_tile;
     }
 
     public Tile VisualizePushing(Tile other_tile)
     {
         Vector2 new_tile_coordinate = (other_tile.position - current_tile.position) + other_tile.position;
-        return Utils.FindTileAtLocation(new_tile_coordinate);
+        Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+        return new_tile;
+    }
+
+    public Tile VisualizePushing(Tile potential_tile, Tile other_tile)
+    {
+        Vector2 new_tile_coordinate = (other_tile.position - potential_tile.position) + other_tile.position;
+        Tile new_tile = Utils.FindTileAtLocation(new_tile_coordinate);
+        return new_tile;
     }
 
     public void Push(Player other_player)

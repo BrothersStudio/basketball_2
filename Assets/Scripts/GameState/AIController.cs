@@ -34,11 +34,12 @@ public class AIController : MonoBehaviour
 
         if (Possession.team == Team.A)
         {
+            SortAIPlayersForDefense();
             StartCoroutine("Defend");
         }
         else
         {
-            SortAIPlayers();
+            SortAIPlayersForAttack();
             StartCoroutine("Attack");
         }
     }
@@ -214,9 +215,43 @@ public class AIController : MonoBehaviour
             }
         }
 
-        // Okay, I can't win let's move towards the goal using the ball to boost movement
+        // Can any aggressive pushes open a path?
         foreach (Player player in ai_players)
         {
+            if (player.HasBall()) continue;
+
+            Player close_ally = FindClosestAllyToHoopAsCrowFlies();
+
+            List<Tile> check_tiles = ReturnAnyTilesAdjacentToEnemy(player);
+            foreach (Tile tile in check_tiles)
+            {
+                List<Player> adjacent_enemy_players = GetAdjacentEnemiesToTile(tile);
+                foreach (Player enemy_player in adjacent_enemy_players)
+                {
+                    Tile moved_to_tile = player.VisualizePushing(tile, enemy_player.current_tile);
+                    if (GetDistanceForTeamIfTileImpassible(close_ally.current_tile, FindObjectOfType<Hoop>().current_tile, moved_to_tile, Team.B, enemy_player.current_tile) <
+                        GetDistanceFromAToBForTeam(close_ally.current_tile, FindObjectOfType<Hoop>().current_tile, Team.B))
+                    {
+                        player.CheckMove();
+                        yield return new WaitForSeconds(1f);
+                        tile.Confirm();
+                        yield return new WaitForSeconds(1f);
+                        player.CheckPush();
+                        yield return new WaitForSeconds(1f);
+                        player.Push(enemy_player);
+                        yield return new WaitForSeconds(1f);
+                        goto next_player;
+                    }
+                }
+            }
+            next_player: continue;
+        }
+
+        // Let's move towards the goal using the ball to boost movement
+        foreach (Player player in ai_players)
+        {
+            if (player.IsDone()) continue;
+
             // Can we pass it to anyone who hasn't moved?
             if (player.HasBall())
             {
@@ -445,7 +480,7 @@ public class AIController : MonoBehaviour
         return false;
     }
 
-    void SortAIPlayers()
+    void SortAIPlayersForAttack()
     {
         Player ball_carrier = null;
         foreach (Player player in ai_players)
@@ -475,6 +510,27 @@ public class AIController : MonoBehaviour
         }
 
         ai_players.Insert(0, ball_carrier);
+    }
+
+    void SortAIPlayersForDefense()
+    {
+        Player danger_player = FindClosestEnemyToHoop();
+
+        // Sort
+        Player temp = null;
+        for (int write = 0; write < ai_players.Count; write++)
+        {
+            for (int sort = 0; sort < ai_players.Count - 1; sort++)
+            {
+                if (Utils.GetDistance(ai_players[sort].current_tile.position, danger_player.current_tile.position) >
+                    Utils.GetDistance(ai_players[sort + 1].current_tile.position, danger_player.current_tile.position))
+                {
+                    temp = ai_players[sort + 1];
+                    ai_players[sort + 1] = ai_players[sort];
+                    ai_players[sort] = temp;
+                }
+            }
+        }
     }
 
     Player GetPlayerWithBall()
@@ -629,6 +685,49 @@ public class AIController : MonoBehaviour
         return output_tiles;
     }
 
+    List<Tile> ReturnAnyTilesAdjacentToEnemy(Player player)
+    {
+        List<Tile> output_tiles = new List<Tile>();
+
+        player.CheckMove();
+        foreach (Tile tile in player.highlighted_tiles)
+        {
+            foreach (Tile adjacent_tile in tile.adjacent_tiles)
+            {
+                if (adjacent_tile == null) continue;
+
+                if (adjacent_tile.HasPlayer())
+                {
+                    if (adjacent_tile.GetPlayer().team != player.team)
+                    {
+                        output_tiles.Add(adjacent_tile);
+                    }
+                }
+            }
+        }
+        player.SetInactive();
+
+        return output_tiles;
+    }
+
+    List<Player> GetAdjacentEnemiesToTile(Tile input_tile)
+    {
+        List<Player> output_players = new List<Player>();
+        foreach (Tile tile in input_tile.adjacent_tiles)
+        {
+            if (tile == null) continue;
+
+            if (tile.HasPlayer())
+            {
+                if (tile.GetPlayer().team == Team.A)
+                {
+                    output_players.Add(tile.GetPlayer());
+                }
+            }
+        }
+        return output_players;
+    }
+
     Player FindClosestEnemyToHoop()
     {
         Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
@@ -640,6 +739,32 @@ public class AIController : MonoBehaviour
             if (player.team == Team.A)
             {
                 int check_dist = GetDistanceFromAToBForTeam(player.current_tile, hoop_tile, Team.A);
+                if (check_dist < min_dist)
+                {
+                    min_dist = check_dist;
+                    min_player = player;
+                }
+                else if (check_dist == min_dist && player.HasBall())
+                {
+                    min_dist = check_dist;
+                    min_player = player;
+                }
+            }
+        }
+        return min_player;
+    }
+
+    Player FindClosestAllyToHoopAsCrowFlies()
+    {
+        Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
+
+        int min_dist = 100;
+        Player min_player = null;
+        foreach (Player player in FindObjectsOfType<Player>())
+        {
+            if (player.team == Team.B)
+            {
+                int check_dist = Utils.GetDistance(player.current_tile.position, hoop_tile.position);
                 if (check_dist < min_dist)
                 {
                     min_dist = check_dist;

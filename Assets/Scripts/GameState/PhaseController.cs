@@ -143,7 +143,7 @@ public class PhaseController : MonoBehaviour
         Destroy(canvas.Find("Command Window").gameObject);
 
         GetComponent<AIController>().StopAllCoroutines();
-        
+
         Utils.DehighlightTiles();
         Utils.DeactivatePlayers();
 
@@ -151,7 +151,14 @@ public class PhaseController : MonoBehaviour
         GetComponent<AudioSource>().Play();
 
         Progression.level++;
-        Invoke("ChangeScene", 5);
+        if (Progression.level == 4)
+        {
+            Application.Quit();
+        }
+        else
+        {
+            Invoke("ChangeScene", 5);
+        }
     }
 
     void ChangeScene()
