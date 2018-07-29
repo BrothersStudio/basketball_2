@@ -25,7 +25,7 @@ public class ShotClock : MonoBehaviour
         Display();
         if (current_value == 0)
         {
-            Invoke("DelayChange", 1f);
+            Invoke("DelayChange", 0.5f);
         }
     }
 

@@ -54,6 +54,15 @@ public class PhaseController : MonoBehaviour
     {
         if (!game_over)
         {
+            if (current_phase == Phase.TeamAAct && Possession.team == Team.A)
+            {
+                FindObjectOfType<ShotClock>().DecreaseTime();
+            }
+            else if (current_phase == Phase.TeamBAct && Possession.team == Team.B)
+            {
+                FindObjectOfType<ShotClock>().DecreaseTime();
+            }
+
             Possession.passes_this_turn = 0;
             GetComponent<AIController>().StopAllCoroutines();
             AITurn.Activity = !AITurn.Activity;
@@ -80,8 +89,6 @@ public class PhaseController : MonoBehaviour
                 FindObjectOfType<TurnText>().StartMoving("A");
 
                 highlight.GetComponent<Highlight>().Reset();
-
-                FindObjectOfType<ShotClock>().DecreaseTime();
             }
 
             FindObjectOfType<TimeCounter>().DecreaseTime();
