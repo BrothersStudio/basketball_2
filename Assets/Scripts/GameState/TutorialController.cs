@@ -20,6 +20,8 @@ public class TutorialController : MonoBehaviour
     Player tutorial_talker;
     Player player_character;
 
+    float end_tutorial_timer = Mathf.Infinity;
+
     void Awake()
     {
         if (Progression.level != 0)
@@ -74,6 +76,8 @@ public class TutorialController : MonoBehaviour
         canvas.transform.Find("End Turn").gameObject.SetActive(false);
         canvas.transform.Find("Shot Clock").gameObject.SetActive(false);
 
+        canvas.transform.Find("End Tutorial").gameObject.SetActive(true);
+
         FindObjectOfType<Ball>().ToggleDribble();
 
         player_character = FindObjectsOfType<Player>()[1];
@@ -83,6 +87,8 @@ public class TutorialController : MonoBehaviour
 
         tutorial_talker = FindObjectsOfType<Player>()[0];
         StartCoroutine(DelayAppear());
+
+        end_tutorial_timer = Time.timeSinceLevelLoad;
     }
 
     IEnumerator DelayAppear()
@@ -180,7 +186,21 @@ public class TutorialController : MonoBehaviour
 
     void Update()
     {
-        if (Input.anyKey && Time.timeSinceLevelLoad > last_text_time + 0.5f && !performing_action)
+        // Skipping tutorial
+        if (Input.GetKey("escape"))
+        {
+            if (Time.timeSinceLevelLoad > end_tutorial_timer + 1.75f)
+            {
+                Progression.level++;
+                SceneManager.LoadScene("Game");
+            }
+        }
+        else
+        {
+            end_tutorial_timer = Time.timeSinceLevelLoad;
+        }
+
+        if (Input.anyKeyDown && Time.timeSinceLevelLoad > last_text_time + 0.5f && !performing_action)
         {
             last_text_time = Time.timeSinceLevelLoad;
 
