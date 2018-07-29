@@ -122,8 +122,11 @@ public class Highlight : MonoBehaviour
         current_tile.has_cursor = false;
         new_tile.has_cursor = true;
 
-        GetComponent<AudioSource>().pitch = Random.Range(0.9f, 1.1f);
-        GetComponent<AudioSource>().Play();
+        if (gameObject.activeSelf)
+        {
+            GetComponent<AudioSource>().pitch = Random.Range(0.9f, 1.1f);
+            GetComponent<AudioSource>().Play();
+        }
 
         transform.SetParent(new_tile.transform, false);
 
