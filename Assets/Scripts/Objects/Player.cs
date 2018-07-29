@@ -655,6 +655,8 @@ public class Player : MonoBehaviour
 
             if (Utils.TeamIsDoneTurn(team))
             {
+                SetInactive();
+                canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
                 FindObjectOfType<PhaseController>().ChangePhase();
             }
         }

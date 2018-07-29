@@ -79,7 +79,7 @@ public class PhaseController : MonoBehaviour
                 current_phase = Phase.TeamAAct;
                 FindObjectOfType<TurnText>().StartMoving("A");
 
-                highlight.SetActive(true);
+                highlight.GetComponent<Highlight>().Reset();
 
                 FindObjectOfType<ShotClock>().DecreaseTime();
             }
