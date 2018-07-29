@@ -43,10 +43,11 @@ public class Highlight : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public void SelectMove()
+    public void SelectMove(Player player)
     {
         moving = true;
-        move_origin_tile = current_tile;
+        move_origin_tile = player.current_tile;
+        MoveToTile(move_origin_tile);
 
         gameObject.SetActive(true);
     }

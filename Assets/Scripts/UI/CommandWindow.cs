@@ -177,7 +177,7 @@ public class CommandWindow : MonoBehaviour
             move_button.onClick.RemoveAllListeners();
             move_button.onClick.AddListener(delegate {
                 lock_arrow = true;
-                highlight.SelectMove();
+                highlight.SelectMove(selected_player);
                 selected_player.CheckMove();
             });
         }

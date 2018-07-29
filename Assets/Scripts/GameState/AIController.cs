@@ -701,7 +701,8 @@ public class AIController : MonoBehaviour
                 {
                     if (adjacent_tile.GetPlayer().team != player.team)
                     {
-                        output_tiles.Add(adjacent_tile);
+                        output_tiles.Add(tile);
+                        break;
                     }
                 }
             }
