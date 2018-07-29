@@ -165,8 +165,8 @@ public class FieldGenerator : MonoBehaviour
                     offensive_player_rows = new List<int>(new int[] { 1, 0, 1, 1, 1 });
                     offensive_player_columns = new List<int>(new int[] { 1, 5, 9, 3, 7 });
 
-                    defensive_player_rows = new List<int>(new int[] { 3, 2, 3, 3, 3 });
-                    defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9 });
+                    defensive_player_rows = new List<int>(new int[] { 3, 2, 3, 3, 3, 4, 4 });
+                    defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9, 6, 4 });
 
                     lava_rows = new List<int>(new int[] { 2, 3, 3, 2, 4, 4, 6, 6 });
                     lava_columns = new List<int>(new int[] { 8, 6, 4, 2, 8, 2, 7, 3 });
@@ -181,8 +181,8 @@ public class FieldGenerator : MonoBehaviour
                 }
                 else if (Possession.team == Team.B)
                 {
-                    offensive_player_rows = new List<int>(new int[] { 5, 1, 9, 3, 7 });
-                    offensive_player_columns = new List<int>(new int[] { 6, 5, 5, 5, 5 });
+                    offensive_player_rows = new List<int>(new int[] { 5, 1, 9, 3, 7, 2, 8 });
+                    offensive_player_columns = new List<int>(new int[] { 6, 5, 5, 5, 5, 6, 6 });
 
                     defensive_player_rows = new List<int>(new int[] { 5, 3, 7, 1, 9 });
                     defensive_player_columns = new List<int>(new int[] { 4, 3, 3, 3, 3 });
