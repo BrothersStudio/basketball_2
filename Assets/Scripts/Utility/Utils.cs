@@ -89,10 +89,10 @@ public static class Utils
         }
 
         // Turn off highlight if it's still there
-        GameObject highlight = GameObject.FindObjectOfType<Highlight>().gameObject;
+        Highlight highlight = GameObject.FindObjectOfType<Highlight>();
         if (highlight != null)
         {
-            highlight.SetActive(false);
+            highlight.gameObject.SetActive(false);
         }
     }
 
