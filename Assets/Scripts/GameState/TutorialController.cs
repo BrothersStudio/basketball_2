@@ -20,6 +20,14 @@ public class TutorialController : MonoBehaviour
     Player tutorial_talker;
     Player player_character;
 
+    void Awake()
+    {
+        if (Progression.level != 0)
+        {
+            Destroy(this);
+        }
+    }
+
     void SetTutorialStrings()
     {
         // Start

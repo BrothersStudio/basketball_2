@@ -88,8 +88,12 @@ public static class Utils
             player.animating = true;
         }
 
+        // Turn off highlight if it's still there
         GameObject highlight = GameObject.FindObjectOfType<Highlight>().gameObject;
-        highlight.SetActive(false);
+        if (highlight != null)
+        {
+            highlight.SetActive(false);
+        }
     }
 
     public static List<Interview> ListConcat(List<Interview> list1, List<Interview> list2)

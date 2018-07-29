@@ -574,6 +574,34 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 74c9c26815d00f34dab113020601f5c5, type: 3}
   - {fileID: 21300000, guid: 1e838b3038b704f45a234d15b0f7011d, type: 3}
   - {fileID: 21300000, guid: 88e925c00bcdcd441899154a23a6e344, type: 3}
+  player_sprites:
+  - {fileID: 21300000, guid: 230b9a0ec6c8eca41a3668707a7b0f96, type: 3}
+  - {fileID: 21300002, guid: 230b9a0ec6c8eca41a3668707a7b0f96, type: 3}
+  player_dunk:
+  - {fileID: 21300000, guid: c837cd3c7a3606a4e986ace5f7b5f756, type: 3}
+  - {fileID: 21300002, guid: c837cd3c7a3606a4e986ace5f7b5f756, type: 3}
+  - {fileID: 21300004, guid: c837cd3c7a3606a4e986ace5f7b5f756, type: 3}
+  level_1_enemy_sprites:
+  - {fileID: 21300000, guid: 9f706ff50d01d4d439d3fbc220608c4a, type: 3}
+  - {fileID: 21300002, guid: 9f706ff50d01d4d439d3fbc220608c4a, type: 3}
+  level_1_dunk:
+  - {fileID: 21300000, guid: 94bf9f7c8ed284445a422feac37033ef, type: 3}
+  - {fileID: 21300002, guid: 94bf9f7c8ed284445a422feac37033ef, type: 3}
+  - {fileID: 21300004, guid: 94bf9f7c8ed284445a422feac37033ef, type: 3}
+  level_2_enemy_sprites:
+  - {fileID: 21300000, guid: 057ba5ccca54a4f478b51ca9e4611b26, type: 3}
+  - {fileID: 21300002, guid: 057ba5ccca54a4f478b51ca9e4611b26, type: 3}
+  level_2_dunk:
+  - {fileID: 21300000, guid: f42f3cce9876d7a4187b385e71419651, type: 3}
+  - {fileID: 21300002, guid: f42f3cce9876d7a4187b385e71419651, type: 3}
+  - {fileID: 21300004, guid: f42f3cce9876d7a4187b385e71419651, type: 3}
+  level_3_enemy_sprites:
+  - {fileID: 21300000, guid: 59200190d0a066349965b4710293c15f, type: 3}
+  - {fileID: 21300002, guid: 59200190d0a066349965b4710293c15f, type: 3}
+  level_3_dunk:
+  - {fileID: 21300000, guid: bd1defcb28746654b8f558b81a9c5015, type: 3}
+  - {fileID: 21300002, guid: bd1defcb28746654b8f558b81a9c5015, type: 3}
+  - {fileID: 21300004, guid: bd1defcb28746654b8f558b81a9c5015, type: 3}
 --- !u!1 &243562964
 GameObject:
   m_ObjectHideFlags: 0

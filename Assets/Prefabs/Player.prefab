@@ -153,9 +153,11 @@ MonoBehaviour:
   passing: 0
   pushing: 0
   moving: 0
+  animating: 0
   took_attack: 0
   took_move: 0
   ai_pass_check: 0
+  can_select: 1
   push_sound: {fileID: 8300000, guid: 542119a1f15f6304d8325bc7f5b6ba68, type: 3}
   out_of_bounds_sound: {fileID: 8300000, guid: 82488c56c4a24e64580359dd786cf36a, type: 3}
   pass_1_sound: {fileID: 8300000, guid: 81c17dd125c320f40a9eab0c747dd404, type: 3}
@@ -170,9 +172,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c25ab215e64e0f748a9ee3c6a315499a, type: 3}
   - {fileID: 8300000, guid: 6be49978efc87fe4282100460a1670d8, type: 3}
   facing: 0
-  player_sprites:
-  - {fileID: 21300000, guid: 230b9a0ec6c8eca41a3668707a7b0f96, type: 3}
-  - {fileID: 21300002, guid: 230b9a0ec6c8eca41a3668707a7b0f96, type: 3}
+  player_sprites: []
+  dunk_sprites: []
   sweat_particle_prefab: {fileID: 1930888459080794, guid: 730fc0bbd2d7c8c4cab3cbd900da4041,
     type: 2}
   team: 0

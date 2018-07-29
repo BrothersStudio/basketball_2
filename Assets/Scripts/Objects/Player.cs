@@ -28,7 +28,8 @@ public class Player : MonoBehaviour
 
     // Sprites
     public SpriteFacing facing;
-    public List<Sprite> player_sprites;
+    public List<Sprite> player_sprites = new List<Sprite>();
+    public List<Sprite> dunk_sprites = new List<Sprite>();
 
     // Particles
     public GameObject sweat_particle_prefab;
@@ -50,6 +51,16 @@ public class Player : MonoBehaviour
 
         current_tile.SetPlayer(this);
 	}
+
+    public void SetSprites(Sprite[] input_sprites, Sprite[] input_dunk_sprites)
+    {
+        player_sprites.Add(input_sprites[0]);
+        player_sprites.Add(input_sprites[1]);
+
+        dunk_sprites.Add(input_dunk_sprites[0]);
+        dunk_sprites.Add(input_dunk_sprites[1]);
+        dunk_sprites.Add(input_dunk_sprites[2]);
+    }
 
     public bool HasBall()
     {
@@ -573,7 +584,7 @@ public class Player : MonoBehaviour
             {
                 FindObjectOfType<ScoreCounter>().PlayerScored(this);
             }
-            FindObjectOfType<DunkBannerMove>().Dunk();
+            FindObjectOfType<DunkBannerMove>().Dunk(this);
 
             canvas.transform.Find("Command Window").GetComponent<CommandWindow>().Cancel();
             GetComponentInChildren<Ball>().gameObject.SetActive(false);
@@ -658,15 +669,7 @@ public class Player : MonoBehaviour
         took_move = false;
 
         GetComponent<Bounce>().stop = false;
-
-        if (team == Team.A)
-        {
-            GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().color = Color.blue;
-        }
+        GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     public bool IsTutorialRestricted(TutorialAction action)

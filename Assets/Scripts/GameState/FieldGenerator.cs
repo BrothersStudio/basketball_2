@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FieldGenerator : MonoBehaviour
 {
+    // Prefabs
     public GameObject ball_prefab;
     public GameObject tile_prefab;
     public GameObject lava_tile_prefab;
@@ -11,8 +12,21 @@ public class FieldGenerator : MonoBehaviour
     public GameObject player_prefab;
     public GameObject highlight_prefab;
 
+    // Sprites
     public Sprite[] tile_sprites;
     List<GameObject> all_objects = new List<GameObject>();
+
+    public Sprite[] player_sprites;
+    public Sprite[] player_dunk;
+
+    public Sprite[] level_1_enemy_sprites;
+    public Sprite[] level_1_dunk;
+
+    public Sprite[] level_2_enemy_sprites;
+    public Sprite[] level_2_dunk;
+
+    public Sprite[] level_3_enemy_sprites;
+    public Sprite[] level_3_dunk;
 
     // Level setup variables
     List<int> offensive_player_rows;
@@ -29,7 +43,11 @@ public class FieldGenerator : MonoBehaviour
 
     int give_ball_ind;
 
-    int set_rows, set_columns;
+    int set_rows;
+    int set_columns;
+
+    Sprite[] enemy_sprites;
+    Sprite[] enemy_dunks;
 
     public void SetupBasedOnLevel()
     {
@@ -47,6 +65,9 @@ public class FieldGenerator : MonoBehaviour
 
                 set_rows = 7;
                 set_columns = 11;
+
+                enemy_sprites = level_3_enemy_sprites;
+                enemy_dunks = level_3_dunk;
 
                 Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 0.75f, -10f));
                 break;
@@ -89,6 +110,10 @@ public class FieldGenerator : MonoBehaviour
 
                     Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 2.2f, -10f));
                 }
+
+                enemy_sprites = level_1_enemy_sprites;
+                enemy_dunks = level_1_dunk;
+
                 break;
             case 2:
                 if (Possession.team == Team.A)
@@ -129,8 +154,54 @@ public class FieldGenerator : MonoBehaviour
 
                     Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 2.2f, -10f));
                 }
+
+                enemy_sprites = level_2_enemy_sprites;
+                enemy_dunks = level_2_dunk;
+
                 break;
             case 3:
+                if (Possession.team == Team.A)
+                {
+                    offensive_player_rows = new List<int>(new int[] { 1, 0, 1, 1, 1 });
+                    offensive_player_columns = new List<int>(new int[] { 1, 5, 9, 3, 7 });
+
+                    defensive_player_rows = new List<int>(new int[] { 3, 2, 3, 3, 3 });
+                    defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9 });
+
+                    lava_rows = new List<int>(new int[] { 2, 3, 3, 2, 4, 4, 6, 6 });
+                    lava_columns = new List<int>(new int[] { 8, 6, 4, 2, 8, 2, 7, 3 });
+
+                    hoop_row = 6;
+                    hoop_column = 5;
+
+                    set_rows = 7;
+                    set_columns = 11;
+
+                    Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 0.75f, -10f));
+                }
+                else if (Possession.team == Team.B)
+                {
+                    offensive_player_rows = new List<int>(new int[] { 5, 1, 9, 3, 7 });
+                    offensive_player_columns = new List<int>(new int[] { 6, 5, 5, 5, 5 });
+
+                    defensive_player_rows = new List<int>(new int[] { 5, 3, 7, 1, 9 });
+                    defensive_player_columns = new List<int>(new int[] { 4, 3, 3, 3, 3 });
+
+                    lava_rows = new List<int>(new int[] { 2, 4, 6, 8, 8, 2, 3, 7 });
+                    lava_columns = new List<int>(new int[] { 4, 3, 3, 4, 2, 2, 0, 0 });
+
+                    hoop_row = 5;
+                    hoop_column = 0;
+
+                    set_rows = 11;
+                    set_columns = 7;
+
+                    Camera.main.GetComponent<CameraShake>().SetNewPosition(new Vector3(-8.41f, 2.2f, -10f));
+                }
+
+                enemy_sprites = level_3_enemy_sprites;
+                enemy_dunks = level_3_dunk;
+
                 break;
             default:
                 Debug.LogError("Trying to generate field for unknown level");
@@ -196,6 +267,15 @@ public class FieldGenerator : MonoBehaviour
                         new_player.name = "Offender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
                         new_player.GetComponent<Player>().team = Possession.team;
+                        if (Possession.team == Team.A)
+                        {
+                            new_player.GetComponent<Player>().SetSprites(player_sprites, player_dunk);
+                        }
+                        else if (Possession.team == Team.B)
+                        {
+                            new_player.GetComponent<Player>().SetSprites(enemy_sprites, enemy_dunks);
+                        }
+
                         all_objects.Add(new_player);
 
                         if (n == give_ball_ind)
@@ -225,6 +305,15 @@ public class FieldGenerator : MonoBehaviour
                         new_player.name = "Defender " + n.ToString();
                         new_player.GetComponent<Player>().current_tile = new_tile.GetComponent<Tile>();
                         new_player.GetComponent<Player>().team = GetDefensiveTeam();
+                        if (Possession.team == Team.A)
+                        {
+                            new_player.GetComponent<Player>().SetSprites(enemy_sprites, enemy_dunks);
+                        }
+                        else if (Possession.team == Team.B)
+                        {
+                            new_player.GetComponent<Player>().SetSprites(player_sprites, player_dunk);
+                        }
+
                         all_objects.Add(new_player);
                     }
                 }
@@ -296,6 +385,7 @@ public class FieldGenerator : MonoBehaviour
         new_player.name = "Offender 2";
         new_player.GetComponent<Player>().current_tile = spawn_tile;
         new_player.GetComponent<Player>().team = Team.A;
+        new_player.GetComponent<Player>().SetSprites(player_sprites, player_dunk);
 
         // Tutorial special
         new_player.GetComponent<Player>().can_select = false;

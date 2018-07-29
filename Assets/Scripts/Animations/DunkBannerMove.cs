@@ -32,9 +32,11 @@ public class DunkBannerMove : MonoBehaviour
         player.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1100, 0.42f);
     }
 
-    public void Dunk()
+    public void Dunk(Player dunking_player)
     {
+        SetDunkSprites(dunking_player);
         ResetBanners();
+
         StartCoroutine(Flash());
         StartCoroutine(MoveBanner());
         StartCoroutine(MovePlayer());
@@ -42,6 +44,13 @@ public class DunkBannerMove : MonoBehaviour
 
         GetComponent<AudioSource>().clip = crowd_cheers[Random.Range(0, crowd_cheers.Count)];
         GetComponent<AudioSource>().Play();
+    }
+
+    void SetDunkSprites(Player dunking_player)
+    {
+        player.GetComponent<DunkAnimation>().dunk_1 = dunking_player.dunk_sprites[0];
+        player.GetComponent<DunkAnimation>().dunk_2 = dunking_player.dunk_sprites[1];
+        player.GetComponent<DunkAnimation>().dunk_3 = dunking_player.dunk_sprites[2];
     }
 
     IEnumerator Flash()
