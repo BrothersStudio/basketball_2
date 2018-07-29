@@ -149,8 +149,16 @@ public class AIController : MonoBehaviour
             player.CheckMove();
             yield return new WaitForSeconds(1f);
             Player hate_target = FindClosestEnemyToHoop();
-            FindMostInconvienientTileFor(hate_target, player).Confirm();
-            yield return new WaitForSeconds(1f);
+            Tile inconvienient = FindMostInconvienientTileFor(hate_target, player);
+            if (inconvienient != player.current_tile)
+            {
+                inconvienient.Confirm();
+                yield return new WaitForSeconds(1f);
+            }
+            else
+            {
+                player.SetInactive();
+            }
 
             // If we still haven't pushed...
             if (!pushed)
@@ -484,13 +492,18 @@ public class AIController : MonoBehaviour
 
     Tile FindMostInconvienientTileFor(Player hate_player, Player check_player)
     {
+        // Include current tile
+        List<Tile> check_tiles = new List<Tile>();
+        check_tiles.AddRange(check_player.highlighted_tiles);
+        check_tiles.Add(check_player.current_tile);
+
         Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
 
         int max_dist = 0;
         List<Tile> best_tiles = new List<Tile>();
-        foreach (Tile highlighted_tile in check_player.highlighted_tiles)
+        foreach (Tile highlighted_tile in check_tiles)
         {
-            int check_dist = GetDistanceForTeamIfTileImpassible(hate_player.current_tile, hoop_tile, highlighted_tile, Team.A);
+            int check_dist = GetDistanceForTeamIfTileImpassible(hate_player.current_tile, hoop_tile, highlighted_tile, Team.A, check_player.current_tile);
             if (check_dist >= max_dist)
             {
                 max_dist = check_dist;
@@ -538,7 +551,7 @@ public class AIController : MonoBehaviour
         return counter;
     }
 
-    int GetDistanceForTeamIfTileImpassible(Tile tile_1, Tile tile_2, Tile impassible_tile, Team team)
+    int GetDistanceForTeamIfTileImpassible(Tile tile_1, Tile tile_2, Tile impassible_tile, Team team, Tile in_motion_tile)
     {
         HashSet<Tile> tiles_to_walk = new HashSet<Tile>();
         tiles_to_walk.Add(tile_1);
@@ -567,7 +580,7 @@ public class AIController : MonoBehaviour
                     }
                     else if (adjacent_tile.HasPlayer())
                     {
-                        if (adjacent_tile.GetPlayer().team != team)
+                        if (adjacent_tile.GetPlayer().team != team && adjacent_tile != in_motion_tile)
                         {
                             continue;
                         }
