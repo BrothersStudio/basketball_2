@@ -94,6 +94,7 @@ public class TutorialController : MonoBehaviour
 
     void AdvanceText()
     {
+        Camera.main.GetComponent<ClickSounds>().Select();
         tutorial_ind++;
         if (tutorial_ind < tutorial_strings.Count)
         {
