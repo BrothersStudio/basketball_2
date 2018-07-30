@@ -6,6 +6,8 @@ public class AIController : MonoBehaviour
 {
     public bool random;
 
+    float ai_wait_time = 0.5f;
+
     List<Player> ai_players = new List<Player>();
 
     void Start()
@@ -46,7 +48,7 @@ public class AIController : MonoBehaviour
 
     IEnumerator Defend()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(ai_wait_time);
 
         // Can anyone push the ball carrier off?
         Player ball_carrier = GetPlayerWithBall();
@@ -63,11 +65,11 @@ public class AIController : MonoBehaviour
                         Tile test_tile = tile.VisualizePushingOtherFromHere(ball_carrier.current_tile);
                         if (test_tile == null || test_tile.impassable)
                         {
-                            yield return new WaitForSeconds(1f);
+                            yield return new WaitForSeconds(ai_wait_time);
                             player.Move(tile);
-                            yield return new WaitForSeconds(1f);
+                            yield return new WaitForSeconds(ai_wait_time);
                             player.CheckPush();
-                            yield return new WaitForSeconds(1f);
+                            yield return new WaitForSeconds(ai_wait_time);
                             player.Push(ball_carrier);
                             yield break;
                         }
@@ -91,21 +93,21 @@ public class AIController : MonoBehaviour
 
                                             // First move/push
                                             player.CheckMove();
-                                            yield return new WaitForSeconds(1f);
+                                            yield return new WaitForSeconds(ai_wait_time);
                                             player.Move(tile);
-                                            yield return new WaitForSeconds(1f);
+                                            yield return new WaitForSeconds(ai_wait_time);
                                             player.CheckPush();
-                                            yield return new WaitForSeconds(1f);
+                                            yield return new WaitForSeconds(ai_wait_time);
                                             player.Push(ball_carrier);
-                                            yield return new WaitForSeconds(1f);
+                                            yield return new WaitForSeconds(ai_wait_time);
 
                                             // Second
                                             other_player.CheckMove();
-                                            yield return new WaitForSeconds(1f);
+                                            yield return new WaitForSeconds(ai_wait_time);
                                             other_player.Move(other_tile);
-                                            yield return new WaitForSeconds(1f);
+                                            yield return new WaitForSeconds(ai_wait_time);
                                             other_player.CheckPush();
-                                            yield return new WaitForSeconds(1f);
+                                            yield return new WaitForSeconds(ai_wait_time);
                                             other_player.Push(ball_carrier);
                                             yield break;
                                         }
@@ -137,9 +139,9 @@ public class AIController : MonoBehaviour
                         GetDistanceFromAToBForTeam(tile, FindObjectOfType<Hoop>().current_tile, Team.A))
                     {
                         // It's better for us to push this guy
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         tile.Confirm();
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         pushed = true;
                         break;
                     }
@@ -149,13 +151,13 @@ public class AIController : MonoBehaviour
 
             // Moving
             player.CheckMove();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(ai_wait_time);
             Player hate_target = FindClosestEnemyToHoop();
             Tile inconvienient = FindMostInconvienientTileFor(hate_target, player);
             if (inconvienient != player.current_tile)
             {
                 inconvienient.Confirm();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(ai_wait_time);
             }
             else
             {
@@ -175,9 +177,9 @@ public class AIController : MonoBehaviour
                         GetDistanceFromAToBForTeam(tile, FindObjectOfType<Hoop>().current_tile, Team.A))
                     {
                         // It's better for us to push this guy
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         tile.Confirm();
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         pushed = true;
                         break;
                     }
@@ -187,12 +189,12 @@ public class AIController : MonoBehaviour
         }
 
         GetComponent<PhaseController>().ChangePhase();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(ai_wait_time);
     }
 
     IEnumerator Attack()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(ai_wait_time);
 
         // First let's see if any player is in range of the goal
         List<Player> in_score_range = new List<Player>();
@@ -212,9 +214,9 @@ public class AIController : MonoBehaviour
             if (player.HasBall())
             {
                 player.CheckMove();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(ai_wait_time);
                 FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(ai_wait_time);
                 yield break;
             }
         }
@@ -237,13 +239,13 @@ public class AIController : MonoBehaviour
                         GetDistanceFromAToBForTeam(close_ally.current_tile, FindObjectOfType<Hoop>().current_tile, Team.B))
                     {
                         player.CheckMove();
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         tile.Confirm();
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         player.CheckPush();
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         player.Push(enemy_player);
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         goto next_player;
                     }
                 }
@@ -260,9 +262,9 @@ public class AIController : MonoBehaviour
             if (player.HasBall())
             {
                 player.CheckMove();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(ai_wait_time);
                 FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile, GetSafeTiles(player)).Confirm();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(ai_wait_time);
 
                 if (player.CheckPass())
                 {
@@ -270,7 +272,7 @@ public class AIController : MonoBehaviour
                     {
                         if (!tile.GetPlayer().took_move)
                         {
-                            yield return new WaitForSeconds(1f);
+                            yield return new WaitForSeconds(ai_wait_time);
                             tile.Confirm();
                             break;
                         }
@@ -291,9 +293,9 @@ public class AIController : MonoBehaviour
                             GetDistanceFromAToBForTeam(tile, GetPlayerWithBall().current_tile, Team.A))
                         {
                             // It's better for us to push this guy
-                            yield return new WaitForSeconds(1f);
+                            yield return new WaitForSeconds(ai_wait_time);
                             tile.Confirm();
-                            yield return new WaitForSeconds(1f);
+                            yield return new WaitForSeconds(ai_wait_time);
                             break;
                         }
                     }
@@ -301,26 +303,26 @@ public class AIController : MonoBehaviour
                 }
 
                 player.CheckMove();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(ai_wait_time);
 
                 if (Random.Range(0, 100) < 50)
                 {
                     // Move toward hoop
                     FindClosestInGroupOfTilesTo(player, FindObjectOfType<Hoop>().current_tile).Confirm();
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(ai_wait_time);
                 }
                 else
                 {
                     // Move and push an enemy
                     Player enemy = FindClosestEnemyTo(player);
                     FindClosestInGroupOfTilesTo(player, enemy.current_tile).Confirm();
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(ai_wait_time);
                     if (player.CheckPush())
                     {
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                         Player chosen_player = player.highlighted_tiles[Random.Range(0, player.highlighted_tiles.Count)].GetPlayer();
                         player.Push(chosen_player);
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(ai_wait_time);
                     }
                 }
             }
@@ -328,7 +330,7 @@ public class AIController : MonoBehaviour
         }
 
         GetComponent<PhaseController>().ChangePhase();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(ai_wait_time);
     }
 
     IEnumerator GiveHimTheBall(Player target_player)
@@ -373,13 +375,12 @@ public class AIController : MonoBehaviour
     {
         origin.CheckMove();
         Tile closest_tile = FindClosestInGroupOfTilesTo(origin, target.current_tile);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(ai_wait_time);
         closest_tile.Confirm();
         origin.CheckPass();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(ai_wait_time);
         origin.Pass(target);
-        yield return new WaitForSeconds(1f);
-        //Utils.ResetPassChecks();
+        yield return new WaitForSeconds(ai_wait_time);
     }
 
     Player FindClosestEnemyTo(Player searching_player)
