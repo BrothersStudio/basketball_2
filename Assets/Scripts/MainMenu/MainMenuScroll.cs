@@ -13,6 +13,8 @@ public class MainMenuScroll : MonoBehaviour
     bool moving = false;
     bool press_button = false;
 
+    public AudioClip cut_theme;
+
     public void StartMoving()
     {
         moving = true;
@@ -21,7 +23,7 @@ public class MainMenuScroll : MonoBehaviour
 
     void Speedup()
     {
-        move_speed += 0.05f;
+        move_speed += 0.04f;
     }
 
     void FixedUpdate()
@@ -35,7 +37,7 @@ public class MainMenuScroll : MonoBehaviour
         else if (moving && transform.position.y >= top.y)
         {
             moving = false;
-            Invoke("AppearTextSoon", 1f);
+            Invoke("AppearTextSoon", 1.4f);
         }
     }
 
@@ -59,6 +61,9 @@ public class MainMenuScroll : MonoBehaviour
             CancelInvoke();
             transform.position = top;
             AppearTextSoon();
+
+            GetComponentInChildren<AudioSource>().clip = cut_theme;
+            GetComponentInChildren<AudioSource>().Play();
         }
     }
 }
