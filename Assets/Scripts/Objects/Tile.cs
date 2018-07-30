@@ -48,7 +48,7 @@ public class Tile : MonoBehaviour
 
         this.querying_player = querying_player;
 
-        GetComponent<SpriteRenderer>().color = Color.red;
+        GetComponent<SpriteRenderer>().color = Color.green;
     }
 
     public void Dehighlight()
