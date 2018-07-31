@@ -11,7 +11,7 @@ public class TimeCounter : MonoBehaviour
 
     void Start()
     {
-        max_quarter_time = new TimeSpan(0, 5, 00);
+        max_quarter_time = new TimeSpan(0, 10, 00);
 
         current_quarter_time = max_quarter_time;
         UpdateTimeDisplay();
@@ -19,7 +19,7 @@ public class TimeCounter : MonoBehaviour
 
     public void DecreaseTime()
     {
-        current_quarter_time -= new TimeSpan(0, 0, 30);
+        current_quarter_time -= new TimeSpan(0, 5, 00);
 
         CheckQuarter();
         UpdateTimeDisplay();
@@ -50,9 +50,6 @@ public class TimeCounter : MonoBehaviour
                 quarter_field.text = "3rd";
                 break;
             case "3rd":
-                quarter_field.text = "4th";
-                break;
-            case "4th":
                 current_quarter_time = new TimeSpan(0, 0, 0);
                 quarter_field.text = "End";
                 FindObjectOfType<PhaseController>().GameOver();
