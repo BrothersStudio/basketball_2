@@ -46,4 +46,16 @@ public class ScoreCounter : MonoBehaviour
         panel.transform.Find("Tens").GetComponent<Image>().sprite = number_sprites[int.Parse(tens.ToString())];
         panel.transform.Find("Ones").GetComponent<Image>().sprite = number_sprites[int.Parse(ones.ToString())];
     }
+
+    public bool DidPlayerWin()
+    {
+        if (team_A_score > team_B_score)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
