@@ -34,14 +34,14 @@ public class TutorialController : MonoBehaviour
     {
         // Start
         tutorial_strings.Add("Welcome to Basketball 2! Are you ready to jam?");
-        tutorial_strings.Add("Your goal is to get the ball to the hoop.");
+        tutorial_strings.Add("Your goal is to get the ball to the hoop the most in three possessions.");
         tutorial_strings.Add("However, if the defense holds you off until the shot clock goes off, they get the ball!");
         tutorial_strings.Add("I'll show you the first action type!");
 
         // Action
         tutorial_strings.Add("Doing move and push...");
 
-        tutorial_strings.Add("When you aren't holding the ball, you can move 2 spaces!");
+        tutorial_strings.Add("When you aren't holding the ball, you can move up to two spaces!");
         tutorial_strings.Add("And you can push people out of the way or even off the stage!");
         tutorial_strings.Add("If you're holding the ball when you fall, the opponent gets it!");
 
@@ -49,8 +49,8 @@ public class TutorialController : MonoBehaviour
         tutorial_strings.Add("Ally falling");
 
         tutorial_strings.Add("Fortunately, you won't be alone!");
-        tutorial_strings.Add("You can pass the ball to teammates within 3 squares of you.");
-        tutorial_strings.Add("Holding the ball\nallows you to move 3 squares, instead of the 2 without.");
+        tutorial_strings.Add("You can pass the ball to teammates!");
+        tutorial_strings.Add("Holding the ball\nallows you to move one extra square");
         tutorial_strings.Add("Select the ball carrier, pass to your teammate, and score!");
 
         // Action
