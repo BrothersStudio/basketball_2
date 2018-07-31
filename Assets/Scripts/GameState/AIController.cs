@@ -6,7 +6,7 @@ public class AIController : MonoBehaviour
 {
     public bool random;
 
-    float ai_wait_time = 0.5f;
+    float ai_wait_time = 0.6f;
 
     List<Player> ai_players = new List<Player>();
 
@@ -231,7 +231,7 @@ public class AIController : MonoBehaviour
             List<Tile> check_tiles = ReturnAnyTilesAdjacentToEnemy(player);
             foreach (Tile tile in check_tiles)
             {
-                List<Player> adjacent_enemy_players = GetAdjacentEnemiesToTile(tile);
+                List<Player> adjacent_enemy_players = GetPushableAdjacentEnemiesToTile(tile);
                 foreach (Player enemy_player in adjacent_enemy_players)
                 {
                     Tile moved_to_tile = player.VisualizePushing(tile, enemy_player.current_tile);
@@ -299,8 +299,8 @@ public class AIController : MonoBehaviour
                             break;
                         }
                     }
-                    player.SetInactive();
                 }
+                player.SetInactive();
 
                 player.CheckMove();
                 yield return new WaitForSeconds(ai_wait_time);
@@ -337,12 +337,9 @@ public class AIController : MonoBehaviour
     {
         if (target_player.HasBall()) yield break;
 
-        Debug.Log("Trying to get the ball to " + target_player.name);
         foreach (Player player in ai_players)
         {
             if (player == target_player || player.ai_pass_check || player.took_attack) continue;
-
-            Debug.Log("Checking " + player.name);
 
             player.CheckMove(true);
             Tile closest_tile = FindClosestInGroupOfTilesTo(player, target_player.current_tile);
@@ -385,7 +382,7 @@ public class AIController : MonoBehaviour
 
     Player FindClosestEnemyTo(Player searching_player)
     {
-        List<Player> min_players = new List<Player>();
+        Player min_player = null;
         int min_dist = 100;
 
         // Let's find the nearest enemy then go to the highlighted tile nearest to him
@@ -394,25 +391,15 @@ public class AIController : MonoBehaviour
             if (enemy_player.team == Team.A)
             {
                 int check_dist = Utils.GetDistance(enemy_player.current_tile.position, searching_player.current_tile.position);
-                if (check_dist <= min_dist)
+                if (check_dist < min_dist)
                 {
-                    min_players.Add(enemy_player);
+                    min_player = enemy_player;
                     min_dist = check_dist;
                 }
             }
         }
 
-        // Break ties with player holding ball
-        foreach (Player player in min_players)
-        {
-            if (player.HasBall())
-            {
-                return player;
-            }
-        }
-
-        // Else, random tiebreaker is fine
-        return min_players[Random.Range(0, min_players.Count)];
+        return min_player;
     }
 
     Tile FindClosestInGroupOfTilesTo(Player moving_player, Tile target_tile, List<Tile> input_tiles = null)
@@ -445,29 +432,7 @@ public class AIController : MonoBehaviour
             }
         }
 
-        // Break ties by picking tile closest to net
-        Tile selected_tile = null;
-        if (min_tiles.Count == 1)
-        {
-            selected_tile = min_tiles[0];
-        }
-        else
-        {
-            Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
-
-            min_dist = 100;
-            foreach (Tile tile in min_tiles)
-            {
-                int check_dist = GetDistanceFromAToBForTeam(tile, hoop_tile, Team.B);
-                if (check_dist < min_dist)
-                {
-                    min_dist = check_dist;
-                    selected_tile = tile;
-                }
-            }
-        }
-
-        return selected_tile;
+        return min_tiles[Random.Range(0, min_tiles.Count)];
     }
 
     bool CanReachNet(Player player)
@@ -717,7 +682,7 @@ public class AIController : MonoBehaviour
         return output_tiles;
     }
 
-    List<Player> GetAdjacentEnemiesToTile(Tile input_tile)
+    List<Player> GetPushableAdjacentEnemiesToTile(Tile input_tile)
     {
         List<Player> output_players = new List<Player>();
         foreach (Tile tile in input_tile.adjacent_tiles)
@@ -728,7 +693,11 @@ public class AIController : MonoBehaviour
             {
                 if (tile.GetPlayer().team == Team.A)
                 {
-                    output_players.Add(tile.GetPlayer());
+                    // Check if we can push this guy legally
+                    if (!Utils.FindTileAtLocation((tile.position - input_tile.position) + tile.position).HasPlayer())
+                    {
+                        output_players.Add(tile.GetPlayer());
+                    }
                 }
             }
         }
