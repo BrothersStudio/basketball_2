@@ -16,6 +16,7 @@ public class PhaseController : MonoBehaviour
     bool game_over = false;
 
     public GameObject overall_results_panel;
+    public GameObject end_turn_text;
 
     void Awake()
     {
@@ -41,6 +42,8 @@ public class PhaseController : MonoBehaviour
     {
         if (current_phase == Phase.TeamBAct && AiOn)
         {
+            end_turn_text.SetActive(false);
+
             AITurn.Activity = true;
             highlight.SetActive(false);
             yield return new WaitForSeconds(1f);
@@ -48,6 +51,8 @@ public class PhaseController : MonoBehaviour
         }
         else
         {
+            end_turn_text.SetActive(true);
+
             AITurn.Activity = false;
         }
     }
@@ -75,6 +80,11 @@ public class PhaseController : MonoBehaviour
                 player.RefreshTurn();
             }
 
+            if (Progression.level != 0)
+            {
+                end_turn_text.GetComponent<EndTurnFlash>().CountPlayers();
+            }
+
             if (current_phase == Phase.TeamAAct)
             {
                 current_phase = Phase.TeamBAct;
@@ -82,6 +92,8 @@ public class PhaseController : MonoBehaviour
                 if (AiOn)
                 {
                     highlight.SetActive(false);
+                    end_turn_text.SetActive(false);
+
                     GetComponent<AIController>().StartAITurn();
                 }
             }
@@ -91,9 +103,10 @@ public class PhaseController : MonoBehaviour
                 FindObjectOfType<TurnText>().StartMoving("A");
 
                 highlight.GetComponent<Highlight>().Reset();
+                end_turn_text.SetActive(true);
             }
 
-            FindObjectOfType<TimeCounter>().DecreaseTime();
+            
         }
     }
 
@@ -130,8 +143,9 @@ public class PhaseController : MonoBehaviour
                 field_generator.GenerateField();
                 StartCoroutine(StartRound());
             }
+
             FindObjectOfType<ShotClock>().Restart();
-            //GameObject.Find("Canvas").transform.Find("Box").GetComponent<FillText>().AnimateText();
+            FindObjectOfType<TimeCounter>().DecreaseTime();
         }
     }
 
