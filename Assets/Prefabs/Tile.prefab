@@ -169,6 +169,7 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   previous_walk_tile: {fileID: 0}
   adjacent_tiles: []
+  current_color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114794833938969822
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -15,6 +15,8 @@ public class PhaseController : MonoBehaviour
 
     bool game_over = false;
 
+    public GameObject overall_results_panel;
+
     void Awake()
     {
         Possession.team = Team.A;
@@ -154,14 +156,17 @@ public class PhaseController : MonoBehaviour
         Utils.DehighlightTiles();
         Utils.DeactivatePlayers();
 
-        FindObjectOfType<MovingUI>().GameOver();
+        bool win = FindObjectOfType<ScoreCounter>().DidPlayerWin();
+        FindObjectOfType<MovingUI>().GameOver(win);
+        Progression.GameResults(win);
+
         GetComponent<AudioSource>().Play();
         Camera.main.GetComponentInChildren<SongSelector>().PlayVictoryTheme();
 
         Progression.level++;
         if (Progression.level == 4)
         {
-            Application.Quit();
+            Invoke("DisplayOverallResults", 3);
         }
         else
         {
@@ -172,6 +177,16 @@ public class PhaseController : MonoBehaviour
     void ChangeScene()
     {
         SceneManager.LoadScene("Game");
+    }
+
+    void DisplayOverallResults()
+    {
+        Ball ball = FindObjectOfType<Ball>();
+        if (ball != null)
+        {
+            ball.ToggleDribble();
+        }
+        overall_results_panel.SetActive(true);
     }
 }
 

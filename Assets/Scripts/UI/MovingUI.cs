@@ -22,13 +22,25 @@ public class MovingUI : MonoBehaviour
         GetComponent<RectTransform>().position = default_position;
     }
 
-    public void GameOver()
+    public void GameOver(bool win)
     {
         moving = true;
         game_over = true;
         GetComponent<RectTransform>().position = default_position;
 
-        GetComponentInChildren<Text>().text = "Game Over";
+        if (win)
+        {
+            transform.Find("Changing Sides").GetComponent<Text>().text = "You Win!";
+        }
+        else
+        {
+            transform.Find("Changing Sides").GetComponent<Text>().text = "You Lose!";
+        }
+
+        if (Progression.level < 3)
+        {
+            transform.Find("Next Game").gameObject.SetActive(true);
+        }
     }
 
     void Update ()

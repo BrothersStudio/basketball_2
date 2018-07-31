@@ -31,6 +31,7 @@ public class SongSelector : MonoBehaviour
 
     public void PlayVictoryTheme()
     {
+        GetComponent<AudioSource>().loop = false;
         GetComponent<AudioSource>().clip = victory_song;
         GetComponent<AudioSource>().Play();
     }

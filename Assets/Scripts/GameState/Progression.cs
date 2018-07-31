@@ -25,10 +25,13 @@ public class Stats
     public int avg_turns_game = 0;
 }
 
-
 public class Progression : MonoBehaviour
 {
     public static int level = 0;
+
+    public static bool game_1_victory = false;
+    public static bool game_2_victory = false;
+    public static bool game_3_victory = false;
 
     public static DateTime session_start = DateTime.Now;
     public static Stats session_stats = new Stats();
@@ -37,5 +40,21 @@ public class Progression : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this);
+    }
+
+    public static void GameResults(bool win)
+    {
+        switch (level)
+        {
+            case 1:
+                game_1_victory = win;
+                break;
+            case 2:
+                game_2_victory = win;
+                break;
+            case 3:
+                game_3_victory = win;
+                break;
+        }
     }
 }
