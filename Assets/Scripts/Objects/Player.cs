@@ -411,7 +411,7 @@ public class Player : MonoBehaviour
 
                         if (adjacent_tile.HasPlayer() && !ignore_other_players)
                         {
-                            if (adjacent_tile.GetPlayer().team != this.team || adjacent_tile.impassable)
+                            if (adjacent_tile.GetPlayer().team != team)
                             {
                                 continue;
                             }
@@ -511,7 +511,7 @@ public class Player : MonoBehaviour
             {
                 DetermineSpriteFacing(previous_tile, next_tile);
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.12f);
             previous_tile = next_tile;
         }
 

@@ -6606,6 +6606,7 @@ GameObject:
   m_Component:
   - component: {fileID: 992280206}
   - component: {fileID: 992280207}
+  - component: {fileID: 992280208}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -6635,9 +6636,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b7996272d59a5824497f84364b88cbb4, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 0.681
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.507
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -6721,6 +6722,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &992280208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 992280205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd0d288dedb67f44f8805a679eaec9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battle_song_1: {fileID: 8300000, guid: b7996272d59a5824497f84364b88cbb4, type: 3}
+  battle_song_2: {fileID: 8300000, guid: 6b9d5f582e6f4994e8c582c8e9a01a57, type: 3}
+  victory_song: {fileID: 8300000, guid: b13c530be4f62694ab33700ea5bdf8cb, type: 3}
 --- !u!1 &1006251151
 GameObject:
   m_ObjectHideFlags: 0
