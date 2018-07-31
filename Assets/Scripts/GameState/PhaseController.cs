@@ -156,6 +156,7 @@ public class PhaseController : MonoBehaviour
 
         FindObjectOfType<MovingUI>().GameOver();
         GetComponent<AudioSource>().Play();
+        Camera.main.GetComponentInChildren<SongSelector>().PlayVictoryTheme();
 
         Progression.level++;
         if (Progression.level == 4)

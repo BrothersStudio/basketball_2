@@ -7,6 +7,8 @@ public class SongSelector : MonoBehaviour
     public AudioClip battle_song_1;
     public AudioClip battle_song_2;
 
+    public AudioClip victory_song;
+
 	void Awake ()
     {
 		switch (Progression.level)
@@ -26,4 +28,10 @@ public class SongSelector : MonoBehaviour
         }
         GetComponent<AudioSource>().Play();
 	}
+
+    public void PlayVictoryTheme()
+    {
+        GetComponent<AudioSource>().clip = victory_song;
+        GetComponent<AudioSource>().Play();
+    }
 }
