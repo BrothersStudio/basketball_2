@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: 0a8d0963a1290f740a973d0c88a224e7
+guid: 96fcaa65a959ec44395b03b60ecb1de1
 TextureImporter:
   fileIDToRecycleName:
-    21300000: green_player2_0
-    21300002: green_player2_1
+    21300000: pink_player2_0
+    21300002: pink_player2_1
   externalObjects: {}
   serializedVersion: 5
   mipmaps:
@@ -84,7 +84,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: green_player2_0
+      name: pink_player2_0
       rect:
         serializedVersion: 2
         x: 3
@@ -98,13 +98,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15eeccb37d5395548b2fa7f36ff7c18a
+      spriteID: 6d367f6bc8280024fbccd99c5664c5c8
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: green_player2_1
+      name: pink_player2_1
       rect:
         serializedVersion: 2
         x: 25
@@ -118,7 +118,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: efdf2d2271ef64346bacad3072b28015
+      spriteID: 77e2c02abcf68ae49bd8bdbb85bf3721
       vertices: []
       indices: 
       edges: []
@@ -126,7 +126,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 86c54057800a1cc45bb46126b341cf18
+    spriteID: a3f91978ac44d1f45aa2721c41923288
     vertices: []
     indices: 
     edges: []
