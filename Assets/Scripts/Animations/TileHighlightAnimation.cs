@@ -33,5 +33,10 @@ public class TileHighlightAnimation : MonoBehaviour
             current_tile = 0;
             GetComponent<SpriteRenderer>().sprite = tile_1;
         }
+
+        if (GetComponent<Tile>() != null)
+        {
+            GetComponent<SpriteRenderer>().color = GetComponent<Tile>().current_color;
+        }
     }
 }

@@ -18,6 +18,8 @@ public class Tile : MonoBehaviour
 
     public List<Tile> adjacent_tiles = new List<Tile>();
 
+    public Color current_color = Color.white;
+
     public void SetAdjacency()
     {
         Vector2 position_1 = new Vector2(position.x + 1, position.y);
@@ -35,10 +37,16 @@ public class Tile : MonoBehaviour
         Vector2 position_4 = new Vector2(position.x, position.y - 1);
         Tile pos_4_tile = Utils.FindTileAtLocation(position_4);
         adjacent_tiles.Add(pos_4_tile);
+
+        if (Utils.IsAdjacentToHoop(this))
+        {
+            GetComponent<TileHighlightAnimation>().enabled = true;
+        }
     }
 
     public void Hover()
     {
+        current_color = Color.green;
         GetComponent<SpriteRenderer>().color = Color.green;
     }
 
@@ -48,6 +56,7 @@ public class Tile : MonoBehaviour
 
         this.querying_player = querying_player;
 
+        current_color = Color.green;
         GetComponent<SpriteRenderer>().color = Color.green;
     }
 
@@ -56,6 +65,8 @@ public class Tile : MonoBehaviour
         highlighted = false;
         previous_walk_tile = null;
         querying_player = null;
+
+        current_color = Color.white;
         GetComponent<SpriteRenderer>().color = Color.white;
     }
 
