@@ -42,7 +42,10 @@ public class PhaseController : MonoBehaviour
     {
         if (current_phase == Phase.TeamBAct && AiOn)
         {
-            end_turn_text.SetActive(false);
+            if (Progression.level != 0)
+            {
+                end_turn_text.SetActive(false);
+            }
 
             AITurn.Activity = true;
             highlight.SetActive(false);
@@ -51,7 +54,10 @@ public class PhaseController : MonoBehaviour
         }
         else
         {
-            end_turn_text.SetActive(true);
+            if (Progression.level != 0)
+            {
+                end_turn_text.SetActive(true);
+            }
 
             AITurn.Activity = false;
         }
