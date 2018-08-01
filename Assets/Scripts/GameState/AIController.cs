@@ -62,6 +62,8 @@ public class AIController : MonoBehaviour
                 {
                     foreach (Tile tile in check_tile)
                     {
+                        if (GetPushableAdjacentEnemiesToTile(tile).Count == 0) continue;
+
                         Tile test_tile = tile.VisualizePushingOtherFromHere(ball_carrier.current_tile);
                         if (test_tile == null || test_tile.impassable)
                         {
@@ -85,6 +87,8 @@ public class AIController : MonoBehaviour
                                 {
                                     foreach (Tile other_tile in other_check_tile)
                                     {
+                                        if (GetPushableAdjacentEnemiesToTile(other_tile).Count == 0) continue;
+
                                         Tile other_test_tile = other_tile.VisualizePushingOtherFromHere(test_tile);
                                         if (other_test_tile == null || other_test_tile.impassable)
                                         {
@@ -170,8 +174,9 @@ public class AIController : MonoBehaviour
                 player.CheckPush();
                 foreach (Tile tile in player.highlighted_tiles)
                 {
-                    Tile potential_tile = player.current_tile.VisualizePushingOtherFromHere(tile);
+                    if (GetPushableAdjacentEnemiesToTile(tile).Count == 0) continue;
 
+                    Tile potential_tile = player.current_tile.VisualizePushingOtherFromHere(tile);
                     if (potential_tile == null)
                     {
                         // It's better for us to push this guy
@@ -732,9 +737,15 @@ public class AIController : MonoBehaviour
                 if (tile.GetPlayer().team == Team.A)
                 {
                     // Check if we can push this guy legally
-                    if (!Utils.FindTileAtLocation((tile.position - input_tile.position) + tile.position).HasPlayer())
+                    if (Utils.FindTileAtLocation((tile.position - input_tile.position) + tile.position) == null)
                     {
                         output_players.Add(tile.GetPlayer());
+                        continue;
+                    }
+                    else if (!Utils.FindTileAtLocation((tile.position - input_tile.position) + tile.position).HasPlayer())
+                    {
+                        output_players.Add(tile.GetPlayer());
+                        continue;
                     }
                 }
             }

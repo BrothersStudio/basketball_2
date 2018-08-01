@@ -283,7 +283,7 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
-            else
+            else if (!new_tile.HasPlayer())
             {
                 other_player.PushedTo(new_tile);
             }
