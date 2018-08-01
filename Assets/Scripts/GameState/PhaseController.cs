@@ -116,7 +116,7 @@ public class PhaseController : MonoBehaviour
         }
     }
 
-    public void ChangeSides()
+    public void ChangeSides(bool shot_clock_out = false)
     {
         // Tutorial
         if (Progression.level == 0)
@@ -134,7 +134,7 @@ public class PhaseController : MonoBehaviour
             FindObjectOfType<TurnText>().StopAndReset();
 
             // Move "switch sides" text
-            FindObjectOfType<MovingUI>().StartMoving();
+            FindObjectOfType<MovingUI>().StartMoving(shot_clock_out);
             if (Possession.team == Team.A)
             {
                 current_phase = Phase.TeamBAct;
