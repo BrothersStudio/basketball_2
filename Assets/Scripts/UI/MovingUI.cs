@@ -65,7 +65,7 @@ public class MovingUI : MonoBehaviour
             {
                 moving = false;
             }
-            else if (game_over && GetComponent<RectTransform>().position.x > 1000)
+            else if (game_over && GetComponent<RectTransform>().position.x > 800)
             {
                 moving = false;
             }
