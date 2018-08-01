@@ -160,10 +160,13 @@ public class Highlight : MonoBehaviour
 
     void Unfade(GameObject player)
     {
-        SpriteRenderer sprite = player.GetComponent<SpriteRenderer>();
-        Color current_color = sprite.color;
-        current_color.a = 1;
-        sprite.color = current_color;
+        if (player != null)
+        {
+            SpriteRenderer sprite = player.GetComponent<SpriteRenderer>();
+            Color current_color = sprite.color;
+            current_color.a = 1;
+            sprite.color = current_color;
+        }
     }
 
     void FadeAdjacentPlayersTo(Tile tile)
