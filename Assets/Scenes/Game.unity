@@ -8086,7 +8086,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 4
+  m_Text: 5
 --- !u!222 &1279026499
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8104,7 +8104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c5f92d7b6281174a8443af890ac50b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starting_value: 4
+  starting_value: 5
 --- !u!114 &1279026501
 MonoBehaviour:
   m_ObjectHideFlags: 0
