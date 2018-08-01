@@ -167,11 +167,11 @@ public class FieldGenerator : MonoBehaviour
             case 3:
                 if (Possession.team == Team.A)
                 {
-                    offensive_player_rows = new List<int>(new int[] { 1, 1, 1, 1, 1 });
-                    offensive_player_columns = new List<int>(new int[] { 0, 10, 2, 8, 5 });
+                    offensive_player_rows = new List<int>(new int[] { 1, 1, 1, 1 });
+                    offensive_player_columns = new List<int>(new int[] { 0, 10, 2, 8 });
 
-                    defensive_player_rows = new List<int>(new int[] { 3, 3, 5, 5, 4 });
-                    defensive_player_columns = new List<int>(new int[] { 1, 9, 3, 8, 5 });
+                    defensive_player_rows = new List<int>(new int[] { 3, 3, 5, 5 });
+                    defensive_player_columns = new List<int>(new int[] { 1, 9, 3, 8 });
 
                     hole_rows = new List<int>(new int[] { 2, 2, 2, 3, 3, 3});
                     hole_columns = new List<int>(new int[] { 4, 5, 6, 4, 5, 6 });
@@ -186,11 +186,11 @@ public class FieldGenerator : MonoBehaviour
                 }
                 else if (Possession.team == Team.B)
                 {
-                    offensive_player_rows = new List<int>(new int[] { 0, 10, 2, 8, 5 });
-                    offensive_player_columns = new List<int>(new int[] {5, 5, 5, 5, 5 });
+                    offensive_player_rows = new List<int>(new int[] { 0, 10, 2, 8 });
+                    offensive_player_columns = new List<int>(new int[] {5, 5, 5, 5 });
 
-                    defensive_player_rows = new List<int>(new int[] { 1, 9, 2, 8, 5 });
-                    defensive_player_columns = new List<int>(new int[] { 3, 3, 1, 1, 2 });
+                    defensive_player_rows = new List<int>(new int[] { 1, 9, 2, 8 });
+                    defensive_player_columns = new List<int>(new int[] { 3, 3, 1, 1 });
 
                     hole_rows = new List<int>(new int[] { 4, 5, 6, 4, 5, 6 });
                     hole_columns = new List<int>(new int[] { 4, 4, 4, 3, 3, 3});
