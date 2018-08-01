@@ -232,6 +232,7 @@ public class AIController : MonoBehaviour
                 yield return new WaitForSeconds(ai_wait_time);
                 yield break;
             }
+            ResetPassChecks();
         }
 
         // Can any aggressive pushes open a path?
@@ -348,6 +349,8 @@ public class AIController : MonoBehaviour
 
     IEnumerator GiveHimTheBall(Player target_player)
     {
+        target_player.ai_pass_check = true;
+
         if (target_player.HasBall()) yield break;
 
         foreach (Player player in ai_players)
@@ -382,7 +385,6 @@ public class AIController : MonoBehaviour
             }
             player.SetInactive();
         }
-        ResetPassChecks();
     }
 
     IEnumerator PassTo(Player origin, Player target)
