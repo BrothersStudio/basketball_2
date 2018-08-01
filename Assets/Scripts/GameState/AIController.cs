@@ -376,6 +376,10 @@ public class AIController : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                player.ai_pass_check = true;
+            }
             player.SetInactive();
         }
         ResetPassChecks();
