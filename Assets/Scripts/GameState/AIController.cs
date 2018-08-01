@@ -171,9 +171,17 @@ public class AIController : MonoBehaviour
                 foreach (Tile tile in player.highlighted_tiles)
                 {
                     Tile potential_tile = player.current_tile.VisualizePushingOtherFromHere(tile);
-                    if (potential_tile == null) continue;
 
-                    if (GetDistanceFromAToBForTeam(potential_tile, FindObjectOfType<Hoop>().current_tile, Team.A) >
+                    if (potential_tile == null)
+                    {
+                        // It's better for us to push this guy
+                        yield return new WaitForSeconds(ai_wait_time);
+                        tile.Confirm();
+                        yield return new WaitForSeconds(ai_wait_time);
+                        pushed = true;
+                        break;
+                    }
+                    else if (GetDistanceFromAToBForTeam(potential_tile, FindObjectOfType<Hoop>().current_tile, Team.A) >
                         GetDistanceFromAToBForTeam(tile, FindObjectOfType<Hoop>().current_tile, Team.A))
                     {
                         // It's better for us to push this guy
