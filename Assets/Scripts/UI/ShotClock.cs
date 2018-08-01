@@ -25,7 +25,8 @@ public class ShotClock : MonoBehaviour
         Display();
         if (current_value == 0)
         {
-            Invoke("DelayChange", 0.5f);
+            GetComponent<AudioSource>().Play();
+            Invoke("DelayChange", 1f);
         }
     }
 
@@ -36,6 +37,6 @@ public class ShotClock : MonoBehaviour
 
     void DelayChange()
     {
-        FindObjectOfType<PhaseController>().ChangeSides();
+        FindObjectOfType<PhaseController>().ChangeSides(true);
     }
 }

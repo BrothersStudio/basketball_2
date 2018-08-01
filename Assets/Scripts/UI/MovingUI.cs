@@ -16,10 +16,18 @@ public class MovingUI : MonoBehaviour
         default_position = GetComponent<RectTransform>().position;
     }
 
-    public void StartMoving()
+    public void StartMoving(bool shot_clock)
     {
         moving = true;
         GetComponent<RectTransform>().position = default_position;
+        if (shot_clock)
+        {
+            transform.Find("Changing Sides").GetComponent<Text>().text = "Shot Clock Out!";
+        }
+        else
+        {
+            transform.Find("Changing Sides").GetComponent<Text>().text = "Changing Sides!";
+        }
     }
 
     public void GameOver(bool win)
