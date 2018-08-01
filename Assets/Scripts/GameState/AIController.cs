@@ -358,8 +358,8 @@ public class AIController : MonoBehaviour
             if (player == target_player || player.ai_pass_check || player.took_attack) continue;
 
             player.CheckMove(true);
-            Tile closest_tile = FindClosestInGroupOfTilesTo(player, target_player.current_tile);
-            if (Utils.GetDistance(closest_tile.position, target_player.current_tile.position) <= 3)
+            Tile passable_tile = ReturnTileWithinPassRange(player.highlighted_tiles, target_player.current_tile);
+            if (passable_tile != null)
             {
                 player.ai_pass_check = true;
                 player.SetInactive();
@@ -390,13 +390,25 @@ public class AIController : MonoBehaviour
     IEnumerator PassTo(Player origin, Player target)
     {
         origin.CheckMove();
-        Tile closest_tile = FindClosestInGroupOfTilesTo(origin, target.current_tile);
+        Tile closest_tile = ReturnTileWithinPassRange(origin.highlighted_tiles, target.current_tile);
         yield return new WaitForSeconds(ai_wait_time);
         closest_tile.Confirm();
         origin.CheckPass();
         yield return new WaitForSeconds(ai_wait_time);
         origin.Pass(target);
         yield return new WaitForSeconds(ai_wait_time);
+    }
+
+    Tile ReturnTileWithinPassRange(List<Tile> highlighted_tiles, Tile target_tile)
+    {
+        foreach (Tile highlighted_tile in highlighted_tiles)
+        {
+            if (Utils.GetDistance(highlighted_tile.position, target_tile.position) <= 3)
+            {
+                return highlighted_tile;
+            }
+        }
+        return null;
     }
 
     Player FindClosestEnemyTo(Player searching_player)
