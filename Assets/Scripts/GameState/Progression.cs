@@ -27,7 +27,7 @@ public class Stats
 
 public class Progression : MonoBehaviour
 {
-    public static int level = 0;
+    public static int level = 3;
 
     public static bool game_1_victory = false;
     public static bool game_2_victory = false;

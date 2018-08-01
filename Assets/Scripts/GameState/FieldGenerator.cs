@@ -40,6 +40,9 @@ public class FieldGenerator : MonoBehaviour
     List<int> lava_rows = new List<int>();
     List<int> lava_columns = new List<int>();
 
+    List<int> hole_rows = new List<int>();
+    List<int> hole_columns = new List<int>();
+
     int hoop_row;
     int hoop_column;
 
@@ -164,14 +167,14 @@ public class FieldGenerator : MonoBehaviour
             case 3:
                 if (Possession.team == Team.A)
                 {
-                    offensive_player_rows = new List<int>(new int[] { 1, 0, 1, 1, 1 });
-                    offensive_player_columns = new List<int>(new int[] { 1, 5, 9, 3, 7 });
+                    offensive_player_rows = new List<int>(new int[] { 1, 1, 1, 1, 1 });
+                    offensive_player_columns = new List<int>(new int[] { 0, 10, 2, 8, 5 });
 
-                    defensive_player_rows = new List<int>(new int[] { 3, 2, 3, 3, 3, 4, 4 });
-                    defensive_player_columns = new List<int>(new int[] { 1, 5, 3, 7, 9, 6, 4 });
+                    defensive_player_rows = new List<int>(new int[] { 3, 3, 5, 5, 4 });
+                    defensive_player_columns = new List<int>(new int[] { 1, 9, 3, 8, 5 });
 
-                    lava_rows = new List<int>(new int[] { 2, 3, 3, 2, 4, 4, 6, 6 });
-                    lava_columns = new List<int>(new int[] { 8, 6, 4, 2, 8, 2, 7, 3 });
+                    hole_rows = new List<int>(new int[] { 2, 2, 2, 2, 2, 3, 3, });
+                    hole_columns = new List<int>(new int[] { 3, 4, 5, 6, 7, 4, 5, 6 });
 
                     hoop_row = 6;
                     hoop_column = 5;
@@ -183,14 +186,14 @@ public class FieldGenerator : MonoBehaviour
                 }
                 else if (Possession.team == Team.B)
                 {
-                    offensive_player_rows = new List<int>(new int[] { 5, 1, 9, 3, 7, 2, 8 });
-                    offensive_player_columns = new List<int>(new int[] { 6, 5, 5, 5, 5, 6, 6 });
+                    offensive_player_rows = new List<int>(new int[] { 0, 10, 2, 8, 5 });
+                    offensive_player_columns = new List<int>(new int[] {5, 5, 5, 5, 5 });
 
-                    defensive_player_rows = new List<int>(new int[] { 5, 3, 7, 1, 9 });
-                    defensive_player_columns = new List<int>(new int[] { 4, 3, 3, 3, 3 });
+                    defensive_player_rows = new List<int>(new int[] { 1, 9, 2, 8, 5 });
+                    defensive_player_columns = new List<int>(new int[] { 3, 3, 1, 1, 2 });
 
-                    lava_rows = new List<int>(new int[] { 2, 4, 6, 8, 8, 2, 3, 7 });
-                    lava_columns = new List<int>(new int[] { 4, 3, 3, 4, 2, 2, 0, 0 });
+                    hole_rows = new List<int>(new int[] { 3, 4, 5, 6, 7, 4, 5, 6 });
+                    hole_columns = new List<int>(new int[] { 4, 4, 4, 4, 4, 3, 3, 3});
 
                     hoop_row = 5;
                     hoop_column = 0;
@@ -222,6 +225,11 @@ public class FieldGenerator : MonoBehaviour
         {
             for (int j = 0; j < set_columns; j++)
             {
+                if (IsHoleTile(i, j))
+                {
+                    continue;
+                }
+
                 GameObject new_tile;
                 if (IsLavaTile(i, j) && Random.Range(0, 100) < 60)
                 {
@@ -412,6 +420,18 @@ public class FieldGenerator : MonoBehaviour
         for (int n = 0; n < lava_rows.Count; n++)
         {
             if (lava_rows[n] == i && lava_columns[n] == j)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool IsHoleTile(int i, int j)
+    {
+        for (int n = 0; n < hole_rows.Count; n++)
+        {
+            if (hole_rows[n] == i && hole_columns[n] == j)
             {
                 return true;
             }
