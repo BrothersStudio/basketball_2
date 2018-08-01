@@ -54,12 +54,24 @@ public class Player : MonoBehaviour
 
     public void SetSprites(Sprite[] input_sprites, Sprite[] input_dunk_sprites)
     {
-        player_sprites.Add(input_sprites[0]);
-        player_sprites.Add(input_sprites[1]);
+        if (Random.Range(0, 100) < 50)
+        {
+            player_sprites.Add(input_sprites[0]);
+            player_sprites.Add(input_sprites[1]);
 
-        dunk_sprites.Add(input_dunk_sprites[0]);
-        dunk_sprites.Add(input_dunk_sprites[1]);
-        dunk_sprites.Add(input_dunk_sprites[2]);
+            dunk_sprites.Add(input_dunk_sprites[0]);
+            dunk_sprites.Add(input_dunk_sprites[1]);
+            dunk_sprites.Add(input_dunk_sprites[2]);
+        }
+        else
+        {
+            player_sprites.Add(input_sprites[2]);
+            player_sprites.Add(input_sprites[3]);
+
+            dunk_sprites.Add(input_dunk_sprites[3]);
+            dunk_sprites.Add(input_dunk_sprites[4]);
+            dunk_sprites.Add(input_dunk_sprites[5]);
+        }
     }
 
     public bool HasBall()
