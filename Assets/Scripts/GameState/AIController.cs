@@ -382,7 +382,7 @@ public class AIController : MonoBehaviour
 
     Player FindClosestEnemyTo(Player searching_player)
     {
-        Player min_player = null;
+        List<Player> min_players = new List<Player>();
         int min_dist = 100;
 
         // Let's find the nearest enemy then go to the highlighted tile nearest to him
@@ -391,15 +391,25 @@ public class AIController : MonoBehaviour
             if (enemy_player.team == Team.A)
             {
                 int check_dist = Utils.GetDistance(enemy_player.current_tile.position, searching_player.current_tile.position);
-                if (check_dist < min_dist)
+                if (check_dist <= min_dist)
                 {
-                    min_player = enemy_player;
+                    min_players.Add(enemy_player);
                     min_dist = check_dist;
                 }
             }
         }
 
-        return min_player;
+        // Break ties with player holding ball
+        foreach (Player player in min_players)
+        {
+            if (player.HasBall())
+            {
+                return player;
+            }
+        }
+
+        // Else, random tiebreaker is fine
+        return min_players[Random.Range(0, min_players.Count)];
     }
 
     Tile FindClosestInGroupOfTilesTo(Player moving_player, Tile target_tile, List<Tile> input_tiles = null)
@@ -432,7 +442,27 @@ public class AIController : MonoBehaviour
             }
         }
 
-        return min_tiles[Random.Range(0, min_tiles.Count)];
+        // Break ties by picking tile closest to net
+        Tile selected_tile = null;
+        if (min_tiles.Count == 1)
+        {
+            selected_tile = min_tiles[0];
+        }
+        else
+        {
+            Tile hoop_tile = FindObjectOfType<Hoop>().current_tile;
+            min_dist = 100;
+            foreach (Tile tile in min_tiles)
+            {
+                int check_dist = GetDistanceFromAToBForTeam(tile, hoop_tile, Team.B);
+                if (check_dist < min_dist)
+                {
+                    min_dist = check_dist;
+                    selected_tile = tile;
+                }
+            }
+        }
+        return selected_tile;
     }
 
     bool CanReachNet(Player player)
