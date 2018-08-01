@@ -588,7 +588,7 @@ public class AIController : MonoBehaviour
         tiles_to_walk.Add(tile_1);
 
         int counter = 0;
-        while (counter < 20)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
+        while (counter < 10)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
         {
             counter++;
 
@@ -626,7 +626,7 @@ public class AIController : MonoBehaviour
         tiles_to_walk.Add(tile_1);
 
         int counter = 0;
-        while (counter < 20)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
+        while (counter < 10)  // Juuust in case there's some ugly infinite nonsense, 20 is p far
         {
             counter++;
 
