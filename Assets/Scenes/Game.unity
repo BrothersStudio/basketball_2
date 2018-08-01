@@ -702,6 +702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d12ad45e392541240b67285e8a5a142a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  end_turn_text: {fileID: 1116067409}
   ball_prefab: {fileID: 1639538958796332, guid: b711488caa546104dacbb512a36a8531,
     type: 2}
   tile_prefab: {fileID: 1653282935156714, guid: fe05a0ed7aa339c4887cc33966898bc2,
@@ -6597,6 +6598,7 @@ MonoBehaviour:
   AiOn: 1
   highlight: {fileID: 0}
   overall_results_panel: {fileID: 2077248306}
+  end_turn_text: {fileID: 1116067409}
 --- !u!114 &897352956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7538,6 +7540,7 @@ GameObject:
   - component: {fileID: 1116067413}
   - component: {fileID: 1116067412}
   - component: {fileID: 1116067411}
+  - component: {fileID: 1116067414}
   m_Layer: 5
   m_Name: End Turn
   m_TagString: Untagged
@@ -7616,6 +7619,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1116067409}
+--- !u!114 &1116067414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1116067409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 779d6f7fdecaa6b4b90e25268cbef0b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1119412735
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FieldGenerator : MonoBehaviour
 {
+    public GameObject end_turn_text;
+
     // Prefabs
     public GameObject ball_prefab;
     public GameObject tile_prefab;
@@ -369,6 +371,10 @@ public class FieldGenerator : MonoBehaviour
         if (Progression.level == 0)
         {
             FindObjectOfType<TutorialController>().StartTutorial();
+        }
+        else
+        {
+            end_turn_text.GetComponent<EndTurnFlash>().CountPlayers();
         }
     }
 
