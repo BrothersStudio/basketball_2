@@ -192,8 +192,8 @@ public class FieldGenerator : MonoBehaviour
                     defensive_player_rows = new List<int>(new int[] { 1, 9, 2, 8, 5 });
                     defensive_player_columns = new List<int>(new int[] { 3, 3, 1, 1, 2 });
 
-                    hole_rows = new List<int>(new int[] { 3, 4, 5, 6, 7, 4, 5, 6 });
-                    hole_columns = new List<int>(new int[] { 4, 4, 4, 4, 4, 3, 3, 3});
+                    hole_rows = new List<int>(new int[] { 4, 5, 6, 4, 5, 6 });
+                    hole_columns = new List<int>(new int[] { 4, 4, 4, 3, 3, 3});
 
                     hoop_row = 5;
                     hoop_column = 0;
